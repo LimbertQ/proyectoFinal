@@ -21,7 +21,7 @@ public class Assets {
         player = loadImage("/images/ships/caza1.png");
         laser = loadImage("/images/lasers/laserGreen01.png");
         effect = loadImage("/images/effects/fire08.png");
-        fireSound = loadSound("/audio/playerShoot.wav");
+        fireSound = loadSound("/audio/ufoShoot.wav");
     }
     
     private static BufferedImage loadImage(String path) {

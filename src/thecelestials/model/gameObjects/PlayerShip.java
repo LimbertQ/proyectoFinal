@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import javax.sound.sampled.Clip;
 import thecelestials.controller.Keyboard;
 import thecelestials.model.data.Assets;
 import thecelestials.model.managers.GameContentManager;
@@ -25,6 +26,9 @@ public class PlayerShip extends MovingObject {
     private long fireRate;
     private final BufferedImage effect;
     private boolean accelerating = false;
+
+    private final Clip shoot;
+
     public PlayerShip(Vector2D position, Vector2D velocity, BufferedImage texture, GameContentManager gg, BufferedImage effect) {
         super(position, texture, velocity);
         this.effect = effect;
@@ -33,33 +37,37 @@ public class PlayerShip extends MovingObject {
         maxVel = 7.0;
         gc = gg;
         fireRate = 0;
+        shoot = Assets.fireSound;
     }
 
     @Override
     public void update(float dt) {
-        fireRate+=dt;
+        fireRate += dt;
         if (Keyboard.RIGHT) {
             angle += Math.PI / 20;
         }
         if (Keyboard.LEFT) {
             angle -= Math.PI / 20;
         }
-        
-        if(Keyboard.SHOOT && fireRate > Constants.FIRERATE){
+
+        if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
             fireRate = 0;
             Vector2D laser = getCenter().add(heading.scale(width));
             Laser la = new Laser(laser, Assets.laser, heading, angle);
             //creator.createGameObject(la);
+            shoot.stop();
+            shoot.setFramePosition(0);
+            shoot.start();
             gc.add(la);
         }
-        
+
         if (Keyboard.UP) {
             acceleration = heading.scale(0.2);
             accelerating = true;
         } else {
             //acceleration = heading.scale(0.2);
             accelerating = false;
-            
+
             if (velocity.getMagnitudeSq() > 0.01) {
                 acceleration = velocity.normalize().scale(-Constants.ACC / 2);
             } else {
@@ -70,18 +78,10 @@ public class PlayerShip extends MovingObject {
                 acceleration.setY(0);
             }
         }
-        
+
         velocity = velocity.add(acceleration).limit(maxVel);
         heading = heading.setDirection(angle - Math.PI / 2);
         position = position.add(velocity);
-        /*
-        velocity = velocity.add(acceleration);
-
-        velocity.limit(maxVel);
-
-        heading = heading.setDirection(angle - Math.PI / 2);
-
-        position = position.add(velocity);*/
 
         if (position.getX() > Constants.WIDTH) {
             position.setX(0);
@@ -104,7 +104,7 @@ public class PlayerShip extends MovingObject {
         if (accelerating) {
             AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() + width / 2 + 5,
                     position.getY() + height / 2 + 10);
-            
+
             AffineTransform at2 = AffineTransform.getTranslateInstance(position.getX() + 5,
                     position.getY() + height / 2 + 10);
             at1.rotate(angle, -5, -10);
@@ -112,10 +112,10 @@ public class PlayerShip extends MovingObject {
             g2d.drawImage(effect, at1, null);
             g2d.drawImage(effect, at2, null);
         }
-        
+
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);
-        
+
     }
 }

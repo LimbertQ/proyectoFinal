@@ -20,7 +20,7 @@ public class Laser extends MovingObject {
     public Laser(Vector2D position, BufferedImage texture, Vector2D velocity, double angle) {
         super(position, texture, velocity);
         this.angle = angle;
-        this.velocity = velocity.scale(15.0);
+        this.velocity = velocity.scale(5.0);
     }
 
     @Override

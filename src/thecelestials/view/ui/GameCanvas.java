@@ -8,13 +8,8 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
 import thecelestials.controller.Keyboard;
-import thecelestials.model.data.Assets;
-import thecelestials.model.gameObjects.Laser;
-import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.managers.GameContentManager;
-import thecelestials.model.math.Vector2D;
 
 /**
  *

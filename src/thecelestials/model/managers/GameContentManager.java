@@ -21,17 +21,16 @@ public class GameContentManager {
     private final ArrayList<MovingObject> movingObjects = new ArrayList<>();
     private final ArrayList<MovingObject> listToAdd = new ArrayList<>();
     private final PlayerShip player;
-    private final Clip shoot;
     public GameContentManager() {
-        player = new PlayerShip(new Vector2D(100, 100), new Vector2D(), Assets.player, this, Assets.effect);
+        
+        player = new PlayerShip(new Vector2D(1366/2-Assets.player.getWidth(), 768/2), new Vector2D(), Assets.player, this, Assets.effect);
         movingObjects.add(player);
-        shoot = Assets.fireSound;
     }
 
     public void add(MovingObject mo) {
+        
+        
         listToAdd.add(mo);
-        shoot.setFramePosition(0);
-        shoot.start();
     }
 
     public void update(float dt) {
