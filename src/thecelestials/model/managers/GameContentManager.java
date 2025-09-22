@@ -6,7 +6,6 @@ package thecelestials.model.managers;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import javax.sound.sampled.Clip;
 import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PlayerShip;
@@ -22,14 +21,11 @@ public class GameContentManager {
     private final ArrayList<MovingObject> listToAdd = new ArrayList<>();
     private final PlayerShip player;
     public GameContentManager() {
-        
         player = new PlayerShip(new Vector2D(1366/2-Assets.player.getWidth(), 768/2), new Vector2D(), Assets.player, this, Assets.effect);
         movingObjects.add(player);
     }
 
     public void add(MovingObject mo) {
-        
-        
         listToAdd.add(mo);
     }
 

@@ -54,7 +54,6 @@ public class PlayerShip extends MovingObject {
             fireRate = 0;
             Vector2D laser = getCenter().add(heading.scale(width));
             Laser la = new Laser(laser, Assets.laser, heading, angle);
-            //creator.createGameObject(la);
             shoot.stop();
             shoot.setFramePosition(0);
             shoot.start();
