@@ -17,10 +17,12 @@ import thecelestials.model.math.Vector2D;
  */
 public class Laser extends MovingObject {
 
-    public Laser(Vector2D position, BufferedImage texture, Vector2D velocity, double angle) {
-        super(position, texture, velocity);
+    public Laser(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel, double angle) {
+        super(position, texture, velocity, maxVel);
         this.angle = angle;
-        this.velocity = velocity.scale(5.0);
+        this.velocity = velocity.scale(maxVel);
+        this.healt = 1;
+        this.damage = 5;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class Laser extends MovingObject {
 
         if (position.getX() > Constants.WIDTH || position.getY() > Constants.HEIGHT
                 || position.getX() < 0 || position.getY() < 0) {
-            destroy();
+            destroy(5);
         }
     }
 
@@ -43,5 +45,9 @@ public class Laser extends MovingObject {
 
         g2d.drawImage(texture, at, null);
     }
-
+    
+    @Override
+    public Vector2D getCenter(){
+        return new Vector2D(position.getX() + width/2, position.getY() + width/2);
+    }
 }

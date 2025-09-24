@@ -15,18 +15,38 @@ public abstract class MovingObject extends GameObject{
     protected Vector2D velocity;
     protected double angle;
     protected double maxVel;
+    protected int healt;
+    protected int damage;
     private boolean isDead = false;
-    public MovingObject(Vector2D position, BufferedImage texture, Vector2D velocity) {
+    protected boolean isInvulnerable = false;
+    public MovingObject(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel) {
         super(position, texture);
         this.velocity = velocity;
-        angle = 0;
+        this.angle = 0;
+        this.maxVel = maxVel;
     }    
     
     public boolean isDead(){
         return isDead;
     }
     
-    public void destroy(){
-        isDead = true;
+    public boolean isInvulnerable(){
+        return isInvulnerable;
+    }
+    
+    public void destroy(int d){
+        healt-= d;
+        if(healt < 1){
+            isInvulnerable = true;
+            isDead = true;
+        }
+    }
+    
+    public int getDamage(){
+        return damage;
+    }
+    
+    public int getHealt(){
+        return healt;
     }
 }

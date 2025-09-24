@@ -29,44 +29,43 @@ public class PlayerShip extends MovingObject {
 
     private final Clip shoot;
 
-    public PlayerShip(Vector2D position, Vector2D velocity, BufferedImage texture, GameContentManager gg, BufferedImage effect) {
-        super(position, texture, velocity);
+    private int lives;
+    private final int copyHealt;
+    private final double x, y;
+
+    public PlayerShip(Vector2D position, Vector2D velocity, BufferedImage texture, double maxVel, GameContentManager gg, BufferedImage effect) {
+        super(position, texture, velocity, maxVel);
+        x = position.getX();
+        y = position.getY();
         this.effect = effect;
         heading = new Vector2D(0, 1);
         acceleration = new Vector2D();
-        maxVel = 7.0;
         gc = gg;
         fireRate = 0;
         shoot = Assets.fireSound;
+        lives = 3;
+        this.healt = 20;
+        copyHealt = healt;
+        this.damage = 5;
     }
 
-    @Override
-    public void update(float dt) {
-        fireRate += dt;
+    public int getLives() {
+        return lives;
+    }
+    
+    private void handleInput() {
         if (Keyboard.RIGHT) {
-            angle += Math.PI / 20;
+            angle += Constants.DELTAANGLE;
         }
         if (Keyboard.LEFT) {
-            angle -= Math.PI / 20;
-        }
-
-        if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
-            fireRate = 0;
-            Vector2D laser = getCenter().add(heading.scale(width));
-            Laser la = new Laser(laser, Assets.laser, heading, angle);
-            shoot.stop();
-            shoot.setFramePosition(0);
-            shoot.start();
-            gc.add(la);
+            angle -= Constants.DELTAANGLE;
         }
 
         if (Keyboard.UP) {
-            acceleration = heading.scale(0.2);
+            acceleration = heading.scale(Constants.ACC);
             accelerating = true;
         } else {
-            //acceleration = heading.scale(0.2);
             accelerating = false;
-
             if (velocity.getMagnitudeSq() > 0.01) {
                 acceleration = velocity.normalize().scale(-Constants.ACC / 2);
             } else {
@@ -77,7 +76,45 @@ public class PlayerShip extends MovingObject {
                 acceleration.setY(0);
             }
         }
+    }
+    
+    @Override
+    public void destroy(int da){
+        healt-= da;
+        if(healt < 1){
+            lives--;
+            isInvulnerable = true;
+            if(lives < 1){
+                super.destroy(da);
+            }else{
+                resetValues();
+            }
+        }
+    }
+    
+    public void resetValues(){
+        angle = 0;
+        velocity = new Vector2D();
+        healt = copyHealt;
+        position = new Vector2D(x, y);
+    }
 
+    @Override
+    public void update(float dt) {
+        fireRate += dt;
+        handleInput();
+
+        if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
+            fireRate = 0;
+            Vector2D center = getCenter();
+            
+            Vector2D muzzle = center.add(heading.scale(width));
+            gc.createGameObject(new Laser(muzzle, Assets.laser, heading, Constants.LASER_VEL, angle));
+
+            shoot.stop();
+            shoot.setFramePosition(0);
+            shoot.start();
+        }
         velocity = velocity.add(acceleration).limit(maxVel);
         heading = heading.setDirection(angle - Math.PI / 2);
         position = position.add(velocity);
@@ -115,6 +152,5 @@ public class PlayerShip extends MovingObject {
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);
-
     }
 }

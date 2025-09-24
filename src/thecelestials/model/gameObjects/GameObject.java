@@ -34,12 +34,20 @@ public abstract class GameObject {
     public Vector2D getPosition() {
         return position;
     }
+    
+    public int getWidth(){
+        return width;
+    }
+    
+    public int getHeight(){
+        return height;
+    }
 
     public void setPosition(Vector2D position) {
         this.position = position;
     }
     
-    protected Vector2D getCenter() {
+    public Vector2D getCenter() {
         return new Vector2D(position.getX() + width / 2.0, position.getY() + height / 2.0);
     }
 }
