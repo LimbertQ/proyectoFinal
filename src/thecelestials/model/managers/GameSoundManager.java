@@ -14,15 +14,18 @@ import thecelestials.model.gameObjects.PlayerShip;
  *
  * @author pc
  */
-public class GameSoundManager implements GameObjectDestroyedListener{
+public class GameSoundManager implements GameObjectDestroyedListener {
+
     private final Clip explosion;
-    public GameSoundManager(){
+
+    public GameSoundManager() {
         explosion = Assets.explosion;
     }
-    
+
     @Override
     public void onGameObjectDestroyed(MovingObject mo) {
-        if(mo instanceof Meteor || mo instanceof PlayerShip){
+        if (mo instanceof Meteor || mo instanceof PlayerShip) {
+            explosion.stop();
             explosion.setFramePosition(0);
             explosion.start();
         }

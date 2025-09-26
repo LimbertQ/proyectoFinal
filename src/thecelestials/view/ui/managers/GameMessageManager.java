@@ -34,8 +34,9 @@ public class GameMessageManager implements GameObjectDestroyedListener{
     public void onGameObjectDestroyed(MovingObject mo) {
         if(mo instanceof Meteor){
             showMessage(mo.getPosition(), "+" + Constants.METEOR_SCORE + " SCORE", Color.WHITE);
-        }else if(mo instanceof PlayerShip){
-            showMessage(mo.getPosition(), "-1 LIFE", Color.RED);
+        }else if(mo instanceof PlayerShip p){
+            if(p.isDead())
+                showMessage(mo.getPosition(), "-1 LIFE", Color.RED);
         }
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }

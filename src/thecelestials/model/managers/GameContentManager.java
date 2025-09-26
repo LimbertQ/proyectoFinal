@@ -61,11 +61,11 @@ public class GameContentManager implements GameObjectCreator {
         for (int i = 0; i < 1; i++) {
             double x, y;
             if (random.nextBoolean()) { // Decidimos si empieza en X o Y
-                x = random.nextDouble() * Constants.WIDTH;
-                y = 0;
+                x = 300;
+                y = 3000;
             } else {
-                x = 0;
-                y = 200.0;
+                x = 300;
+                y = 300;
             }
             
             BufferedImage texture = images.get("Bbig" + 2);
@@ -79,6 +79,8 @@ public class GameContentManager implements GameObjectCreator {
     }
 
     public void update(float dt) {
+        
+        gameEffectManager.update(dt);
         if(!hasActiveMeteors()){
             startWave();
         }
@@ -87,12 +89,12 @@ public class GameContentManager implements GameObjectCreator {
         }
         
         gameCollisionManager.checkCollisions(movingObjects);
-        gameEffectManager.update(dt);
         gameMessageManager.update(dt);
 
         if (!listToAdd.isEmpty()) {
             movingObjects.addAll(listToAdd);
         }
+        
         removeDeadObjects();
     }
     
@@ -104,10 +106,14 @@ public class GameContentManager implements GameObjectCreator {
                 objectsToNotify.add(obj);
             }
         }
-        
+        if(player.isDestroy() && !player.isDead()){
+            //player.resetValues();
+            objectsToNotify.add(player);
+        }
         for (MovingObject obj : objectsToNotify) {
             gameEventManager.notifyGameObjectDestroyed(obj);
         }
+        
         // Tercero, elimina los objetos muertos de cada lista
         movingObjects.removeIf(MovingObject::isDead);
         listToAdd.clear();

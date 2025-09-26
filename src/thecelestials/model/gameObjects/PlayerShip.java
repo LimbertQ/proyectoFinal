@@ -26,12 +26,13 @@ public class PlayerShip extends MovingObject {
     private long fireRate;
     private final BufferedImage effect;
     private boolean accelerating = false;
-
+    private boolean visible = true;
     private final Clip shoot;
 
     private int lives;
     private final int copyHealt;
     private final double x, y;
+    private long spawnTime , flickerTime = 0;
 
     public PlayerShip(Vector2D position, Vector2D velocity, BufferedImage texture, double maxVel, GameContentManager gg, BufferedImage effect) {
         super(position, texture, velocity, maxVel);
@@ -52,7 +53,7 @@ public class PlayerShip extends MovingObject {
     public int getLives() {
         return lives;
     }
-    
+
     private void handleInput() {
         if (Keyboard.RIGHT) {
             angle += Constants.DELTAANGLE;
@@ -78,24 +79,46 @@ public class PlayerShip extends MovingObject {
         }
     }
     
-    @Override
-    public void destroy(int da){
-        healt-= da;
-        if(healt < 1){
-            lives--;
-            isInvulnerable = true;
-            if(lives < 1){
-                super.destroy(da);
-            }else{
+    public boolean isDestroy(){
+        return isInvulnerable && spawnTime == 0;
+    }
+    
+    private void updateSpawningState(float dt) {
+        if(isInvulnerable){
+            if(spawnTime == 0){
                 resetValues();
+            }
+            spawnTime += dt;
+            flickerTime += dt;
+            if(flickerTime > Constants.FLICKER_TIME){
+                visible = !visible;
+                flickerTime = 0;
+            }
+            if (spawnTime > Constants.SPAWNING_TIME) {
+                isInvulnerable = false;
+                visible = true;
             }
         }
     }
-    
-    public void resetValues(){
+
+    @Override
+    public void destroy(int da) {
+        healt -= da;
+        if (healt < 1) {
+            lives--;
+            isInvulnerable = true;
+            spawnTime = 0;
+            if (lives < 1) {
+                super.destroy(da);
+            }
+        }
+    }
+
+    public void resetValues() {
         angle = 0;
         velocity = new Vector2D();
         healt = copyHealt;
+        //isInvulnerable = false;
         position = new Vector2D(x, y);
     }
 
@@ -103,11 +126,12 @@ public class PlayerShip extends MovingObject {
     public void update(float dt) {
         fireRate += dt;
         handleInput();
-
+        updateSpawningState(dt);
+        
         if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
             fireRate = 0;
             Vector2D center = getCenter();
-            
+
             Vector2D muzzle = center.add(heading.scale(width));
             gc.createGameObject(new Laser(muzzle, Assets.laser, heading, Constants.LASER_VEL, angle));
 
@@ -136,6 +160,9 @@ public class PlayerShip extends MovingObject {
     @Override
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        if(visible == false){
+            return;
+        }
         //Vector2D center = getCenter();
         if (accelerating) {
             AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() + width / 2 + 5,

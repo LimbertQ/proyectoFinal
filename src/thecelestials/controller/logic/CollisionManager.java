@@ -19,10 +19,10 @@ public class CollisionManager {
     public void checkCollisions(List<MovingObject> allObjects){
         for (int i = 0; i < allObjects.size() - 1; i++) {
             MovingObject a = allObjects.get(i);
-            if (!a.isDead()) {
+            if (!a.isInvulnerable()) {
                 for (int j = i + 1; j < allObjects.size(); j++) {
                     MovingObject b = allObjects.get(j);
-                    if (!b.isDead()) {
+                    if (!b.isInvulnerable()) {
                         double distance = a.getCenter().subtract(b.getCenter()).getMagnitude();
                         if (distance < (a.getWidth() / 2.0 + b.getHeight() / 2.0)) {
                             if(!handleCollision(a, b)){
