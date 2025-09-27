@@ -19,6 +19,7 @@ public abstract class MovingObject extends GameObject{
     protected int damage;
     private boolean isDead = false;
     protected boolean isInvulnerable = false;
+    private boolean isMovementLocked = false;
     public MovingObject(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel) {
         super(position, texture);
         this.velocity = velocity;
@@ -48,5 +49,15 @@ public abstract class MovingObject extends GameObject{
     
     public int getHealt(){
         return healt;
+    }
+    
+    protected boolean isMovementLocked(){
+        return isMovementLocked;
+    }
+    
+    public void applyExternalControl(double newX, double newY){
+        isMovementLocked = true;
+        position.setX(newX);
+        position.setY(newY);
     }
 }

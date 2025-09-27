@@ -31,6 +31,9 @@ public class Meteor extends MovingObject {
 
     @Override
     public void update(float dt) {
+        if(isMovementLocked()){
+            return;
+        }
         // Limitar la velocidad si excede la máxima
         if (velocity.getMagnitudeSq() >= maxVel * maxVel) {
             velocity = velocity.add(velocity.normalize().scale(-0.01f)); // ligera desaceleración

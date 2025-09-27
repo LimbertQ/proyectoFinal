@@ -118,12 +118,14 @@ public class PlayerShip extends MovingObject {
         angle = 0;
         velocity = new Vector2D();
         healt = copyHealt;
-        //isInvulnerable = false;
         position = new Vector2D(x, y);
     }
 
     @Override
     public void update(float dt) {
+        if(isMovementLocked()){
+            return;
+        }
         fireRate += dt;
         handleInput();
         updateSpawningState(dt);

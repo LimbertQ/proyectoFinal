@@ -17,6 +17,8 @@ import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MeteorSize;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PlayerShip;
+import thecelestials.model.gameObjects.Pulsar;
+import thecelestials.model.gameObjects.Vortex;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
 import thecelestials.view.ui.managers.GameEffectManager;
@@ -31,6 +33,8 @@ public class GameContentManager implements GameObjectCreator {
     private final ArrayList<MovingObject> movingObjects = new ArrayList<>();
     private final ArrayList<MovingObject> listToAdd = new ArrayList<>();
     private final PlayerShip player;
+    private final Vortex vortex;
+    private final Pulsar pulsar;
     private final HUDManager gameHudManager;
     private final GameEventManager gameEventManager;
     private final GameSoundManager gameSoundManager;
@@ -42,6 +46,9 @@ public class GameContentManager implements GameObjectCreator {
 
     public GameContentManager() {
         player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.player, Constants.PLAYER_MAX_VEL, this, Assets.effect);
+        vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+        pulsar = new Pulsar(new Vector2D(300, 100), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+        
         movingObjects.add(player);
         gameHudManager = new HUDManager(player);
         gameEventManager = new GameEventManager();
@@ -61,16 +68,15 @@ public class GameContentManager implements GameObjectCreator {
         for (int i = 0; i < 1; i++) {
             double x, y;
             if (random.nextBoolean()) { // Decidimos si empieza en X o Y
-                x = 300;
-                y = 3000;
+                x = random.nextDouble() * Constants.WIDTH;
+                y = 0;
             } else {
-                x = 300;
-                y = 300;
+                x = 0;
+                y = random.nextDouble() * Constants.HEIGHT;
             }
             
             BufferedImage texture = images.get("Bbig" + 2);
             createGameObject(new Meteor(new Vector2D(x, y), texture, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * random.nextDouble() + 1, MeteorSize.BIG, this));
-            
         }
     }
 
@@ -89,6 +95,10 @@ public class GameContentManager implements GameObjectCreator {
         }
         
         gameCollisionManager.checkCollisions(movingObjects);
+        
+        
+        vortex.update(dt, movingObjects);
+        pulsar.update(dt, movingObjects);
         gameMessageManager.update(dt);
 
         if (!listToAdd.isEmpty()) {
@@ -124,6 +134,8 @@ public class GameContentManager implements GameObjectCreator {
         for (MovingObject mo : movingObjects) {
             mo.draw(g);
         }
+        vortex.draw(g);
+        pulsar.draw(g);
         gameEffectManager.draw(g);
         gameHudManager.draw(g);
         gameMessageManager.draw(g2d);

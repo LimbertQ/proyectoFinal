@@ -24,6 +24,7 @@ public class Assets {
     public static BufferedImage[] meteors = new BufferedImage[10];
     public static BufferedImage[] explosions = new BufferedImage[9];
     public static Map<String, BufferedImage> images = new HashMap<>();
+    public static BufferedImage vortex, pulsar;
     public static Clip fireSound, explosion;
 
     public static Font fontBig, fontMed;
@@ -36,6 +37,8 @@ public class Assets {
         explosion = loadSound("/audio/explosion.wav");
         fontBig = loadFont("/fonts/futureFont.ttf", 42);
         fontMed = loadFont("/fonts/futureFont.ttf", 20);
+        vortex = loadImage("/images/gravitationalFields/blackHole.png");
+        pulsar = loadImage("/images/gravitationalFields/pulsar.png");
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = loadImage("/images/numbers/num" + i + ".png");
         }
