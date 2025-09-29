@@ -12,8 +12,8 @@ import thecelestials.model.math.Vector2D;
  *
  * @author pc
  */
-public class Pulsar extends GravitationalField{
-
+public class Pulsar extends GravitationalField {
+    private boolean flag = false;
     public Pulsar(Vector2D position, BufferedImage texture, Vector2D velocity) {
         super(position, texture, velocity);
     }
@@ -21,24 +21,29 @@ public class Pulsar extends GravitationalField{
     @Override
     public void update(float dt, List<MovingObject> objects) {
         angle += rotate;
-        if(Math.abs(angle) > 5){
+        
+        if (Math.abs(angle) > 5) {
             rotate *= -1;
+            flag = false;
             applyOnda(objects);
         }
-        update(dt);
+        if(!flag)
+            update(dt);
     }
-    
-    private void applyOnda(List<MovingObject> objects){
-        for(int i = 0; i < objects.size(); i++){
+
+    private void applyOnda(List<MovingObject> objects) {
+        for (int i = 0; i < objects.size(); i++) {
             MovingObject o = objects.get(i);
-            if(!o.isDead()){
+            if (!o.isInvulnerable()) {
                 Vector2D oCenter = o.getCenter();
                 double dist = oCenter.subtract(center).getMagnitude();
 
-                if (dist < radio) destroyObject(o);
+                if (dist < radio) {
+                    o.switchLocked(!o.isMovementLocked());
+                    o.destroy(1);
+                    flag = true;
+                }
             }
         }
-        
-        //objects.removeIf(MovingObject::isDead);
     }
 }

@@ -60,4 +60,10 @@ public abstract class MovingObject extends GameObject{
         position.setX(newX);
         position.setY(newY);
     }
+    
+    public void switchLocked(boolean locked){
+        isMovementLocked = locked;
+        //System.out.println(isMovementLocked);
+        destroy(1);
+    }
 }

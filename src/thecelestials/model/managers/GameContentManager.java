@@ -47,7 +47,7 @@ public class GameContentManager implements GameObjectCreator {
     public GameContentManager() {
         player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.player, Constants.PLAYER_MAX_VEL, this, Assets.effect);
         vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
-        pulsar = new Pulsar(new Vector2D(300, 100), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+        pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         
         movingObjects.add(player);
         gameHudManager = new HUDManager(player);
@@ -118,6 +118,7 @@ public class GameContentManager implements GameObjectCreator {
         }
         if(player.isDestroy() && !player.isDead()){
             //player.resetValues();
+            //System.out.println("morir");
             objectsToNotify.add(player);
         }
         for (MovingObject obj : objectsToNotify) {
@@ -131,11 +132,11 @@ public class GameContentManager implements GameObjectCreator {
 
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        vortex.draw(g);
+        pulsar.draw(g);
         for (MovingObject mo : movingObjects) {
             mo.draw(g);
         }
-        vortex.draw(g);
-        pulsar.draw(g);
         gameEffectManager.draw(g);
         gameHudManager.draw(g);
         gameMessageManager.draw(g2d);

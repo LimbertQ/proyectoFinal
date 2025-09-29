@@ -24,7 +24,7 @@ public class Vortex extends GravitationalField{
         boolean flag = false;
         for (int i = 0; i < objects.size(); i++) {
             MovingObject o = objects.get(i);
-            if(!o.isDead()){
+            if(!o.isInvulnerable()){
                 Vector2D oCenter = o.getCenter();
                 double dist = oCenter.subtract(center).getMagnitude();
 

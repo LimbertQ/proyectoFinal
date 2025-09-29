@@ -87,6 +87,7 @@ public class PlayerShip extends MovingObject {
         if(isInvulnerable){
             if(spawnTime == 0){
                 resetValues();
+                //System.out.println("vidas mrd"+lives);
             }
             spawnTime += dt;
             flickerTime += dt;
@@ -106,6 +107,7 @@ public class PlayerShip extends MovingObject {
         healt -= da;
         if (healt < 1) {
             lives--;
+            //System.out.println("vidas"+lives);
             isInvulnerable = true;
             spawnTime = 0;
             if (lives < 1) {
@@ -119,16 +121,18 @@ public class PlayerShip extends MovingObject {
         velocity = new Vector2D();
         healt = copyHealt;
         position = new Vector2D(x, y);
+        switchLocked(false);
     }
 
     @Override
     public void update(float dt) {
+        
+        updateSpawningState(dt);
         if(isMovementLocked()){
             return;
         }
         fireRate += dt;
         handleInput();
-        updateSpawningState(dt);
         
         if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
             fireRate = 0;
