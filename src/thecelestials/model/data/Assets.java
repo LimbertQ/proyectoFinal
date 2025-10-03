@@ -96,7 +96,7 @@ public class Assets {
         explosion = loadSound("/audio/explosion.wav");
         fontBig = loadFont("/fonts/futureFont.ttf", 42);
         fontMed = loadFont("/fonts/futureFont.ttf", 20);
-        vortex = loadImage("/images/gravitationalFields/blackHole.png");
+        vortex = loadImage("/images/gravitationalFields/vortex.png");
         pulsar = loadImage("/images/gravitationalFields/pulsar.png");
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = loadImage("/images/numbers/num" + i + ".png");
