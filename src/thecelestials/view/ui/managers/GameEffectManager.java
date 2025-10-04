@@ -12,7 +12,6 @@ import java.util.List;
 import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.Laser;
 import thecelestials.model.gameObjects.MovingObject;
-import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.managers.GameObjectDestroyedListener;
 import thecelestials.model.math.Vector2D;
 import thecelestials.view.ui.animations.Animation;
@@ -28,7 +27,14 @@ public class GameEffectManager implements GameObjectDestroyedListener {
     private final List<Animation> animToAdd = new ArrayList<>();
 
     public GameEffectManager() {
-        explosions = Assets.explosions;
+        explosions = new BufferedImage[9];
+        loadExplosionFrames();
+    }
+    
+    private void loadExplosionFrames(){
+        for(int i=0; i<explosions.length; i++){
+            explosions[i] = Assets.images.get("exp"+i);
+        }
     }
 
     public void update(float dt) {

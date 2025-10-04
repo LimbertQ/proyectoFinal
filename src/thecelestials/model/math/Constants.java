@@ -27,7 +27,7 @@ public class Constants {
 
     // Laser properties
 
-    public static final double LASER_VEL = 15.0;
+    public static final double LASER_VEL = 18.0;
 
     // Meteor properties
 

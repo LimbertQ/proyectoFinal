@@ -14,13 +14,27 @@ import thecelestials.model.gameObjects.MovingObject;
  */
 public class GameEventManager {
     private final List<GameObjectDestroyedListener> destroyedListeners;
+    private final List<GameNotificationListener> notifyListener;
     public GameEventManager(){
         destroyedListeners = new ArrayList<>();
+        this.notifyListener = new ArrayList<>();
     }
     
     // Método para que otros managers o el GameState se suscriban a eventos de destrucción
     public void addGameObjectDestroyedListener(GameObjectDestroyedListener listener) {
         destroyedListeners.add(listener);
+    }
+    
+    // Método para que otros managers o el GameState se suscriban a eventos de destrucción
+    public void addGameNotificationListener(GameNotificationListener listener) {
+        notifyListener.add(listener);
+    }
+    
+    // Método para notificar que un GameObject ha sido destruido
+    public void notifyGameEvent(String type) {
+        for (GameNotificationListener listener : notifyListener) {
+            listener.onGameNotify(type);
+        }
     }
     
     // Método para notificar que un GameObject ha sido destruido

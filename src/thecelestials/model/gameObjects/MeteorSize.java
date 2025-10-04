@@ -11,16 +11,16 @@ package thecelestials.model.gameObjects;
 public enum MeteorSize {
     // Definimos los enums del más grande al más pequeño.
     // Su fragmento siguiente es 'null'.
-    TINY(null, "Btiny", 5, 1),
+    TINY(null, "tiny", 5, 1),
 
     // 'SMALL' se rompe en 'TINY'. 'TINY' ya está definido.
-    SMALL(TINY, "Bsmall", 10, 5),
+    SMALL(TINY, "small", 10, 5),
 
     // 'MED' se rompe en 'SMALL'. 'SMALL' ya está definido.
-    MED(SMALL, "Bmed", 15, 10),
+    MED(SMALL, "med", 15, 10),
 
     // 'BIG' se rompe en 'MED'. 'MED' ya está definido.
-    BIG(MED, "Bbig", 30, 15);
+    BIG(MED, "big", 30, 15);
 
     private final MeteorSize nextSize;
     private final String quantity;

@@ -56,28 +56,17 @@ public class DataBaseManager {
         }
     }
     
-    public List<Map<String, Object>> readAvailableShips() {
-        List<Map<String, Object>> navesData = new ArrayList<>();
-        String sql = "SELECT * FROM Ship s;";
+    public List<ShipStats> readAvailableShips() {
+        List<ShipStats> navesData = new ArrayList<>();
+        //ShipStats ship = null;
+        String sql = "SELECT * FROM Ship s WHERE s.shipState = 1;";
 
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Map<String, Object> naveMap = new HashMap<>();
-                naveMap.put("shipID", rs.getString("shipID"));
-                naveMap.put("shipClass", rs.getString("shipClass"));
-                naveMap.put("shipName", rs.getString("shipName"));
-                naveMap.put("profileShipPath", rs.getString("profileShipPath")); // <-- URL de la imagen de perfil
-                naveMap.put("shipAssetPath", rs.getString("shipAssetPath"));     // <-- URL de la imagen de la nave
-                naveMap.put("shipHealth", rs.getInt("shipHealth"));
-                naveMap.put("shipDamage", rs.getInt("shipDamage"));
-                naveMap.put("shipDescription", rs.getString("shipDescription"));
-                naveMap.put("shipState", rs.getInt("shipState"));
-                naveMap.put("laserID", rs.getString("laserID"));
-                naveMap.put("civilizationID", rs.getString("civilizationID"));
-                
-                //team = 1;
-                navesData.add(naveMap);
+                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getInt("shipState"), rs.getString("laserID"), rs.getString("civilizationID"));
+                ship.setEntityState(readLaserByID(ship.getEntityStatsID()));
+                navesData.add(ship);
             }
         } catch (SQLException e) {
             System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
@@ -85,22 +74,19 @@ public class DataBaseManager {
         return navesData;
     }
     
-    public Map<String, Object> readLaserByID(String ID){
-        Map<String, Object> laser = new HashMap<>();
+    public EntityStats readLaserByID(String ID){
         String sql = "SELECT * FROM Laser la WHERE la.laserID = '"+ID+"';";
+        EntityStats entity = null;
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                laser.put("laserID", rs.getString("laserID"));
-                laser.put("laserName", rs.getString("laserName"));
-                laser.put("laserAssetPath", rs.getString("laserAssetPath"));     // <-- URL de la imagen de la nave
-                laser.put("laserDamage", (int)rs.getInt("laserDamage"));
+                entity = new EntityStats(rs.getString("laserID"), rs.getString("laserName"), null, rs.getString("laserAssetPath"), rs.getString("laserAssetPath"), 1, (int)rs.getInt("laserDamage"));
                 
             }
         } catch (SQLException e) {
             System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
         }
-        return laser;
+        return entity;
     }
     
     public Map<String, Object> readCVLByID(String ID){
@@ -142,24 +128,81 @@ public class DataBaseManager {
         return navesData;
     }
     
-    public List<Map<String, String>> readAvailableCivilization() {
-        List<Map<String, String>> list = new ArrayList<>();
+    public List<AssetDefinition> readAvailableCivilization() {
+        List<AssetDefinition> list = new ArrayList<>();
         String sql = "SELECT * FROM Civilization c;";
 
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+                AssetDefinition civilization = new AssetDefinition(rs.getString("civilizationID"),
+                        rs.getString("civilizationName"), rs.getString("civilizationPath"), rs.getString("civilizationDescription"));
+                
+                //team = 1;
+                list.add(civilization);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List<Map<String, String>> readSounds(){
+        List<Map<String, String>> list = new ArrayList<>();
+        String sql = "SELECT * FROM ActiveSound a;";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
                 Map<String, String> naveMap = new HashMap<>();
-                naveMap.put("civilizationID", rs.getString("civilizationID"));
-                naveMap.put("civilizationName", rs.getString("civilizationName"));
-                naveMap.put("civilizationPath", rs.getString("civilizationPath"));     // <-- URL de la imagen de la nave
-                naveMap.put("civilizationDescription", rs.getString("civilizationDescription"));
+                naveMap.put("soundName", rs.getString("soundName"));
+                naveMap.put("soundPath", rs.getString("soundPath"));
                 
                 //team = 1;
                 list.add(naveMap);
             }
         } catch (SQLException e) {
             System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List<Map<String, String>> readAllImages(){
+        List<Map<String, String>> list = new ArrayList<>();
+        String sql = "SELECT * FROM ActiveImage a;";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Map<String, String> naveMap = new HashMap<>();
+                naveMap.put("imageName", rs.getString("imageName"));
+                naveMap.put("imagePath", rs.getString("imagePath"));
+                
+                //team = 1;
+                list.add(naveMap);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List<Map<String, String>> readStars(){
+        List<Map<String, String>> list = new ArrayList<>();
+        String sql = "SELECT * FROM Star s;";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Map<String, String> naveMap = new HashMap<>();
+                naveMap.put("starName", rs.getString("starName"));
+                naveMap.put("starAssetPath", rs.getString("starAssetPath"));
+                
+                //team = 1;
+                list.add(naveMap);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
         }
         return list;
     }

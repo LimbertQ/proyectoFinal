@@ -7,7 +7,7 @@ package thecelestials.model.gameObjects;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+import thecelestials.model.data.EntityStats;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
 
@@ -17,12 +17,10 @@ import thecelestials.model.math.Vector2D;
  */
 public class Laser extends MovingObject {
 
-    public Laser(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel, double angle) {
-        super(position, texture, velocity, maxVel);
+    public Laser(Vector2D position, EntityStats entityStats, Vector2D velocity, double maxVel, double angle) {
+        super(position, entityStats, velocity, maxVel);
         this.angle = angle;
         this.velocity = velocity.scale(maxVel);
-        this.healt = 1;
-        this.damage = 5;
     }
 
     @Override

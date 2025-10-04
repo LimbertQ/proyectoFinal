@@ -21,11 +21,9 @@ public class Meteor extends MovingObject {
     private final MeteorSize size;
     private final GameObjectCreator creator;
     public Meteor(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel, MeteorSize size, GameObjectCreator creator) {
-        super(position, texture, velocity, maxVel);
+        super(position, texture, velocity, maxVel, size.getHealt(), size.getDamage());
         this.velocity = velocity.scale(maxVel);
         this.size = size;
-        this.healt = size.getHealt();
-        this.damage = size.getDamage();
         this.creator = creator;
     }
 

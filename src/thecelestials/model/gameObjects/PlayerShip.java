@@ -9,8 +9,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.sound.sampled.Clip;
+import javax.swing.text.html.parser.Entity;
 import thecelestials.controller.Keyboard;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.EntityStats;
+import thecelestials.model.data.ShipStats;
 import thecelestials.model.managers.GameContentManager;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
@@ -27,15 +30,15 @@ public class PlayerShip extends MovingObject {
     private final BufferedImage effect;
     private boolean accelerating = false;
     private boolean visible = true;
-    private final Clip shoot;
 
     private int lives;
     private final int copyHealt;
     private final double x, y;
     private long spawnTime , flickerTime = 0;
+    private final EntityStats bullet;
 
-    public PlayerShip(Vector2D position, Vector2D velocity, BufferedImage texture, double maxVel, GameContentManager gg, BufferedImage effect) {
-        super(position, texture, velocity, maxVel);
+    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameContentManager gg, BufferedImage effect) {
+        super(position, shipStats, velocity, maxVel);
         x = position.getX();
         y = position.getY();
         this.effect = effect;
@@ -43,11 +46,9 @@ public class PlayerShip extends MovingObject {
         acceleration = new Vector2D();
         gc = gg;
         fireRate = 0;
-        shoot = Assets.fireSound;
         lives = 3;
-        this.healt = 20;
-        copyHealt = healt;
-        this.damage = 5;
+        copyHealt = shipStats.getHealth();
+        this.bullet = shipStats.getEntityStats();
     }
 
     public int getLives() {
@@ -139,11 +140,7 @@ public class PlayerShip extends MovingObject {
             Vector2D center = getCenter();
 
             Vector2D muzzle = center.add(heading.scale(width));
-            gc.createGameObject(new Laser(muzzle, Assets.laser, heading, Constants.LASER_VEL, angle));
-
-            shoot.stop();
-            shoot.setFramePosition(0);
-            shoot.start();
+            gc.createGameObject(new Laser(muzzle, bullet, heading, Constants.LASER_VEL, angle));
         }
         velocity = velocity.add(acceleration).limit(maxVel);
         heading = heading.setDirection(angle - Math.PI / 2);

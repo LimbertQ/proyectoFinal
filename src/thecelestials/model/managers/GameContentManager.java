@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import thecelestials.controller.logic.CollisionManager;
 import thecelestials.model.data.Assets;
+import thecelestials.model.gameObjects.Laser;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MeteorSize;
 import thecelestials.model.gameObjects.MovingObject;
@@ -45,7 +46,7 @@ public class GameContentManager implements GameObjectCreator {
     private final Map<String, BufferedImage> images;
 
     public GameContentManager() {
-        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.player, Constants.PLAYER_MAX_VEL, this, Assets.effect);
+        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.shipsAvaible.getFirst(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
         vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         
@@ -60,6 +61,8 @@ public class GameContentManager implements GameObjectCreator {
         gameEventManager.addGameObjectDestroyedListener(gameMessageManager);
         gameEffectManager = new GameEffectManager();
         gameEventManager.addGameObjectDestroyedListener(gameEffectManager);
+        
+        gameEventManager.addGameNotificationListener(gameSoundManager);
         images = Assets.images;
     }
 
@@ -75,7 +78,7 @@ public class GameContentManager implements GameObjectCreator {
                 y = random.nextDouble() * Constants.HEIGHT;
             }
             
-            BufferedImage texture = images.get("Bbig" + 2);
+            BufferedImage texture = Assets.stars.get("big" + 2);
             createGameObject(new Meteor(new Vector2D(x, y), texture, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * random.nextDouble() + 1, MeteorSize.BIG, this));
         }
     }
@@ -144,6 +147,9 @@ public class GameContentManager implements GameObjectCreator {
 
     @Override
     public void createGameObject(MovingObject obj) {
+        if(obj instanceof Laser)
+            gameEventManager.notifyGameEvent("laser");
+        
         listToAdd.add(obj);
     }
 
@@ -152,7 +158,7 @@ public class GameContentManager implements GameObjectCreator {
         MeteorSize nextSize = meteor.getSize().getNextSize();
         for (int i = 0; i < 2; i++) {
             int nro = random.nextInt(2) + 1;
-            listToAdd.add(new Meteor(meteor.getPosition(), images.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this));
+            listToAdd.add(new Meteor(meteor.getPosition(), Assets.stars.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this));
         }
     }
 }

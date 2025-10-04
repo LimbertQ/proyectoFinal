@@ -22,7 +22,14 @@ public class HUDManager implements GameObjectDestroyedListener{
     private final BufferedImage[] numbers;
     public HUDManager(PlayerShip p){
         this.player = p;
-        numbers = Assets.numbers;
+        numbers = new BufferedImage[11];
+        loadNumbersImages();
+    }
+    
+    private void loadNumbersImages(){
+        for(int i=0; i<numbers.length; i++){
+            numbers[i] = Assets.images.get("num"+i);
+        }
     }
     
     private void drawNumbers(int x, int y, int number, Graphics g) {
