@@ -4,7 +4,6 @@
  */
 package thecelestials.model.data;
 
-import java.awt.image.BufferedImage;
 
 /**
  *

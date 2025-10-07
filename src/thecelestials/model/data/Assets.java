@@ -29,6 +29,7 @@ public class Assets {
     public static Map<String, BufferedImage> stars = new HashMap<>();
     public static Map<String, Clip> audioCache = new HashMap<>();
     public static List<ShipStats> shipsAvaible = new ArrayList<>();
+    public static EntityStats powerBullet;
     public static BufferedImage vortex, pulsar;
 
     public static Font fontBig, fontMed;
@@ -43,12 +44,14 @@ public class Assets {
             readAllSounds();
             readAllImages();
             readStarsImages();
-
+            powerBullet = db.readLaserByID("LSR06");
+            setImageLaser(powerBullet);
+            
             db.closeConnection();
 
         }
         player = loadImage("/images/ships/fighter01.png");
-
+        effect = loadImage("/images/effects/fire08.png");
         images.put("effect", loadImage("/images/effects/fire08.png"));
         fontBig = loadFont("/fonts/futureFont.ttf", 42);
         fontMed = loadFont("/fonts/futureFont.ttf", 20);
@@ -78,6 +81,7 @@ public class Assets {
             images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
             EntityStats bullet = ship.getEntityStats();
             setImageLaser(bullet);
+            System.out.println("ship dispo");
         }
     }
     

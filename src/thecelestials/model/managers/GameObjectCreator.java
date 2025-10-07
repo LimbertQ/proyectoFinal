@@ -6,6 +6,7 @@ package thecelestials.model.managers;
 
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
+import thecelestials.model.math.Vector2D;
 
 /**
  *
@@ -14,4 +15,5 @@ import thecelestials.model.gameObjects.MovingObject;
 public interface GameObjectCreator {
     void createGameObject(MovingObject obj);
     void createFragmentedMeteors(Meteor meteor);
+    void cloneShip(Vector2D position, int team);
 }

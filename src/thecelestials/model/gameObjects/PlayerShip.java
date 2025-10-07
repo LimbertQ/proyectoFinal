@@ -8,13 +8,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import javax.sound.sampled.Clip;
-import javax.swing.text.html.parser.Entity;
 import thecelestials.controller.Keyboard;
-import thecelestials.model.data.Assets;
-import thecelestials.model.data.EntityStats;
 import thecelestials.model.data.ShipStats;
-import thecelestials.model.managers.GameContentManager;
+import thecelestials.model.managers.GameObjectCreator;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
 
@@ -22,33 +18,24 @@ import thecelestials.model.math.Vector2D;
  *
  * @author pc
  */
-public class PlayerShip extends MovingObject {
+public class PlayerShip extends Ship {
 
     private Vector2D heading, acceleration;
-    private final GameContentManager gc;
-    private long fireRate;
-    private final BufferedImage effect;
-    private boolean accelerating = false;
     private boolean visible = true;
 
     private int lives;
     private final int copyHealt;
     private final double x, y;
-    private long spawnTime , flickerTime = 0;
-    private final EntityStats bullet;
+    private long spawnTime, flickerTime = 0;
 
-    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameContentManager gg, BufferedImage effect) {
-        super(position, shipStats, velocity, maxVel);
+    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, BufferedImage effect) {
+        super(position, shipStats, velocity, maxVel, creator, effect, 1);
         x = position.getX();
         y = position.getY();
-        this.effect = effect;
         heading = new Vector2D(0, 1);
         acceleration = new Vector2D();
-        gc = gg;
-        fireRate = 0;
-        lives = 3;
+        lives = 10;
         copyHealt = shipStats.getHealth();
-        this.bullet = shipStats.getEntityStats();
     }
 
     public int getLives() {
@@ -79,20 +66,20 @@ public class PlayerShip extends MovingObject {
             }
         }
     }
-    
-    public boolean isDestroy(){
+
+    public boolean isDestroy() {
         return isInvulnerable && spawnTime == 0;
     }
-    
+
     private void updateSpawningState(float dt) {
-        if(isInvulnerable){
-            if(spawnTime == 0){
+        if (isInvulnerable) {
+            if (spawnTime == 0) {
                 resetValues();
                 //System.out.println("vidas mrd"+lives);
             }
             spawnTime += dt;
             flickerTime += dt;
-            if(flickerTime > Constants.FLICKER_TIME){
+            if (flickerTime > Constants.FLICKER_TIME) {
                 visible = !visible;
                 flickerTime = 0;
             }
@@ -127,20 +114,26 @@ public class PlayerShip extends MovingObject {
 
     @Override
     public void update(float dt) {
-        
+
         updateSpawningState(dt);
-        if(isMovementLocked()){
+        if (isMovementLocked()) {
             return;
         }
         fireRate += dt;
         handleInput();
-        
+
         if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
             fireRate = 0;
             Vector2D center = getCenter();
 
             Vector2D muzzle = center.add(heading.scale(width));
-            gc.createGameObject(new Laser(muzzle, bullet, heading, Constants.LASER_VEL, angle));
+
+            shooti(muzzle, heading);
+
+        }
+        if (Keyboard.SPECIAL) {
+            Vector2D muzzle = getCenter().add(heading.scale(width));
+            specialTechnique(muzzle, heading);
         }
         velocity = velocity.add(acceleration).limit(maxVel);
         heading = heading.setDirection(angle - Math.PI / 2);
@@ -163,21 +156,11 @@ public class PlayerShip extends MovingObject {
     @Override
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        if(visible == false){
+        if (visible == false) {
             return;
         }
-        //Vector2D center = getCenter();
-        if (accelerating) {
-            AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() + width / 2 + 5,
-                    position.getY() + height / 2 + 10);
 
-            AffineTransform at2 = AffineTransform.getTranslateInstance(position.getX() + 5,
-                    position.getY() + height / 2 + 10);
-            at1.rotate(angle, -5, -10);
-            at2.rotate(angle, width / 2 - 5, -10);
-            g2d.drawImage(effect, at1, null);
-            g2d.drawImage(effect, at2, null);
-        }
+        drawSpeed(g2d);
 
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);

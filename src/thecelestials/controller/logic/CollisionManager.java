@@ -7,6 +7,7 @@ package thecelestials.controller.logic;
 import java.util.List;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
+import thecelestials.model.gameObjects.Ship;
 
 /**
  *
@@ -37,6 +38,6 @@ public class CollisionManager {
     }
     
     public boolean handleCollision(MovingObject a, MovingObject b){
-        return a instanceof Meteor && b instanceof Meteor;
+        return a instanceof Meteor && b instanceof Meteor || a instanceof Ship p1 && b instanceof Ship p2 && p1.getTeam() == p2.getTeam();
     }
 }

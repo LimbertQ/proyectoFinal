@@ -9,7 +9,7 @@ import javax.sound.sampled.Clip;
 import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
-import thecelestials.model.gameObjects.PlayerShip;
+import thecelestials.model.gameObjects.Ship;
 
 /**
  *
@@ -32,7 +32,7 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
 
     @Override
     public void onGameObjectDestroyed(MovingObject mo) {
-        if (mo instanceof Meteor || mo instanceof PlayerShip) {
+        if (mo instanceof Meteor || mo instanceof Ship) {
             playSound("explosion");
         }
     }

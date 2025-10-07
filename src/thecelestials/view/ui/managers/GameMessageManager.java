@@ -11,6 +11,7 @@ import java.util.List;
 import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
+import thecelestials.model.gameObjects.NPCShip;
 import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.managers.GameObjectDestroyedListener;
 import thecelestials.model.math.Constants;
@@ -21,32 +22,37 @@ import thecelestials.view.ui.animations.Message;
  *
  * @author pc
  */
-public class GameMessageManager implements GameObjectDestroyedListener{
+public class GameMessageManager implements GameObjectDestroyedListener {
+
     private final List<Message> activeMessages;
-    public GameMessageManager(){
+
+    public GameMessageManager() {
         activeMessages = new ArrayList<>();
     }
+
     public void showMessage(Vector2D pos, String text, Color color) {
         activeMessages.add(new Message(pos, false, text, color, false, Assets.fontMed, 1));
     }
-    
+
     @Override
-    public void onGameObjectDestroyed(MovingObject mo) {
-        if(mo instanceof Meteor){
-            showMessage(mo.getPosition(), "+" + Constants.METEOR_SCORE + " SCORE", Color.WHITE);
-        }else if(mo instanceof PlayerShip p){
-            if(p.isDead())
-                showMessage(mo.getPosition(), "-1 LIFE", Color.RED);
-        }
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void onGameObjectDestroyed(MovingObject destroyedObject) {
+        if (destroyedObject instanceof Meteor) {
+            showMessage(destroyedObject.getPosition(), "+" + Constants.METEOR_SCORE + " SCORE", Color.WHITE);
+        } else if (destroyedObject instanceof PlayerShip player && player.isDead()) {
+            showMessage(destroyedObject.getPosition(), "-1 LIFE", Color.RED);
+        } else if (destroyedObject instanceof NPCShip npcShip && npcShip.getTeam() == 0) {
+            showMessage(destroyedObject.getPosition(), "+" + Constants.UFO_SCORE + " SCORE", Color.WHITE);
+        }    
     }
-    
+
     public void update(float deltaTime) {
         activeMessages.removeIf(Message::isDead);
     }
 
     public void draw(Graphics2D g) {
-        for (Message msg : activeMessages) msg.draw(g);
+        for (Message msg : activeMessages) {
+            msg.draw(g);
+        }
         activeMessages.removeIf(Message::isDead);
     }
 }

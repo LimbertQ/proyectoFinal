@@ -10,6 +10,7 @@ import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PlayerShip;
+import thecelestials.model.gameObjects.Ship;
 import thecelestials.model.math.Constants;
 
 /**
@@ -61,6 +62,8 @@ public class HUDManager implements GameObjectDestroyedListener{
     public void onGameObjectDestroyed(MovingObject destroyedObject) {
         if(destroyedObject instanceof Meteor){
             score += Constants.METEOR_SCORE;
+        }else if(destroyedObject instanceof Ship ship && ship.getTeam()==0){
+            score += Constants.UFO_SCORE;
         }
     }
 }
