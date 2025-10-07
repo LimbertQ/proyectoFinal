@@ -92,6 +92,7 @@ public class PlayerShip extends Ship {
 
     @Override
     public void destroy(int da) {
+        
         healt -= da;
         if (healt < 1) {
             lives--;
@@ -119,21 +120,19 @@ public class PlayerShip extends Ship {
         if (isMovementLocked()) {
             return;
         }
-        fireRate += dt;
+        updateValuesShip(dt);
         handleInput();
 
         if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
-            fireRate = 0;
             Vector2D center = getCenter();
 
-            Vector2D muzzle = center.add(heading.scale(width));
-
-            shooti(muzzle, heading);
-
+            //Vector2D left = new Vector2D(-heading.getY(),heading.getX());
+            //Vector2D leftWingPosition = center.copy().add(left.scale(width*0.3));
+            shooti(center, heading);
         }
         if (Keyboard.SPECIAL) {
             Vector2D muzzle = getCenter().add(heading.scale(width));
-            specialTechnique(muzzle, heading);
+            specialTechnique(muzzle, heading, dt);
         }
         velocity = velocity.add(acceleration).limit(maxVel);
         heading = heading.setDirection(angle - Math.PI / 2);
@@ -155,11 +154,11 @@ public class PlayerShip extends Ship {
 
     @Override
     public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
         if (visible == false) {
             return;
         }
-
+        Graphics2D g2d = (Graphics2D) g;
+        
         drawSpeed(g2d);
 
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());

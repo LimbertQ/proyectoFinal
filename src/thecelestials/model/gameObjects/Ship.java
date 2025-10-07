@@ -21,46 +21,50 @@ import thecelestials.model.math.Vector2D;
 public abstract class Ship extends MovingObject {
 
     private final GameObjectCreator creator;
-    //private final BufferedImage effect;
-    private long special = 2990;
     protected final EntityStats bullet;
     private final ShipStats shipStats;
     protected boolean accelerating = false;
+    private long special = 0;
     protected long fireRate = 0;
     private final int team;
 
     public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team) {
         super(position, shipStats, velocity, maxVel);
-        //this.effect = effect;
         this.bullet = shipStats.getEntityStats();
         this.creator = creator;
         this.team = team;
         this.shipStats = shipStats;
     }
 
+    protected void updateValuesShip(float dt) {
+        fireRate += dt;
+        special += dt;
+    }
+
     //LASER FUERTE
     //CLONAR
     //CLONAR VARIOS
-    protected void specialTechnique(Vector2D position, Vector2D direction) {
-        special += 500;
+    protected void specialTechnique(Vector2D position, Vector2D direction, float dt) {
         if (special > Constants.UFO_CLONE_RATE) {
             special = 0;
-            if (shipStats.getShipClass().equals("caza")) {
-                shootLaserBig(position, direction);
-                
-            } else if (shipStats.getShipClass().equals("ufo")) {
-                creator.cloneShip(position, team);
-            } else {
-                creator.cloneShip(position, team);
-                creator.cloneShip(position, team);
-                creator.cloneShip(position, team);
+            switch (shipStats.getShipClass()) {
+                case "caza" ->
+                    shootLaserBig(position, direction);
+                case "ufo" ->
+                    creator.cloneShip(position, team);
+                default -> {
+                    healt += 50;
+                    shootLaserBig(position, direction);
+                    creator.cloneShip(getPosition(), team);
+                    creator.cloneShip(getPosition(), team);
+                }
             }
         }
     }
 
     private void shootLaserBig(Vector2D position, Vector2D direction) {
         Laser laser = new Laser(
-                position,
+                position.add(direction.scale(width)),
                 Assets.powerBullet,
                 direction,
                 Constants.LASER_VEL,
@@ -68,17 +72,19 @@ public abstract class Ship extends MovingObject {
         creator.createGameObject(laser);
     }
 
-    protected void shooti(Vector2D position, Vector2D direction) {
-        if(special == 0){
+    protected void shooti(Vector2D positione, Vector2D direction) {
+        if (special == 0) {
             return;
         }
+        fireRate = 0;
         Laser laser = new Laser(
-                getCenter().add(direction.scale(width)),
+                positione.add(direction.scale(width)),
                 bullet,
                 direction,
                 Constants.LASER_VEL,
                 angle);
         creator.createGameObject(laser);
+
     }
 
     public int getTeam() {

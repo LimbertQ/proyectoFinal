@@ -47,7 +47,7 @@ public class Constants {
 
     public static final int UFO_MAX_VEL = 3;
     
-    public static final long UFO_CLONE_RATE = 3000;
+    public static final long UFO_CLONE_RATE = 7000;
 
     public static long UFO_FIRE_RATE = 1000;
 

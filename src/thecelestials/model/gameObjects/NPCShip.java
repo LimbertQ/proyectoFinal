@@ -51,20 +51,10 @@ public class NPCShip extends Ship {
     }
 
     private void shoot(Vector2D direction) {
-        //new Laser(muzzle, bullet, heading, Constants.LASER_VEL, angle)
-        Vector2D muzzle = getCenter().add(direction.scale(width));
-        
-        specialTechnique(muzzle, direction);
-        shooti(muzzle, direction);
-        /*Laser laser = new Laser(
-                getCenter().add(direction.scale(width)),
-                bullet,
-                direction,
-                Constants.LASER_VEL,
-                angle);
-        if (creator != null) {
-            creator.createGameObject(laser);
-        }*/
+        if (fireRate > Constants.UFO_FIRE_RATE) {
+            specialTechnique(getCenter(), direction, 1000f);
+            shooti(getCenter(), direction);
+        }
     }
 
     private void flankAttack(Vector2D targetPos, Vector2D center, double distance, float dt, int leftRight) {
@@ -85,20 +75,16 @@ public class NPCShip extends Ship {
             Vector2D objetivo = targetDirection(targetPos, center);
             toTarget(objetivo);
             accelerating = true;
-            if (fireRate > Constants.UFO_FIRE_RATE) {
-                shoot(objetivo);
-                fireRate = 0;
-            }
+            
+            shoot(objetivo);
         }
     }
 
     public void frontalAttack(Vector2D targetPos, Vector2D center, double distancia, float dt) {
         Vector2D targetDirection = targetDirection(targetPos, center);
         toTarget(targetDirection);
-        if (fireRate > Constants.UFO_FIRE_RATE) {
-            shoot(targetDirection);
-            fireRate = 0;
-        }
+        
+        shoot(targetDirection);
         if (distancia > 100) {
             velocity = targetDirection.scale(maxVel * 0.05f);
             position = position.add(velocity.scale(dt));
@@ -109,10 +95,8 @@ public class NPCShip extends Ship {
     private void defensive(Vector2D targetPos, Vector2D center, float dt) {
         Vector2D targetDirection = targetDirection(targetPos, center);
         toTarget(targetDirection);
-        if (fireRate > Constants.UFO_FIRE_RATE) {
-            shoot(targetDirection);
-            fireRate = 0;
-        }
+        shoot(targetDirection);
+        
         double distancia = centerBattle.subtract(center).getMagnitude();
         targetDirection = targetDirection(centerBattle, center);
         if (distancia < 300) {
@@ -141,7 +125,7 @@ public class NPCShip extends Ship {
     @Override
     public void update(float dt) {
         accelerating = false;
-        
+
         if (isMovementLocked()) {
             return;
         }
@@ -162,12 +146,11 @@ public class NPCShip extends Ship {
                 }
             }
         } else {
-            
-
-            fireRate += dt;
+            updateValuesShip(dt);
             if (contMoves > 5000) {
                 contMoves = 0;
                 currentPattern = (int) (Math.random() * 4);
+                //searchTarget();
                 //currentPattern = 2;
             }
             Vector2D enemiCenter = target.getCenter();

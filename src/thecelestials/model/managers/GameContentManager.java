@@ -93,7 +93,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     private void spawnShip(int limit, int x, int y, int team) {
         for (int i = 0; i < limit; i++) {
-            Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+            Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size()-1)), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
             createGameObject(ship);
         }
     }
@@ -102,10 +102,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         if(!hasActiveMeteors()){
             startWave();
         }
-        
+        /*
         if (allies.isEmpty()) {
             spawnShip(1, 0, Constants.HEIGHT - 100, 1);
-        }
+        }*/
 
         if (enemys.isEmpty()) {
             spawnShip(2, 0, 100, 0);
@@ -223,7 +223,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     @Override
     public void cloneShip(Vector2D position, int team) {
-        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size()-1)), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
         createGameObject(ship);
     }
 }
