@@ -96,15 +96,15 @@ public abstract class Ship extends MovingObject {
 
     protected void drawSpeed(Graphics2D g2d) {
         if (accelerating) {
-            AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() + width / 2 + 5,
+            AffineTransform right = AffineTransform.getTranslateInstance(position.getX() + width * 0.6,
                     position.getY() + height / 2 + 10);
-            
-            AffineTransform at2 = AffineTransform.getTranslateInstance(position.getX() + 5,
+
+            AffineTransform left = AffineTransform.getTranslateInstance(position.getX() + width - (width * 0.6 + 16),
                     position.getY() + height / 2 + 10);
-            at1.rotate(angle, -5, -10);
-            at2.rotate(angle, width / 2 - 5, -10);
-            g2d.drawImage(Assets.effect, at1, null);
-            g2d.drawImage(Assets.effect, at2, null);
+            right.rotate(angle, width * -0.1, -10);
+            left.rotate(angle, width * 0.5 - (width - (width * 0.6 + 16)), -10);
+            g2d.drawImage(Assets.effect, right, null);
+            g2d.drawImage(Assets.effect, left, null); 
         }
     }
 }
