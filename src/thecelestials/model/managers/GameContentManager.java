@@ -52,7 +52,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final Map<String, BufferedImage> images;
 
     public GameContentManager() {
-        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.shipsAvaible.getFirst(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
+        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.shipsAvaible.getLast(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
         GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         gravitationalsFields.add(vortex);
@@ -102,10 +102,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         if(!hasActiveMeteors()){
             startWave();
         }
-        /*
+        
         if (allies.isEmpty()) {
             spawnShip(1, 0, Constants.HEIGHT - 100, 1);
-        }*/
+        }
 
         if (enemys.isEmpty()) {
             spawnShip(2, 0, 100, 0);

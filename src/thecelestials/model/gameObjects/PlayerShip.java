@@ -29,7 +29,7 @@ public class PlayerShip extends Ship {
     private long spawnTime, flickerTime = 0;
 
     public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, BufferedImage effect) {
-        super(position, shipStats, velocity, maxVel, creator, effect, 1);
+        super(position, shipStats, velocity, maxVel, creator, effect, 1, Constants.FIRERATE);
         x = position.getX();
         y = position.getY();
         heading = new Vector2D(0, 1);
@@ -123,7 +123,7 @@ public class PlayerShip extends Ship {
         updateValuesShip(dt);
         handleInput();
 
-        if (Keyboard.SHOOT && fireRate > Constants.FIRERATE) {
+        if (Keyboard.SHOOT) {
             Vector2D center = getCenter();
 
             //Vector2D left = new Vector2D(-heading.getY(),heading.getX());

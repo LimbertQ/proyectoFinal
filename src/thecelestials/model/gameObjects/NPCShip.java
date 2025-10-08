@@ -28,7 +28,7 @@ public class NPCShip extends Ship {
     private final Vector2D goal;
 
     public NPCShip(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team, TargetProvider provider) {
-        super(position, shipStats, velocity, maxVel, creator, effect, team);
+        super(position, shipStats, velocity, maxVel, creator, effect, team, Constants.UFO_FIRE_RATE);
         goal = new Vector2D();
         centerBattle = new Vector2D(Constants.WIDTH / 2.0, Constants.HEIGHT / 2.0);
         this.provider = provider;
@@ -51,10 +51,9 @@ public class NPCShip extends Ship {
     }
 
     private void shoot(Vector2D direction) {
-        if (fireRate > Constants.UFO_FIRE_RATE) {
-            specialTechnique(getCenter(), direction, 1000f);
-            shooti(getCenter(), direction);
-        }
+        specialTechnique(getCenter(), direction, 1000f);
+        shooti(getCenter(), direction);
+
     }
 
     private void flankAttack(Vector2D targetPos, Vector2D center, double distance, float dt, int leftRight) {
@@ -75,7 +74,7 @@ public class NPCShip extends Ship {
             Vector2D objetivo = targetDirection(targetPos, center);
             toTarget(objetivo);
             accelerating = true;
-            
+
             shoot(objetivo);
         }
     }
@@ -83,7 +82,7 @@ public class NPCShip extends Ship {
     public void frontalAttack(Vector2D targetPos, Vector2D center, double distancia, float dt) {
         Vector2D targetDirection = targetDirection(targetPos, center);
         toTarget(targetDirection);
-        
+
         shoot(targetDirection);
         if (distancia > 100) {
             velocity = targetDirection.scale(maxVel * 0.05f);
@@ -96,7 +95,7 @@ public class NPCShip extends Ship {
         Vector2D targetDirection = targetDirection(targetPos, center);
         toTarget(targetDirection);
         shoot(targetDirection);
-        
+
         double distancia = centerBattle.subtract(center).getMagnitude();
         targetDirection = targetDirection(centerBattle, center);
         if (distancia < 300) {

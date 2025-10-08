@@ -25,15 +25,17 @@ public abstract class Ship extends MovingObject {
     private final ShipStats shipStats;
     protected boolean accelerating = false;
     private long special = 0;
-    protected long fireRate = 0;
+    private long fireRate = 0;
+    private final long fireRateConstants;
     private final int team;
 
-    public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team) {
+    public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team, long shipFireRate) {
         super(position, shipStats, velocity, maxVel);
         this.bullet = shipStats.getEntityStats();
         this.creator = creator;
         this.team = team;
         this.shipStats = shipStats;
+        this.fireRateConstants = shipFireRate;
     }
 
     protected void updateValuesShip(float dt) {
@@ -76,15 +78,16 @@ public abstract class Ship extends MovingObject {
         if (special == 0) {
             return;
         }
-        fireRate = 0;
-        Laser laser = new Laser(
-                positione.add(direction.scale(width)),
-                bullet,
-                direction,
-                Constants.LASER_VEL,
-                angle);
-        creator.createGameObject(laser);
-
+        if (fireRate > fireRateConstants) {
+            fireRate = 0;
+            Laser laser = new Laser(
+                    positione.add(direction.scale(width)),
+                    bullet,
+                    direction,
+                    Constants.LASER_VEL,
+                    angle);
+            creator.createGameObject(laser);
+        }
     }
 
     public int getTeam() {
@@ -95,7 +98,7 @@ public abstract class Ship extends MovingObject {
         if (accelerating) {
             AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() + width / 2 + 5,
                     position.getY() + height / 2 + 10);
-
+            
             AffineTransform at2 = AffineTransform.getTranslateInstance(position.getX() + 5,
                     position.getY() + height / 2 + 10);
             at1.rotate(angle, -5, -10);
