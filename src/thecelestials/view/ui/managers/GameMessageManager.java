@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.NPCShip;
@@ -25,9 +26,10 @@ import thecelestials.view.ui.animations.Message;
 public class GameMessageManager implements GameObjectDestroyedListener {
 
     private final List<Message> activeMessages;
-
-    public GameMessageManager() {
+    private final Vector2D left;
+    public GameMessageManager(Vector2D left) {
         activeMessages = new ArrayList<>();
+        this.left = left;
     }
     
     public void clear(){
@@ -36,6 +38,14 @@ public class GameMessageManager implements GameObjectDestroyedListener {
 
     public void showMessage(Vector2D pos, String text, Color color) {
         activeMessages.add(new Message(pos, false, text, color, false, Assets.fontMed, 1));
+    }
+    
+    private void showDescription(String text, Color color) {
+        activeMessages.add(new Message(left, false, text, color, false, Assets.fontMed, 0));
+    }
+    
+    public void onGameNotify(){
+        showDescription(MissionStats.missionDescription, Color.GREEN);
     }
 
     @Override

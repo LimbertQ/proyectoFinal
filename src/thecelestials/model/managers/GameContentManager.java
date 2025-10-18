@@ -62,7 +62,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameSoundManager = new GameSoundManager();
         gameEventManager.addGameObjectDestroyedListener(gameSoundManager);
         gameCollisionManager = new CollisionManager();
-        gameMessageManager = new GameMessageManager();
+        gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4));
         gameEventManager.addGameObjectDestroyedListener(gameMessageManager);
         gameEffectManager = new GameEffectManager();
         gameEventManager.addGameObjectDestroyedListener(gameEffectManager);
@@ -97,6 +97,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         movingObjects.add(player);
         
         gameHudManager.playGame(player);
+        gameMessageManager.onGameNotify();
         
         GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));

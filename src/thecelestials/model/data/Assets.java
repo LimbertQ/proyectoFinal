@@ -121,7 +121,7 @@ public class Assets {
     
     public static void loadGame(String missionID){
         Mission mission = db.readMissionsByID(missionID);
-        MissionStats.setMissionStats(missionID, mission.getName());
+        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription());
     }
     
     public static List<AssetDefinition> loadCivilizations(){
