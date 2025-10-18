@@ -17,22 +17,32 @@ import thecelestials.model.math.Constants;
  *
  * @author pc
  */
-public class HUDManager implements GameObjectDestroyedListener{
+public class HUDManager implements GameObjectDestroyedListener {
+
     private int score = 0;
-    private final PlayerShip player;
+    private PlayerShip player;
     private final BufferedImage[] numbers;
-    public HUDManager(PlayerShip p){
-        this.player = p;
+
+    public HUDManager() {
         numbers = new BufferedImage[11];
         loadNumbersImages();
     }
-    
-    private void loadNumbersImages(){
-        for(int i=0; i<numbers.length; i++){
-            numbers[i] = Assets.images.get("num"+i);
+
+    public void clear() {
+        player = null;
+        score = 0;
+    }
+
+    public void playGame(PlayerShip p) {
+        player = p;
+    }
+
+    private void loadNumbersImages() {
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = Assets.images.get("num" + i);
         }
     }
-    
+
     private void drawNumbers(int x, int y, int number, Graphics g) {
         String str = String.valueOf(number);
         for (char c : str.toCharArray()) {
@@ -40,12 +50,14 @@ public class HUDManager implements GameObjectDestroyedListener{
             x += 20;
         }
     }
-    
-    public void draw(Graphics g){
-        drawScore(g);
-        drawLives(g);
+
+    public void draw(Graphics g) {
+        if (player != null) {
+            drawScore(g);
+            drawLives(g);
+        }
     }
-    
+
     private void drawScore(Graphics g) {
         drawNumbers(1200, 25, score, g);
     }
@@ -60,9 +72,9 @@ public class HUDManager implements GameObjectDestroyedListener{
 
     @Override
     public void onGameObjectDestroyed(MovingObject destroyedObject) {
-        if(destroyedObject instanceof Meteor){
+        if (destroyedObject instanceof Meteor) {
             score += Constants.METEOR_SCORE;
-        }else if(destroyedObject instanceof Ship ship && ship.getTeam()==0){
+        } else if (destroyedObject instanceof Ship ship && ship.getTeam() == 0) {
             score += Constants.UFO_SCORE;
         }
     }

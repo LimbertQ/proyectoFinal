@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -203,6 +204,38 @@ public class DataBaseManager {
             }
         } catch (SQLException e) {
             System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public Map<String, Campaign> readCampaigns(){
+        Map<String, Campaign> list = new LinkedHashMap<>();
+        String sql = "SELECT * FROM Campaign c;";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Campaign campaign = new Campaign(rs.getString("campaignID"), rs.getString("campaignName"), rs.getString("campaignDescription"), rs.getString("videoPath"), rs.getString("mapPath"), rs.getInt("campaignState"));
+                list.put(campaign.getID(), campaign);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer campanias disponibles: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public Map<String, Mission> readMissionsByCampaign(String campaignID){
+        Map<String, Mission> list = new LinkedHashMap<>();
+        String sql = "SELECT * FROM Mission m WHERE m.campaignID = '"+campaignID+"';";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Mission mission = new Mission(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionMapPath"), rs.getString("missionDescription"), rs.getString("voiceStartPath"), rs.getString("voiceEndPath"), rs.getString("challenge"), rs.getInt("assaults"), rs.getInt("reinforcement"), rs.getInt("missionState"), rs.getString("campaignID"));
+                list.put(mission.getID(), mission);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer las misiones por campanias: " + e.getMessage());
         }
         return list;
     }

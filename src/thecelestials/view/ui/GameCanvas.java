@@ -22,6 +22,8 @@ public class GameCanvas extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
 
+    private volatile boolean isPaused = true;
+
     private static final int FPS = 60;
     private static final double TARGET_TIME = 1_000_000_000.0 / FPS;
     private int averageFps = FPS;
@@ -31,7 +33,7 @@ public class GameCanvas extends Canvas implements Runnable {
     private final Keyboard keyboard;
 
     private final GameContentManager gcm;
-    
+
     public GameCanvas() {
         setFocusable(true);
         keyboard = new Keyboard();
@@ -55,7 +57,7 @@ public class GameCanvas extends Canvas implements Runnable {
 
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
-        
+
         gcm.draw(g);
 
         g.setColor(Color.WHITE);
@@ -69,6 +71,19 @@ public class GameCanvas extends Canvas implements Runnable {
         thread = new Thread(this);
         thread.start();
         running = true;
+    }
+    
+    //al empezar un nivel
+    public void playGame(){
+        lastTime = System.nanoTime();
+        gcm.clear();
+        gcm.playGame();
+        isPaused = false;
+    }
+    
+    public void resume(){
+        isPaused = false;
+        lastTime = System.nanoTime();
     }
 
     private void stop() {
@@ -88,23 +103,25 @@ public class GameCanvas extends Canvas implements Runnable {
         long timeAccumulator = 0;
         double delta = 0;
         while (running) {
-            now = System.nanoTime();
-            delta += (now - lastTime) / TARGET_TIME;
-            timeAccumulator += (now - lastTime);
-            lastTime = now;
+            if (isPaused == false) {
+                now = System.nanoTime();
+                delta += (now - lastTime) / TARGET_TIME;
+                timeAccumulator += (now - lastTime);
+                lastTime = now;
 
-            if (delta >= 1) {
+                if (delta >= 1) {
 
-                update((float) (delta * TARGET_TIME * 0.000001f));
-                draw();
-                delta--;
-                frames++;
-            }
+                    update((float) (delta * TARGET_TIME * 0.000001f));
+                    draw();
+                    delta--;
+                    frames++;
+                }
 
-            if (timeAccumulator >= 1_000_000_000) {
-                averageFps = frames;
-                frames = 0;
-                timeAccumulator = 0;
+                if (timeAccumulator >= 1_000_000_000) {
+                    averageFps = frames;
+                    frames = 0;
+                    timeAccumulator = 0;
+                }
             }
         }
         stop();

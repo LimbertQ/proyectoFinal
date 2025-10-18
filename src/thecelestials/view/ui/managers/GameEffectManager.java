@@ -31,6 +31,11 @@ public class GameEffectManager implements GameObjectDestroyedListener {
         loadExplosionFrames();
     }
     
+    public void clear(){
+        animations.clear();
+        animToAdd.clear();
+    }
+    
     private void loadExplosionFrames(){
         for(int i=0; i<explosions.length; i++){
             explosions[i] = Assets.images.get("exp"+i);

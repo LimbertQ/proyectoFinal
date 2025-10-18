@@ -21,7 +21,8 @@ public class Assets {
 
     public static int count = 0;
     public static int MAX_COUNT = 100;
-    public static BufferedImage player, effect;
+    public static int currentShip = 0;
+    public static BufferedImage player, effect, fondo;
     //public static BufferedImage[] numbers = new BufferedImage[11];
     public static BufferedImage[] meteors = new BufferedImage[10];
     //public static BufferedImage[] explosions = new BufferedImage[9];
@@ -29,6 +30,7 @@ public class Assets {
     public static Map<String, BufferedImage> stars = new HashMap<>();
     public static Map<String, Clip> audioCache = new HashMap<>();
     public static List<ShipStats> shipsAvaible = new ArrayList<>();
+    public static Map<String, Campaign> campaigns = null;
     public static EntityStats powerBullet;
     public static BufferedImage vortex, pulsar;
 
@@ -46,11 +48,11 @@ public class Assets {
             readStarsImages();
             powerBullet = db.readLaserByID("LSR06");
             setImageLaser(powerBullet);
-            
-            db.closeConnection();
-
+            campaigns = loadCampaigns();
+            //db.closeConnection();
         }
         player = loadImage("/images/ships/fighter01.png");
+        fondo = loadImage("/images/maps/exoplaneta.jpeg");
         effect = loadImage("/images/effects/fire08.png");
         images.put("effect", loadImage("/images/effects/fire08.png"));
         fontBig = loadFont("/fonts/futureFont.ttf", 42);
@@ -69,6 +71,14 @@ public class Assets {
         }*/
     }
     
+    public static void closeDbConnection() {
+        if (db != null) {
+            db.closeConnection();
+            db = null; // Opcional: Establecer a null para liberar la referencia
+            System.out.println("Conexión a la base de datos cerrada.");
+        }
+    }
+    
     private static void setImageLaser(EntityStats bullet){
         //images.put(bullet.getName(), loadImage(bullet.getProfileImagePath()));
         images.put(bullet.getSpriteKey(), loadImage(bullet.getSpritePath()));
@@ -83,6 +93,28 @@ public class Assets {
             setImageLaser(bullet);
             System.out.println("ship dispo");
         }
+    }
+    
+    public static ShipStats getCurrentShip(){
+        return shipsAvaible.get(currentShip);
+    }
+    
+    private static Map<String, Campaign> loadCampaigns(){
+        Map<String, Campaign> list = db.readCampaigns();
+        for(Campaign campaign : list.values()){
+            System.out.println(campaign.getProfileImagePath());
+            images.put(campaign.getName(), loadImage(campaign.getProfileImagePath()));
+        }
+        return list;
+    }
+    
+    public static Map<String, Mission> loadMissionsByCampaign(String campaignID){
+        Map<String, Mission> missions = db.readMissionsByCampaign(campaignID);
+        return missions;
+    }
+    
+    private static void loadCurrentMission(){
+        
     }
     
     public static List<AssetDefinition> loadCivilizations(){

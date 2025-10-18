@@ -22,6 +22,13 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
     public GameSoundManager() {
         audioCache = Assets.audioCache;
     }
+    
+    public void clear(){
+        for(Clip clip : audioCache.values()){
+            clip.stop();
+            clip.setFramePosition(0);
+        }
+    }
 
     private void playSound(String soundKey) {
         Clip clip = audioCache.get(soundKey);

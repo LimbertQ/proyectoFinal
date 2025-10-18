@@ -38,7 +38,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final List<MovingObject> listToAdd = new ArrayList<>();
     private final List<Ship> enemys = new ArrayList<>();
     private final List<Ship> allies = new ArrayList<>();
-    private final PlayerShip player;
+    private PlayerShip player;
     private final List<GravitationalField> gravitationalsFields = new ArrayList<>();
     //private final Vortex vortex;
     //private final Pulsar pulsar;
@@ -52,14 +52,9 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final Map<String, BufferedImage> images;
 
     public GameContentManager() {
-        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.shipsAvaible.getLast(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
-        GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
-        GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
-        gravitationalsFields.add(vortex);
-        gravitationalsFields.add(pulsar);
-
-        movingObjects.add(player);
-        gameHudManager = new HUDManager(player);
+        //player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
+        
+        gameHudManager = new HUDManager();
         gameEventManager = new GameEventManager();
         gameEventManager.addGameObjectDestroyedListener(gameHudManager);
         gameSoundManager = new GameSoundManager();
@@ -72,6 +67,37 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
         gameEventManager.addGameNotificationListener(gameSoundManager);
         images = Assets.images;
+    }
+    
+    public void clear(){
+        gameHudManager.clear();
+        //---------
+        gameEffectManager.clear();
+        //---------
+        gameMessageManager.clear();
+        //---------
+        gameSoundManager.clear();
+        
+        //---------
+        gravitationalsFields.clear();
+        movingObjects.clear();
+        listToAdd.clear();
+        enemys.clear();
+        allies.clear();
+        player = null;
+    }
+    
+    public void playGame(){
+        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
+        movingObjects.add(player);
+        
+        gameHudManager.playGame(player);
+        
+        GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+        GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+        gravitationalsFields.add(vortex);
+        gravitationalsFields.add(pulsar);
+
     }
 
     private void startWave() {

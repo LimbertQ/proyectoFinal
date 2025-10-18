@@ -29,6 +29,10 @@ public class GameMessageManager implements GameObjectDestroyedListener {
     public GameMessageManager() {
         activeMessages = new ArrayList<>();
     }
+    
+    public void clear(){
+        activeMessages.clear();
+    }
 
     public void showMessage(Vector2D pos, String text, Color color) {
         activeMessages.add(new Message(pos, false, text, color, false, Assets.fontMed, 1));
