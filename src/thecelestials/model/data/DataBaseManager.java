@@ -239,4 +239,19 @@ public class DataBaseManager {
         }
         return list;
     }
+    
+    public Mission readMissionsByID(String missionID){
+        String sql = "SELECT * FROM Mission m WHERE m.missionID = '"+missionID+"';";
+        Mission mission = null;
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                mission = new Mission(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionMapPath"), rs.getString("missionDescription"), rs.getString("voiceStartPath"), rs.getString("voiceEndPath"), rs.getString("challenge"), rs.getInt("assaults"), rs.getInt("reinforcement"), rs.getInt("missionState"), rs.getString("campaignID"));
+                //list.put(mission.getID(), mission);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer el juego: " + e.getMessage());
+        }
+        return mission;
+    }
 }

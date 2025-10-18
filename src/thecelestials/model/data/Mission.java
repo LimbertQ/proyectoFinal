@@ -21,7 +21,7 @@ public class Mission extends GameEntity{
     private final String campaignID;    
 
     public Mission(String missionID, String missionName, String missionMapPath, String missionDescription, String voiceStartPath, String voiceEndPath, String challenge, int assaults, int reinforcement, int missionState, String campaignID) {
-        super(missionID, missionName, missionMapPath, missionDescription, missionState);
+        super(missionID, missionName, missionDescription, missionMapPath, missionState);
         //this.missionID = missionID;
         //this.missionName = missionName;
         //this.missionMapPath = missionMapPath;

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import thecelestials.controller.logic.CollisionManager;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.GravitationalField;
 import thecelestials.model.gameObjects.Laser;
 import thecelestials.model.gameObjects.Meteor;
@@ -50,6 +51,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final GameEffectManager gameEffectManager;
     private final Random random = new Random();
     private final Map<String, BufferedImage> images;
+    private BufferedImage missionMap;
 
     public GameContentManager() {
         //player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
@@ -70,6 +72,8 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     }
     
     public void clear(){
+        missionMap = null;
+        
         gameHudManager.clear();
         //---------
         gameEffectManager.clear();
@@ -88,6 +92,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     }
     
     public void playGame(){
+        missionMap = Assets.missionMaps.get(MissionStats.missionName);
         player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
         movingObjects.add(player);
         
@@ -191,6 +196,9 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     }
 
     public void draw(Graphics g) {
+        
+        g.drawImage(missionMap, 0, 0, 1366, 768, null);
+        
         Graphics2D g2d = (Graphics2D) g;
         for (GravitationalField gf : gravitationalsFields) {
             gf.draw(g);

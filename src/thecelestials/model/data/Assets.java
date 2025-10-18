@@ -27,6 +27,7 @@ public class Assets {
     public static BufferedImage[] meteors = new BufferedImage[10];
     //public static BufferedImage[] explosions = new BufferedImage[9];
     public static Map<String, BufferedImage> images = new HashMap<>();
+    public static Map<String, BufferedImage> missionMaps = new HashMap<>();
     public static Map<String, BufferedImage> stars = new HashMap<>();
     public static Map<String, Clip> audioCache = new HashMap<>();
     public static List<ShipStats> shipsAvaible = new ArrayList<>();
@@ -102,19 +103,25 @@ public class Assets {
     private static Map<String, Campaign> loadCampaigns(){
         Map<String, Campaign> list = db.readCampaigns();
         for(Campaign campaign : list.values()){
-            System.out.println(campaign.getProfileImagePath());
+            //System.out.println(campaign.getProfileImagePath());
             images.put(campaign.getName(), loadImage(campaign.getProfileImagePath()));
         }
         return list;
     }
     
     public static Map<String, Mission> loadMissionsByCampaign(String campaignID){
+        missionMaps.clear();
         Map<String, Mission> missions = db.readMissionsByCampaign(campaignID);
+        for(Mission mission : missions.values()){
+            //System.out.println(mission.getProfileImagePath());
+            missionMaps.put(mission.getName(), loadImage(mission.getProfileImagePath()));
+        }
         return missions;
     }
     
-    private static void loadCurrentMission(){
-        
+    public static void loadGame(String missionID){
+        Mission mission = db.readMissionsByID(missionID);
+        MissionStats.setMissionStats(missionID, mission.getName());
     }
     
     public static List<AssetDefinition> loadCivilizations(){

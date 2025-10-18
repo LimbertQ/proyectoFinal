@@ -67,6 +67,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         if(cardName.equals(missionsMenuCard)){
             missionsPanel.updateContentForMenu(menuID);
         }else if(cardName.equals(gameCanvasCard)){
+            Assets.loadGame(menuID);
             gameCanvas.playGame();
         }
         cardLayout.show(mainPanel, cardName);
