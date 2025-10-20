@@ -17,15 +17,24 @@ public class MissionStats {
     public static ShipStats playerShip;
     public static List<ShipStats> allies;
     public static List<ShipStats> axis;
+    public static boolean alliesExist;
+    public static byte challenge;
+    public static byte assaults;
+    public static byte reinforcement;
     public static void setPlayerShip(ShipStats player){
         playerShip = player;
     }
     
-    public static void setMissionStats(String ID, String name, String description, List<ShipStats> AShip, List<ShipStats> BShip){
+    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass){
         missionID = ID;
         missionName = name;
         missionDescription = description;
-        allies = AShip;
-        axis = BShip;
+        allies = shipsArray[0];
+        axis = shipsArray[1];
+        alliesExist = !allies.isEmpty();
+        challenge = challeng;
+        assaults = ass;
+        if(challenge == 1)
+            assaults *= 3;
     }
 }

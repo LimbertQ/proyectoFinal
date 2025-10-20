@@ -34,7 +34,7 @@ public class PlayerShip extends Ship {
         y = position.getY();
         heading = new Vector2D(0, 1);
         acceleration = new Vector2D();
-        lives = 10;
+        lives = 3;
         copyHealt = shipStats.getHealth();
     }
 

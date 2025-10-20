@@ -14,6 +14,7 @@ import java.util.Random;
 import thecelestials.controller.logic.CollisionManager;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
+import thecelestials.model.data.ShipStats;
 import thecelestials.model.gameObjects.GravitationalField;
 import thecelestials.model.gameObjects.Laser;
 import thecelestials.model.gameObjects.Meteor;
@@ -41,8 +42,6 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final List<Ship> allies = new ArrayList<>();
     private PlayerShip player;
     private final List<GravitationalField> gravitationalsFields = new ArrayList<>();
-    //private final Vortex vortex;
-    //private final Pulsar pulsar;
     private final HUDManager gameHudManager;
     private final GameEventManager gameEventManager;
     private final GameSoundManager gameSoundManager;
@@ -51,18 +50,20 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final GameEffectManager gameEffectManager;
     private final Random random = new Random();
     private final Map<String, BufferedImage> images;
+
+    private long assault = 0;
+    private byte type;
+    private byte waves = 0;
     private BufferedImage missionMap;
 
     public GameContentManager() {
-        //player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
-        
         gameHudManager = new HUDManager();
         gameEventManager = new GameEventManager();
         gameEventManager.addGameObjectDestroyedListener(gameHudManager);
         gameSoundManager = new GameSoundManager();
         gameEventManager.addGameObjectDestroyedListener(gameSoundManager);
         gameCollisionManager = new CollisionManager();
-        gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4));
+        gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4), new Vector2D(Constants.WIDTH / 2, Constants.HEIGHT / 2));
         gameEventManager.addGameObjectDestroyedListener(gameMessageManager);
         gameEffectManager = new GameEffectManager();
         gameEventManager.addGameObjectDestroyedListener(gameEffectManager);
@@ -70,10 +71,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameEventManager.addGameNotificationListener(gameSoundManager);
         images = Assets.images;
     }
-    
-    public void clear(){
+
+    public void clear() {
         missionMap = null;
-        
+
         gameHudManager.clear();
         //---------
         gameEffectManager.clear();
@@ -81,7 +82,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameMessageManager.clear();
         //---------
         gameSoundManager.clear();
-        
+
         //---------
         gravitationalsFields.clear();
         movingObjects.clear();
@@ -89,23 +90,36 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         enemys.clear();
         allies.clear();
         player = null;
+        assault = 0;
+        waves = 0;
+        type = -1;
     }
-    
-    public void playGame(){
+
+    public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
         player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
         movingObjects.add(player);
-        
+
         gameHudManager.playGame(player);
-        gameMessageManager.onGameNotify();
-        
+        gameMessageManager.onGameNotify("DESCRIPTION");
+
         GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         gravitationalsFields.add(vortex);
         gravitationalsFields.add(pulsar);
 
+        assault = 15;
+        type = -1;
     }
 
+    public void resume(){
+        gameSoundManager.resume();
+    }
+    
+    public void pause(){
+        gameSoundManager.pause();
+    }
+    
     private void startWave() {
 
         for (int i = 0; i < 1; i++) {
@@ -123,25 +137,80 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         }
     }
 
-    private void spawnShip(int limit, int x, int y, int team) {
+    private void spawnShip(int limit, int x, int y, int team, List<ShipStats> shipsList) {
         for (int i = 0; i < limit; i++) {
-            Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size()-1)), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+            Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
             createGameObject(ship);
         }
     }
 
-    private void spawnObjects() {
-        if(!hasActiveMeteors()){
-            startWave();
+    private void spawnObjects(float dt) {
+        if (waves <= MissionStats.assaults) {
+
+            if (!hasActiveMeteors()) {
+                startWave();
+            }
+
+            if (MissionStats.alliesExist && allies.isEmpty()) {
+                spawnShip(1, 0, Constants.HEIGHT - 100, 1, MissionStats.allies);
+            }
+            assault += dt;
+            if (assault > 20000) {
+                assault = 0;
+                waves++;
+                int nroRandom;
+                if (MissionStats.challenge == 1 && waves % 3 == 0) {
+                    nroRandom = random.nextInt(3) + 2;
+                    gameMessageManager.onGameNotify("WAVE");
+                    gameSoundManager.onGameNotify("WAVE");
+                } else {
+                    nroRandom = random.nextInt(4) + 5;
+                    gameMessageManager.onGameNotify("ASSAULT");
+                    gameSoundManager.onGameNotify("ASSAULT");
+                }
+                spawnShip(nroRandom, 0, 100, 0, MissionStats.axis);
+            }
+        }else if(type < 0){
+            type = 0;
         }
-        
-        if (allies.isEmpty()) {
-            spawnShip(1, 0, Constants.HEIGHT - 100, 1);
+    }
+    
+    public byte gameOver(){
+        return type;
+    }
+    
+    private void cinematic(float dt) {
+        //type = 3 muere, type = 4 gana 
+        if (type == 0) {
+            if (MissionStats.reinforcement == 1) {
+                //reforces
+                if (assault == 0) {
+                    //axis and reforces
+                } else if (assault > 3000) {
+                    //destroyAxis
+                    type = 4;
+                    assault = 0;
+                }
+            } else {
+                //mensaje victoria
+                type = 4;
+                assault = 0;
+            }
+        } else if (assault == 0) {
+            if (type == 3) {
+                //mensaje gameOver ------ assault = 0
+                gameMessageManager.onGameNotify("GAME OVER");
+            } else if (type == 4) {
+                //mensaje victoria
+                gameMessageManager.onGameNotify("VICTORY");
+            }
         }
 
-        if (enemys.isEmpty()) {
-            spawnShip(2, 0, 100, 0);
+        if (assault > 5000) {
+            //termina el juego
+            type -= 2;
         }
+        assault += dt;
     }
 
     private boolean hasActiveMeteors() {
@@ -163,7 +232,11 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             gf.update(dt, movingObjects);
         }
         gameMessageManager.update(dt);
-        spawnObjects();
+        if(type < 0)
+            spawnObjects(dt);
+        if (type > -1) {
+            cinematic(dt);
+        }
 
         if (!listToAdd.isEmpty()) {
             movingObjects.addAll(listToAdd);
@@ -184,6 +257,12 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             //player.resetValues();
             //System.out.println("morir");
             objectsToNotify.add(player);
+        } else if (player.isDead()) {
+            //mensaje -> GAME OVER
+            if (type > 3 || type < 1) {
+                type = 3;
+                assault = 0;
+            }
         }
         for (MovingObject obj : objectsToNotify) {
             gameEventManager.notifyGameObjectDestroyed(obj);
@@ -197,9 +276,9 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     }
 
     public void draw(Graphics g) {
-        
+
         g.drawImage(missionMap, 0, 0, 1366, 768, null);
-        
+
         Graphics2D g2d = (Graphics2D) g;
         for (GravitationalField gf : gravitationalsFields) {
             gf.draw(g);
@@ -258,7 +337,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     @Override
     public void cloneShip(Vector2D position, int team) {
-        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size()-1)), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size() - 1)), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
         createGameObject(ship);
     }
 }

@@ -65,7 +65,7 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getInt("shipState"), rs.getString("laserID"), rs.getString("civilizationID"));
+                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getInt("shipState"), rs.getString("laserID"), rs.getString("civilizationID"), 1);
                 ship.setEntityState(readLaserByID(ship.getEntityStatsID()));
                 navesData.add(ship);
             }
@@ -253,5 +253,34 @@ public class DataBaseManager {
             System.err.println("Error al leer el juego: " + e.getMessage());
         }
         return mission;
+    }
+    
+    public List<ShipStats>[] readShipsByMission(String missionID){
+        String sql = "SELECT s.shipID, s.shipClass, s.shipName, s.profileShipPath, s.shipAssetPath, s.shipHealth, s.shipDamage, s.shipDescription, s.shipState, s.laserID, s.civilizationID, mhs.team FROM Ship s INNER JOIN MissionHasShip mhs ON s.shipID = mhs.shipID WHERE mhs.missionID = '"+missionID+"';";
+        List<ShipStats> allies = new ArrayList<>();
+        List<ShipStats> axis = new ArrayList<>();
+        List<ShipStats> cruisers = new ArrayList<>();
+        List<ShipStats>[] shipList = new List[3];
+        shipList[0] = allies;
+        shipList[1] = axis;
+        shipList[2] = cruisers;
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getInt("shipState"), rs.getString("laserID"), rs.getString("civilizationID"), rs.getInt("team"));
+                
+                ship.setEntityState(readLaserByID(ship.getEntityStatsID()));
+                if(ship.getShipClass().equals("crucero")){
+                    cruisers.add(ship);
+                }else if(ship.getTeam() == 1){
+                    allies.add(ship);
+                }else{
+                    axis.add(ship);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer las naves de la mision: " + e.getMessage());
+        }
+        return shipList;
     }
 }

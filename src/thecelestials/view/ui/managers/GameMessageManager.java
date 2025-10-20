@@ -27,12 +27,16 @@ public class GameMessageManager implements GameObjectDestroyedListener {
 
     private final List<Message> activeMessages;
     private final Vector2D left;
-    public GameMessageManager(Vector2D left) {
+    private final Vector2D center;
+    private byte waves = 0;
+    public GameMessageManager(Vector2D left, Vector2D center) {
         activeMessages = new ArrayList<>();
         this.left = left;
+        this.center = center;
     }
     
     public void clear(){
+        waves = 0;
         activeMessages.clear();
     }
 
@@ -44,9 +48,31 @@ public class GameMessageManager implements GameObjectDestroyedListener {
         activeMessages.add(new Message(left, false, text, color, false, Assets.fontMed, 0));
     }
     
-    public void onGameNotify(){
-        showDescription(MissionStats.missionDescription, Color.GREEN);
+    private void showMessage(String text, boolean flag){
+        activeMessages.add(new Message(center, flag, text, Color.WHITE, true, Assets.fontBig, 1));
     }
+    
+    public void onGameNotify(String reason){
+        switch (reason) {
+            case "DESCRIPTION" -> showDescription(MissionStats.missionDescription, Color.GREEN);
+            case "WAVE" -> {
+                waves++;
+                showMessage("OLEADA"+waves, false);
+            }
+            case "ASSAULT" -> {
+            }
+            case "GAME OVER" -> {
+                showMessage("DERROTA", true);
+            }
+            case "VICTORY" -> {
+                showMessage("VICTORIA", false);
+            }
+            default -> {
+                
+            }
+        }
+        //showMessage("ASALTO"+waves, false);
+            }
 
     @Override
     public void onGameObjectDestroyed(MovingObject destroyedObject) {

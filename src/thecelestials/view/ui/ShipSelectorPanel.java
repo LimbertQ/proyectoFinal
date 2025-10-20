@@ -37,7 +37,7 @@ public class ShipSelectorPanel extends JPanel{
         //currentShip.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
         
         //JLabel image = new JLabel();
-        image.setIcon(new ImageIcon(Assets.shipsAvaible.get(Assets.currentShip).getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
+        image.setIcon(new ImageIcon(Assets.getCurrentShip().getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
         
         
         JLabel left = MenuComponentFactory.createArrowButton("<<", e ->{nextShip(-1);});

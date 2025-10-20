@@ -121,7 +121,27 @@ public class Assets {
     
     public static void loadGame(String missionID){
         Mission mission = db.readMissionsByID(missionID);
-        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription());
+        List<ShipStats>[] shipsList = db.readShipsByMission(missionID);
+        byte challenge = 0;
+        if(mission.getChallenge().equals("WAVES")){
+            challenge++;
+        }
+        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte)mission.getAssaults());
+        for(ShipStats ship: MissionStats.allies){
+            images.put(ship.getName(), loadImage(ship.getProfileImagePath()));
+            images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
+            EntityStats bullet = ship.getEntityStats();
+            setImageLaser(bullet);
+            //System.out.println("ship dispo");
+        }
+        
+        for(ShipStats ship: MissionStats.axis){
+            images.put(ship.getName(), loadImage(ship.getProfileImagePath()));
+            images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
+            EntityStats bullet = ship.getEntityStats();
+            setImageLaser(bullet);
+            //System.out.println("ship dispo");
+        }
     }
     
     public static List<AssetDefinition> loadCivilizations(){

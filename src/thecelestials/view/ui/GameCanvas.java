@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import thecelestials.controller.Keyboard;
 import thecelestials.model.managers.GameContentManager;
+import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
  *
@@ -42,8 +43,15 @@ public class GameCanvas extends Canvas implements Runnable {
     }
 
     private void update(float dt) {
-        keyboard.update();
-        gcm.update(dt);
+
+        if (gcm.gameOver() > 0 && gcm.gameOver() < 3) {
+            isPaused = true;
+            gcm.pause();
+            //MenuComponentFactory
+        } else {
+            keyboard.update();
+            gcm.update(dt);
+        }
     }
 
     private void draw() {
@@ -72,18 +80,19 @@ public class GameCanvas extends Canvas implements Runnable {
         thread.start();
         running = true;
     }
-    
+
     //al empezar un nivel
-    public void playGame(){
+    public void playGame() {
         lastTime = System.nanoTime();
         gcm.clear();
         gcm.playGame();
         isPaused = false;
     }
-    
-    public void resume(){
+
+    public void resume() {
         isPaused = false;
         lastTime = System.nanoTime();
+        gcm.resume();
     }
 
     private void stop() {
