@@ -69,6 +69,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameEventManager.addGameObjectDestroyedListener(gameEffectManager);
 
         gameEventManager.addGameNotificationListener(gameSoundManager);
+        gameEventManager.addGameNotificationListener(gameMessageManager);
         images = Assets.images;
     }
 
@@ -101,7 +102,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         movingObjects.add(player);
 
         gameHudManager.playGame(player);
-        gameMessageManager.onGameNotify("DESCRIPTION");
+        gameEventManager.notifyGameEvent("DESCRIPTION");
 
         GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
         GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
@@ -161,12 +162,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                 int nroRandom;
                 if (MissionStats.challenge == 1 && waves % 3 == 0) {
                     nroRandom = random.nextInt(3) + 2;
-                    gameMessageManager.onGameNotify("WAVE");
-                    gameSoundManager.onGameNotify("WAVE");
+                    gameEventManager.notifyGameEvent("WAVE");
                 } else {
                     nroRandom = random.nextInt(4) + 5;
-                    gameMessageManager.onGameNotify("ASSAULT");
-                    gameSoundManager.onGameNotify("ASSAULT");
+                    gameEventManager.notifyGameEvent("ASSAULT");
                 }
                 spawnShip(nroRandom, 0, 100, 0, MissionStats.axis);
             }
@@ -199,10 +198,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         } else if (assault == 0) {
             if (type == 3) {
                 //mensaje gameOver ------ assault = 0
-                gameMessageManager.onGameNotify("GAME OVER");
+                gameEventManager.notifyGameEvent("GAME OVER");
             } else if (type == 4) {
                 //mensaje victoria
-                gameMessageManager.onGameNotify("VICTORY");
+                gameEventManager.notifyGameEvent("VICTORY");
             }
         }
 

@@ -14,6 +14,7 @@ import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.NPCShip;
 import thecelestials.model.gameObjects.PlayerShip;
+import thecelestials.model.managers.GameNotificationListener;
 import thecelestials.model.managers.GameObjectDestroyedListener;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
@@ -23,7 +24,7 @@ import thecelestials.view.ui.animations.Message;
  *
  * @author pc
  */
-public class GameMessageManager implements GameObjectDestroyedListener {
+public class GameMessageManager implements GameObjectDestroyedListener, GameNotificationListener {
 
     private final List<Message> activeMessages;
     private final Vector2D left;
@@ -52,6 +53,7 @@ public class GameMessageManager implements GameObjectDestroyedListener {
         activeMessages.add(new Message(center, flag, text, Color.WHITE, true, Assets.fontBig, 1));
     }
     
+    @Override
     public void onGameNotify(String reason){
         switch (reason) {
             case "DESCRIPTION" -> showDescription(MissionStats.missionDescription, Color.GREEN);
@@ -72,7 +74,7 @@ public class GameMessageManager implements GameObjectDestroyedListener {
             }
         }
         //showMessage("ASALTO"+waves, false);
-            }
+    }
 
     @Override
     public void onGameObjectDestroyed(MovingObject destroyedObject) {

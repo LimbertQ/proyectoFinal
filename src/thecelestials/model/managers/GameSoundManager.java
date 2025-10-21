@@ -23,12 +23,13 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
     private final Map<String, Clip> audioCache;
     private final List<Clip> pauseClip = new ArrayList<>();
     private final Random random = new Random();
+
     public GameSoundManager() {
         audioCache = Assets.audioCache;
     }
-    
-    public void clear(){
-        for(Clip clip : audioCache.values()){
+
+    public void clear() {
+        for (Clip clip : audioCache.values()) {
             clip.stop();
             clip.setFramePosition(0);
         }
@@ -36,12 +37,14 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
 
     private void playSound(String soundKey) {
         Clip clip = audioCache.get(soundKey);
-        clip.stop();
-        clip.setFramePosition(0);
-        clip.start();
+        if (clip != null) {
+            clip.stop();
+            clip.setFramePosition(0);
+            clip.start();
+        }
     }
-    
-    public void pause(){
+
+    public void pause() {
         for (Map.Entry<String, Clip> entry : audioCache.entrySet()) {
             Clip sound = entry.getValue();
             if (sound != null && sound.isRunning()) {
@@ -50,9 +53,9 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
             }
         }
     }
-    
-    public void resume(){
-        for(Clip clip : pauseClip){
+
+    public void resume() {
+        for (Clip clip : pauseClip) {
             clip.setFramePosition(clip.getFramePosition());
             clip.start();
         }
@@ -69,9 +72,18 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
     @Override
     public void onGameNotify(String reason) {
         switch (reason) {
-            case "laser" -> playSound("shoot");
-            case "WAVE" -> playSound("wave"+random.nextInt(11));
-            case "ASSAULT" -> playSound("assault"+random.nextInt(12));
+            case "DESCRIPTION" ->
+                playSound("description");
+            case "laser" ->
+                playSound("shoot");
+            case "WAVE" ->
+                playSound("wave" + random.nextInt(11));
+            case "ASSAULT" ->
+                playSound("assault" + random.nextInt(12));
+            case "VICTORY" ->
+                playSound("assault" + random.nextInt(12));
+            case "GAME OVER" ->
+                playSound("assault" + random.nextInt(12));
             default -> {
             }
         }
