@@ -266,7 +266,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             //player.resetValues();
             //System.out.println("morir");
             objectsToNotify.add(player);
-        } else if (player.isDead() || cruiser != null && cruiser.isDead()) {
+        } else if (player.isDead() || (cruiser != null && cruiser.isDead())) {
             //mensaje -> GAME OVER
             if (type > 3 || type < 1) {
                 type = 3;
