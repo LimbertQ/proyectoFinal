@@ -40,6 +40,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final List<MovingObject> listToAdd = new ArrayList<>();
     private final List<Ship> enemys = new ArrayList<>();
     private final List<Ship> allies = new ArrayList<>();
+    private Ship cruiser;
     private PlayerShip player;
     private final List<GravitationalField> gravitationalsFields = new ArrayList<>();
     private final HUDManager gameHudManager;
@@ -75,6 +76,8 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     public void clear() {
         missionMap = null;
+        
+        cruiser = null;
 
         gameHudManager.clear();
         //---------
@@ -102,6 +105,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         movingObjects.add(player);
 
         gameHudManager.playGame(player);
+        gameSoundManager.playGame();
         gameEventManager.notifyGameEvent("DESCRIPTION");
 
         GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
@@ -109,6 +113,12 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gravitationalsFields.add(vortex);
         gravitationalsFields.add(pulsar);
 
+        if(MissionStats.cruiserAllie != null){
+            cruiser = new NPCShip(new Vector2D(700, 300), MissionStats.cruiserAllie, new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), 1, this);
+            movingObjects.add(cruiser);
+            //Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+            
+                    }
         assault = 15;
         type = -1;
     }
@@ -205,7 +215,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             }
         }
 
-        if (assault > 5000) {
+        if (assault > 10000) {
             //termina el juego
             type -= 2;
         }
@@ -256,7 +266,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             //player.resetValues();
             //System.out.println("morir");
             objectsToNotify.add(player);
-        } else if (player.isDead()) {
+        } else if (player.isDead() || cruiser != null && cruiser.isDead()) {
             //mensaje -> GAME OVER
             if (type > 3 || type < 1) {
                 type = 3;

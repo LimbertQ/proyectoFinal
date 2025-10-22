@@ -150,7 +150,7 @@ public class DataBaseManager {
     
     public List<Map<String, String>> readSounds(){
         List<Map<String, String>> list = new ArrayList<>();
-        String sql = "SELECT * FROM ActiveSound a;";
+        String sql = "SELECT * FROM ActiveSound a WHERE a.audioFileFormat = 'wav';";
 
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -163,7 +163,26 @@ public class DataBaseManager {
                 list.add(naveMap);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer los sonidos wav: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List<Map<String, String>> readSoundsMedia(){
+        List<Map<String, String>> list = new ArrayList<>();
+        String sql = "SELECT * FROM ActiveSound a WHERE a.audioFileFormat = 'mp3';";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Map<String, String> naveMap = new HashMap<>();
+                naveMap.put("soundName", rs.getString("soundName"));
+                naveMap.put("soundPath", rs.getString("soundPath"));
+                
+                list.add(naveMap);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer los sonidos: " + e.getMessage());
         }
         return list;
     }

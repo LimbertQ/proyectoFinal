@@ -61,6 +61,17 @@ public class Loader {
         return null;
     }
     
+    public static String loadMedia(String path) {
+        // La forma correcta de referenciar la clase
+        URL resource = Loader.class.getResource(path);
+        
+        if (resource == null) {
+            System.err.println("Error: No se encontró el recurso de media en la ruta: " + path);
+            return null;
+        }
+        return resource.toExternalForm();
+    }
+    
     public static Font loadFont(String path, int size) {
         try {
             return Font.createFont(Font.TRUETYPE_FONT, Loader.class.getResourceAsStream(path)).deriveFont(Font.PLAIN, size);
