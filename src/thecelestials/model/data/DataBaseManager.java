@@ -227,6 +227,28 @@ public class DataBaseManager {
         return list;
     }
     
+    public List<Map<String, String>> readStarsByMission(String missionID){
+        List<Map<String, String>> list = new ArrayList<>();
+        String sql = "SELECT s.starID, s.starName, s.starAssetPath, sc.starClassName FROM "
+                + "Star s INNER JOIN StarClass sc ON s.starClassID = sc.starClassID INNER JOIN"
+                + " MissionHasStarClass mhsc ON sc.starClassID = mhsc.starClassID WHERE mhsc.missionID = '"+missionID+"';";
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Map<String, String> naveMap = new HashMap<>();
+                naveMap.put("starName", rs.getString("starName"));
+                naveMap.put("starAssetPath", rs.getString("starAssetPath"));
+                
+                //team = 1;
+                list.add(naveMap);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
+        }
+        return list;
+    }
+    
     public Map<String, Campaign> readCampaigns(){
         Map<String, Campaign> list = new LinkedHashMap<>();
         String sql = "SELECT * FROM Campaign c;";

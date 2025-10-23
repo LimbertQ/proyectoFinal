@@ -4,6 +4,7 @@
  */
 package thecelestials.model.gameObjects;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -28,6 +29,7 @@ public abstract class Ship extends MovingObject {
     private long fireRate = 0;
     private final long fireRateConstants;
     private final int team;
+    private final Color color;
 
     public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team, long shipFireRate) {
         super(position, shipStats, velocity, maxVel);
@@ -36,6 +38,10 @@ public abstract class Ship extends MovingObject {
         this.team = team;
         this.shipStats = shipStats;
         this.fireRateConstants = shipFireRate;
+        if(team == 1)
+            color = Color.BLUE;
+        else
+            color = Color.RED;
     }
 
     protected void updateValuesShip(float dt) {
@@ -107,4 +113,43 @@ public abstract class Ship extends MovingObject {
             g2d.drawImage(Assets.effect, left, null); 
         }
     }
+    
+    protected void drawRectangle(Graphics2D g2d) {
+    // 1. **GUARDAR** el estado original de Graphics2D. ¡Crucial!
+    AffineTransform originalTransform = g2d.getTransform();
+
+    // 2. **DEFINIR la Transformación** para el rectángulo:
+    // A. Traslación: Mueve el origen a la posición (x, y) de la nave.
+    // B. Rotación: Rota alrededor del centro de la nave (si la nave rota).
+    
+    // Primero, nos movemos a la posición de la nave:
+    g2d.translate(position.getX(), position.getY());
+    
+    // Luego, rotamos (si la nave rota):
+    // La rotación debe ser alrededor del centro de tu nave. 
+    // Asumiré que el centro es (width/2, height/2) de tu área de dibujo.
+    g2d.rotate(angle, width / 2, height / 2);
+
+    // 3. **DIBUJAR** el rectángulo:
+    
+    // Define el color del rectángulo (ej: rojo para indicar el bando o un color de sombra)
+    g2d.setColor(color); 
+    
+    // Definición de la posición RELATIVA del rectángulo (para que esté debajo de la nave):
+    // X = 0 (centrado en la nave)
+    // Y = height + 5 (un poco debajo de la nave)
+    // Ancho = width (el ancho de la nave)
+    // Alto = 10 (la altura del rectángulo)
+    
+    int rectX = 0; // Se dibuja desde el borde izquierdo del área de la nave
+    int rectY = height + 5; // Se dibuja 5px debajo del borde inferior de la nave
+    int rectWidth = width;
+    int rectHeight = 10;
+    
+    g2d.fillRect(rectX, rectY, rectWidth, rectHeight);
+
+    // 4. **RESTAURAR** el estado original de Graphics2D.
+    // Esto asegura que los dibujos posteriores (como la nave misma) no hereden esta rotación y traslación.
+    g2d.setTransform(originalTransform);
+}
 }

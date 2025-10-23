@@ -32,13 +32,11 @@ public class Assets {
     //public static BufferedImage[] explosions = new BufferedImage[9];
     public static Map<String, BufferedImage> images = new HashMap<>();
     public static Map<String, BufferedImage> missionMaps = new HashMap<>();
-    public static Map<String, BufferedImage> stars = new HashMap<>();
     public static Map<String, Clip> audioCache = new HashMap<>();
     public static Map<String, MediaPlayer> audioMediaCache = new HashMap<>();
     public static List<ShipStats> shipsAvaible = new ArrayList<>();
     public static Map<String, Campaign> campaigns = null;
     public static EntityStats powerBullet;
-    public static BufferedImage vortex, pulsar;
 
     public static Font fontBig, fontMed;
     private static DataBaseManager db;
@@ -52,7 +50,6 @@ public class Assets {
             readAllSounds();
             readAllSoundsMedia();
             readAllImages();
-            readStarsImages();
             powerBullet = db.readLaserByID("LSR06");
             setImageLaser(powerBullet);
             campaigns = loadCampaigns();
@@ -64,18 +61,6 @@ public class Assets {
         images.put("effect", loadImage("/images/effects/fire08.png"));
         fontBig = loadFont("/fonts/futureFont.ttf", 42);
         fontMed = loadFont("/fonts/futureFont.ttf", 20);
-        vortex = loadImage("/images/gravitationalFields/vortex.png");
-        pulsar = loadImage("/images/gravitationalFields/pulsar.png");
-        for (int i = 0; i < meteors.length; i++) {
-            meteors[i] = loadImage("/images/numbers/num" + i + ".png");
-        }
-        /*for (int i = 0; i < numbers.length; i++) {
-            numbers[i] = loadImage("/images/numbers/num" + i + ".png");
-        }
-
-        for (int i = 0; i < 9; i++) {
-            explosions[i] = loadImage("/images/explosions/exp" + i + ".png");
-        }*/
     }
 
     public static void closeDbConnection() {
@@ -145,7 +130,9 @@ public class Assets {
         Map<String, MediaPlayer> audioMission = new HashMap<>();
         loadMediaSound("voiceStartPath", mission.getVoiceStartPath(), audioMission);
         loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
-        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission);
+        
+        Map<String, BufferedImage> stars = readStarsImages(missionID);
+        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars);
         loadSpriteShips(MissionStats.allies);
         loadSpriteShips(MissionStats.axis);
     }
@@ -206,11 +193,13 @@ public class Assets {
         }
     }
 
-    private static void readStarsImages() {
-        List<Map<String, String>> AllImages = db.readStars();
+    private static Map<String, BufferedImage> readStarsImages(String missionID) {
+        List<Map<String, String>> AllImages = db.readStarsByMission(missionID);
+        
+        Map<String, BufferedImage> starsMission = new HashMap<>();
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("starAssetPath"));
-            stars.put(image.get("starName"), imagen);
+            starsMission.put(image.get("starName"), imagen);
             System.out.println(image.get("starName") + ":_:" + image.get("starAssetPath"));
             if (imagen == null) {
                 System.err.println(false);
@@ -218,6 +207,7 @@ public class Assets {
                 System.err.println(true);
             }
         }
+        return starsMission;
     }
 
     private static BufferedImage loadImage(String path) {

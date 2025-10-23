@@ -179,7 +179,7 @@ public class NPCShip extends Ship {
         Graphics2D g2d = (Graphics2D) g;
 
         drawSpeed(g2d);
-
+        //drawRectangle(g2d);
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);

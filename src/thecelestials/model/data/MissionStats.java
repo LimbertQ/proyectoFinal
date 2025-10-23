@@ -4,6 +4,7 @@
  */
 package thecelestials.model.data;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.media.MediaPlayer;
@@ -20,8 +21,9 @@ public class MissionStats {
     public static ShipStats playerShip;
     public static List<ShipStats> allies;
     public static List<ShipStats> axis;
-    public static ShipStats cruiserAllie;
+    public static ShipStats cruiser;
     public static Map<String, MediaPlayer> missionVoicePath;
+    public static Map<String, BufferedImage> stars;
     public static boolean alliesExist;
     public static byte challenge;
     public static byte assaults;
@@ -31,14 +33,15 @@ public class MissionStats {
         playerShip = player;
     }
 
-    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission) {
+    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission, Map<String, BufferedImage> star) {
         missionID = ID;
         missionName = name;
         missionDescription = description;
         allies = shipsArray[0];
         axis = shipsArray[1];
-        cruiserAllie = null;
-        cruiserAllie = shipsArray[2].getFirst();
+        cruiser = null;
+        if(!shipsArray[2].isEmpty())
+            cruiser = shipsArray[2].getFirst();
         alliesExist = !allies.isEmpty();
         challenge = challeng;
         assaults = ass;
@@ -47,6 +50,7 @@ public class MissionStats {
         if (challenge == 1) {
             assaults *= 3;
         }
+        stars = star;
     }
 
     private static void clear() {

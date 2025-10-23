@@ -55,6 +55,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private long assault = 0;
     private byte type;
     private byte waves = 0;
+    private boolean meteor = false;
     private BufferedImage missionMap;
 
     public GameContentManager() {
@@ -94,6 +95,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         enemys.clear();
         allies.clear();
         player = null;
+        meteor = false;
         assault = 0;
         waves = 0;
         type = -1;
@@ -107,19 +109,32 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameHudManager.playGame(player);
         gameSoundManager.playGame();
         gameEventManager.notifyGameEvent("DESCRIPTION");
-
-        GravitationalField vortex = new Vortex(new Vector2D(100, 100), Assets.vortex, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
-        GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), Assets.pulsar, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
-        gravitationalsFields.add(vortex);
-        gravitationalsFields.add(pulsar);
-
-        if(MissionStats.cruiserAllie != null){
-            cruiser = new NPCShip(new Vector2D(700, 300), MissionStats.cruiserAllie, new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), 1, this);
-            movingObjects.add(cruiser);
-            //Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+        if(MissionStats.stars.containsKey("big1")){
+            meteor = true;
+        }
+        for(Map.Entry<String, BufferedImage> entry: MissionStats.stars.entrySet()){
+            if(entry.getKey().equals("pulsar")){
+                GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), entry.getValue(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+                gravitationalsFields.add(pulsar);
+            }else if(entry.getKey().equals("vortice")){
+                GravitationalField vortex = new Vortex(new Vector2D(100, 100), entry.getValue(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+                gravitationalsFields.add(vortex);
+            }
+        }
+        
+        if(MissionStats.cruiser != null){
+            Ship cruisero;
+            if(MissionStats.cruiser.getTeam() == 1)
+                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), 1, this);
             
-                    }
-        assault = 15;
+            else{
+                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), 0, this);
+            }
+            movingObjects.add(cruisero);
+            cruiser = cruisero;
+            //Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+        }
+        assault = 0;
         type = -1;
     }
 
@@ -143,7 +158,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                 y = random.nextDouble() * Constants.HEIGHT;
             }
 
-            BufferedImage texture = Assets.stars.get("big" + 2);
+            BufferedImage texture = MissionStats.stars.get("big" + 2);
             createGameObject(new Meteor(new Vector2D(x, y), texture, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * random.nextDouble() + 1, MeteorSize.BIG, this));
         }
     }
@@ -158,7 +173,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private void spawnObjects(float dt) {
         if (waves <= MissionStats.assaults) {
 
-            if (!hasActiveMeteors()) {
+            if (meteor && !hasActiveMeteors()) {
                 startWave();
             }
 
@@ -319,7 +334,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         MeteorSize nextSize = meteor.getSize().getNextSize();
         for (int i = 0; i < 2; i++) {
             int nro = random.nextInt(2) + 1;
-            listToAdd.add(new Meteor(meteor.getPosition(), Assets.stars.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this));
+            listToAdd.add(new Meteor(meteor.getPosition(), MissionStats.stars.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this));
         }
     }
 

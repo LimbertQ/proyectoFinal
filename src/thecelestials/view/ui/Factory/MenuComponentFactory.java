@@ -36,16 +36,16 @@ public class MenuComponentFactory {
         // panel.setOpaque(false); // Para ver el fondo del MenuPadre
         JPanel panelTitle = new JPanel();
         panelTitle.setOpaque(false);
-        panelTitle.add(titleMenu(menuType));
-
+        //panelTitle.add(titleMenu(menuType));
+        JLabel title = null;
         panel.add(panelTitle);
 
         Map<String, ActionListener> actions;
         switch (menuType) {
             case "campaignMenuCard" -> {
-                JPanel menug = createMenuLabel(0);
                 //System.out.println(menug+"mrd");
-                panel.add(menug);
+                title = titleMenu("campaña");
+                panel.add(createMenuLabel(0));
 
                 //------------
                 actions = createActionsContent(switcher, "MENU");
@@ -57,6 +57,7 @@ public class MenuComponentFactory {
                 //System.out.println("grrrr");
             }
             case "missionsMenuCard" -> {
+                title = titleMenu("misiones");
                 panel.add(createMenuLabel(2));
 
                 JPanel missions = new JPanel();
@@ -76,6 +77,7 @@ public class MenuComponentFactory {
 
             }
         }
+        panelTitle.add(title);
         return panel;
     }
 
