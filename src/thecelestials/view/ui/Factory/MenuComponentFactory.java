@@ -7,6 +7,7 @@ package thecelestials.view.ui.Factory;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -185,7 +186,7 @@ public class MenuComponentFactory {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                clickAction.actionPerformed(new java.awt.event.ActionEvent(boton, 0, "clicked"));
+                clickAction.actionPerformed(new ActionEvent(boton, 0, "clicked"));
             }
 
             @Override
@@ -283,7 +284,7 @@ public class MenuComponentFactory {
         switch (ID) {
             //CAMP01 soy mision->gameCanvasCard
             case "CAMP" -> {
-                //cargando misiones
+                //cargando misiones ---CORREGIR
                 menuCard = "gameCanvasCard";
                 mapEntitys = Assets.loadMissionsByCampaign(menuID);
             }

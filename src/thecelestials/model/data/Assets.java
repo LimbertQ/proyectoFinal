@@ -26,6 +26,7 @@ public class Assets {
     public static int count = 0;
     public static int MAX_COUNT = 100;
     public static int currentShip = 0;
+    public static boolean loaded = false;
     public static BufferedImage player, effect, fondo;
     //public static BufferedImage[] numbers = new BufferedImage[11];
     public static BufferedImage[] meteors = new BufferedImage[10];
@@ -45,22 +46,25 @@ public class Assets {
         if (db == null) {
             db = DataBaseManager.getInstance("src/thecelestials/model/data/TheCelestialsDB.db");
             db.openConnection();
-
+            fontBig = loadFont("/fonts/futureFont.ttf", 42);
+            fontMed = loadFont("/fonts/futureFont.ttf", 20);
+            campaigns = loadCampaigns();
+            fondo = loadImage("/images/maps/exoplaneta.jpeg");
             loadShipAvaible();
             readAllSounds();
             readAllSoundsMedia();
             readAllImages();
             powerBullet = db.readLaserByID("LSR06");
             setImageLaser(powerBullet);
-            campaigns = loadCampaigns();
+
             //db.closeConnection();
         }
         player = loadImage("/images/ships/fighter01.png");
-        fondo = loadImage("/images/maps/exoplaneta.jpeg");
         effect = loadImage("/images/effects/fire08.png");
         images.put("effect", loadImage("/images/effects/fire08.png"));
-        fontBig = loadFont("/fonts/futureFont.ttf", 42);
-        fontMed = loadFont("/fonts/futureFont.ttf", 20);
+        //System.out.println(count+"es el contador");
+        count = MAX_COUNT;
+        loaded = true;
     }
 
     public static void closeDbConnection() {
@@ -68,6 +72,23 @@ public class Assets {
             db.closeConnection();
             db = null; // Opcional: Establecer a null para liberar la referencia
             System.out.println("Conexión a la base de datos cerrada.");
+        }
+    }
+
+    public static void unlocks() {
+        boolean flag = campaigns.get(MissionStats.campaignID).unlocks(MissionStats.missionID);
+        if (!flag) {
+            String campaignID = MissionStats.campaignID;
+            int length = campaignID.length();
+            int digit = Integer.parseInt(String.valueOf(campaignID.charAt(length - 1))) + 1;
+            campaignID = campaignID.substring(0, length - 1) + digit;
+            campaigns.get(campaignID).unlocks(MissionStats.missionID);
+            campaigns.get(campaignID).setState();
+        }
+        //DESBLOQUEAR EN CAMPANIA
+        String shipID = db.readIDShipUnlock();
+        if (shipID != null) {
+            db.updateShipState(shipID);
         }
     }
 
@@ -83,7 +104,7 @@ public class Assets {
             images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
             EntityStats bullet = ship.getEntityStats();
             setImageLaser(bullet);
-            System.out.println("ship dispo");
+            //System.out.println("ship dispo");
         }
     }
 
@@ -108,8 +129,8 @@ public class Assets {
         }
         return missions;
     }
-    
-    private static void loadSpriteShips(List<ShipStats> ships){
+
+    private static void loadSpriteShips(List<ShipStats> ships) {
         for (ShipStats ship : ships) {
             images.put(ship.getName(), loadImage(ship.getProfileImagePath()));
             images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
@@ -118,8 +139,14 @@ public class Assets {
             //System.out.println("ship dispo");
         }
     }
+    
+    public static void setear(){
+        loaded = false;
+        count = 0;
+    }
 
     public static void loadGame(String missionID) {
+        
         Mission mission = db.readMissionsByID(missionID);
         List<ShipStats>[] shipsList = db.readShipsByMission(missionID);
         loadSpriteShips(shipsList[2]);
@@ -130,21 +157,22 @@ public class Assets {
         Map<String, MediaPlayer> audioMission = new HashMap<>();
         loadMediaSound("voiceStartPath", mission.getVoiceStartPath(), audioMission);
         loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
-        
+
         Map<String, BufferedImage> stars = readStarsImages(missionID);
-        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars);
+        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, mission.getCampaignID());
         loadSpriteShips(MissionStats.allies);
         loadSpriteShips(MissionStats.axis);
+        loaded = true;
     }
-    
-    public static void clear(){
-        for(MediaPlayer media : MissionStats.missionVoicePath.values()){
+
+    public static void clear() {
+        for (MediaPlayer media : MissionStats.missionVoicePath.values()) {
             media.pause();
             media.stop();
             media.dispose();
         }
-        
-        for(MediaPlayer media : audioMediaCache.values()){
+
+        for (MediaPlayer media : audioMediaCache.values()) {
             media.pause();
             media.stop();
             media.dispose();
@@ -195,7 +223,7 @@ public class Assets {
 
     private static Map<String, BufferedImage> readStarsImages(String missionID) {
         List<Map<String, String>> AllImages = db.readStarsByMission(missionID);
-        
+
         Map<String, BufferedImage> starsMission = new HashMap<>();
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("starAssetPath"));

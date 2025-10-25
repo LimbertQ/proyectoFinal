@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import thecelestials.controller.Keyboard;
+import thecelestials.model.data.Assets;
 import thecelestials.model.managers.GameContentManager;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
 
@@ -47,6 +48,9 @@ public class GameCanvas extends Canvas implements Runnable {
         if (gcm.gameOver() > 0 && gcm.gameOver() < 3) {
             isPaused = true;
             gcm.pause();
+            if(gcm.gameOver() == 2){
+                Assets.unlocks();
+            }
             //MenuComponentFactory
         } else {
             keyboard.update();

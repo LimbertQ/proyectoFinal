@@ -6,6 +6,7 @@ package thecelestials.model.data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -256,7 +257,7 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Campaign campaign = new Campaign(rs.getString("campaignID"), rs.getString("campaignName"), rs.getString("campaignDescription"), rs.getString("videoPath"), rs.getString("mapPath"), rs.getInt("campaignState"));
+                Campaign campaign = new Campaign(rs.getString("campaignID"), rs.getString("campaignName"), rs.getString("campaignDescription"), rs.getString("videoPath"), rs.getString("mapPath"), rs.getInt("campaignState"), readMissionsByCampaign(rs.getString("campaignID")));
                 list.put(campaign.getID(), campaign);
             }
         } catch (SQLException e) {
@@ -294,6 +295,57 @@ public class DataBaseManager {
             System.err.println("Error al leer el juego: " + e.getMessage());
         }
         return mission;
+    }
+    
+    public void updateMissionState(String missionID){
+        String sql = "UPDATE Mission SET missionState = 1 WHERE missionID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            System.out.println(missionID);
+            pstmt.setString(1, missionID);
+            pstmt.executeUpdate();
+            
+            //System.out.println("Estado de misión '" + missionId + "' actualizado a '" + newState + "'.");
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar mision" + e.getMessage());
+        }
+    }
+    
+    public void updateShipState(String shipID){
+        String sql = "UPDATE Ship SET shipState = 1 WHERE shipID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            //System.out.println(missionID);
+            pstmt.setString(1, shipID);
+            pstmt.executeUpdate();
+            
+            //System.out.println("Estado de misión '" + missionId + "' actualizado a '" + newState + "'.");
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar mision" + e.getMessage());
+        }
+    }
+    
+    public String readIDShipUnlock(){
+        String sql = "SELECT s.shipID FROM Ship s WHERE s.shipClass != 'crucero' AND s.shipState = 0 ORDER BY s.civilizationID ASC LIMIT 1;";
+        String shipID = null;
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                shipID = rs.getString("shipID");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer el juego: " + e.getMessage());
+        }
+        return shipID;
+    }
+    
+    public void updateCampaignState(String campaignID){
+        String sql = "UPDATE Campaign SET campaignState = 1 WHERE campaignID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, campaignID);
+            pstmt.executeUpdate();
+            //System.out.println("Estado de misión '" + missionId + "' actualizado a '" + newState + "'.");
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar campania" + e.getMessage());
+        }
     }
     
     public List<ShipStats>[] readShipsByMission(String missionID){

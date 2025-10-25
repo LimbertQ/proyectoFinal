@@ -22,6 +22,7 @@ public class ShipSelectorPanel extends JPanel{
     private int index;
     private final JLabel image = new JLabel();
     //private final ImageIcon icon = new ImageIcon();
+    private final JLabel infShip;
     public ShipSelectorPanel(JLabel back){
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //setBackground(Color.red);
@@ -58,10 +59,10 @@ public class ShipSelectorPanel extends JPanel{
         
         add(contents);
         
-        JLabel infNave = MenuComponentFactory.sampleLabel(Assets.shipsAvaible.getFirst().getName(), -1, 1);
-        infNave.setAlignmentX(Component.CENTER_ALIGNMENT);
-        infNave.setOpaque(false);
-        add(infNave);
+        infShip = MenuComponentFactory.sampleLabel(Assets.shipsAvaible.getFirst().getName(), -1, 1);
+        infShip.setAlignmentX(Component.CENTER_ALIGNMENT);
+        infShip.setOpaque(false);
+        add(infShip);
         add(Box.createVerticalStrut(67));
         
         JPanel southPanel = new JPanel();
@@ -84,8 +85,9 @@ public class ShipSelectorPanel extends JPanel{
             Assets.currentShip = index;
             //icon.setImage(Assets.shipsAvaible.get(Assets.currentShip).getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH));
             //image.setIcon(new ImageIcon(icon.getImage().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
-        
             image.setIcon(new ImageIcon(Assets.shipsAvaible.get(Assets.currentShip).getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
+        
+            infShip.setText(Assets.shipsAvaible.get(Assets.currentShip).getName());
         }else{
             //System.out.println("fuera de rango"+(index+num));
         }

@@ -4,23 +4,51 @@
  */
 package thecelestials.model.data;
 
+import java.util.Map;
+
 /**
  *
  * @author pc
  */
-public class Campaign extends GameEntity{
+public class Campaign extends GameEntity {
+
     private final String videoPath;
-    public Campaign(String campaignID, String campaignName, String mapPath, String videoPath, String campaignDescription, int campaignState){
+    private final Map<String, Mission> missions;
+
+    public Campaign(String campaignID, String campaignName, String mapPath, String videoPath, String campaignDescription, int campaignState, Map<String, Mission> missions) {
         super(campaignID, campaignName, mapPath, campaignDescription, campaignState);
         this.videoPath = videoPath;
+        this.missions = missions;
     }
 
     public String getVideoPath() {
         return videoPath;
-    }    
-    
-    
-    public void setCampaignState(){
+    }
+
+    public void setCampaignState() {
         //campaignState = 1;
+    }
+
+    public boolean unlocks(String missionID) {
+        boolean flag = false;
+        int length = missionID.length();
+        int digit = Integer.parseInt(missionID.substring(length - 2, length)) + 1;
+        if (digit < 10) {
+            missionID = missionID.substring(0, length - 1) + digit;
+        } else {
+            missionID = missionID.substring(0, length - 2) + digit;
+        }
+
+        if (missions.containsKey(missionID)) {
+            if (missions.get(missionID).getState() == 0) {
+                missions.get(missionID).setState();
+                DataBaseManager.getInstance("").updateMissionState(missionID);
+            }
+            flag = true;
+        }
+        if (getState() == 0) {
+            DataBaseManager.getInstance("").updateCampaignState(getID());
+        }
+        return flag;
     }
 }

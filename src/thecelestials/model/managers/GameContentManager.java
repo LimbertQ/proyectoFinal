@@ -215,8 +215,9 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                     type = 4;
                     assault = 0;
                 }
-            } else {
+            } else if(enemys.isEmpty()){
                 //mensaje victoria
+                gameEventManager.notifyGameEvent("VICTORY");
                 type = 4;
                 assault = 0;
             }

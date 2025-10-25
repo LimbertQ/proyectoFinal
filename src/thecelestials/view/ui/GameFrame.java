@@ -21,13 +21,16 @@ import thecelestials.model.data.Assets;
  */
 public class GameFrame extends JFrame implements ScreenSwitcher{
     private final CardLayout cardLayout;
+    private final LoadingPanel loadingPanel;
     private final JPanel mainPanel;
-    private final MenuPanel menuPanel;
-    private final MenuPanel missionsPanel;
-    private final GameCanvas gameCanvas;
+    private MenuPanel menuPanel;
+    private MenuPanel missionsPanel;
+    private GameCanvas gameCanvas;
     private final String gameCanvasCard = "gameCanvasCard";
     private final String campaignsMenuCard = "campaignMenuCard";
     private final String missionsMenuCard = "missionsMenuCard";
+    private final String loadingCard = "loadingCard";
+    
     public GameFrame(){
         setTitle("Los Celestiales");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -44,32 +47,51 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         setSize(screenSize);
         setLocationRelativeTo(null);
         //-----------
-        Assets.init();
+        //Assets.init();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
+        loadingPanel = new LoadingPanel(loadingCard, this);
+        loadingPanel.nextPanel(loadingCard, "");
+        mainPanel.add(loadingPanel, loadingCard);
+        add(mainPanel, BorderLayout.CENTER);
+        cardLayout.show(mainPanel, loadingCard);
+        setVisible(true);
         
-        gameCanvas = new GameCanvas();
+        
+    }
+    
+    
+
+    @Override
+    public void showCard(String cardName, String menuID) {
+        
+        switch (cardName) {
+            case "loadingGameCard" -> {
+                loadingPanel.nextPanel(gameCanvasCard, menuID);
+                cardName = loadingCard;
+            }
+            case missionsMenuCard -> missionsPanel.updateContentForMenu(menuID);
+            case gameCanvasCard -> {
+                Assets.loadGame(menuID);
+                gameCanvas.playGame();
+            }
+            //System.out.println(cardName+" soy genio");
+            default -> {
+            }
+        }
+        cardLayout.show(mainPanel, cardName);
+    }
+    
+    @Override
+    public void initializeMenus(){
         menuPanel = new MenuPanel(this, campaignsMenuCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
         
         mainPanel.add(menuPanel, campaignsMenuCard);
         mainPanel.add(missionsPanel, missionsMenuCard);
-        mainPanel.add(gameCanvas, gameCanvasCard);
         
-        add(mainPanel, BorderLayout.CENTER);
-        cardLayout.show(mainPanel, campaignsMenuCard);
-        setVisible(true);
+        gameCanvas = new GameCanvas();
+        mainPanel.add(gameCanvas, gameCanvasCard);
         gameCanvas.start();
-    }
-
-    @Override
-    public void showCard(String cardName, String menuID) {
-        if(cardName.equals(missionsMenuCard)){
-            missionsPanel.updateContentForMenu(menuID);
-        }else if(cardName.equals(gameCanvasCard)){
-            Assets.loadGame(menuID);
-            gameCanvas.playGame();
-        }
-        cardLayout.show(mainPanel, cardName);
     }
 }

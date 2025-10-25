@@ -16,6 +16,7 @@ import javafx.scene.media.MediaPlayer;
 public class MissionStats {
 
     public static String missionID;
+    public static String campaignID;
     public static String missionName;
     public static String missionDescription;
     public static ShipStats playerShip;
@@ -33,7 +34,7 @@ public class MissionStats {
         playerShip = player;
     }
 
-    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission, Map<String, BufferedImage> star) {
+    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission, Map<String, BufferedImage> star, String campID) {
         missionID = ID;
         missionName = name;
         missionDescription = description;
@@ -51,6 +52,7 @@ public class MissionStats {
             assaults *= 3;
         }
         stars = star;
+        campaignID = campID;
     }
 
     private static void clear() {
