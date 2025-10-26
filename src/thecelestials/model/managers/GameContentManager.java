@@ -204,7 +204,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     }
     
     private void cinematic(float dt) {
-        //type = 3 muere, type = 4 gana 
+        //type = 3 muere, type = 4 gana --cinematic
         if (type == 0) {
             if (MissionStats.reinforcement == 1) {
                 //reforces
