@@ -285,7 +285,8 @@ public class MenuComponentFactory {
             //CAMP01 soy mision->gameCanvasCard
             case "CAMP" -> {
                 //cargando misiones ---CORREGIR
-                menuCard = "gameCanvasCard";
+                menuCard = "loadingGameCard";
+                //menuCard = "gameCanvasCard";
                 mapEntitys = Assets.loadMissionsByCampaign(menuID);
             }
             //CAMPA soy menuCamp

@@ -186,10 +186,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                 waves++;
                 int nroRandom;
                 if (MissionStats.challenge == 1 && waves % 3 == 0) {
-                    nroRandom = random.nextInt(3) + 2;
+                    nroRandom = random.nextInt(4) + 5;
                     gameEventManager.notifyGameEvent("WAVE");
                 } else {
-                    nroRandom = random.nextInt(4) + 5;
+                    nroRandom = random.nextInt(3) + 2;
                     gameEventManager.notifyGameEvent("ASSAULT");
                 }
                 spawnShip(nroRandom, 0, 100, 0, MissionStats.axis);

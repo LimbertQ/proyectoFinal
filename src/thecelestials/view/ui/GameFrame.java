@@ -51,7 +51,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         loadingPanel = new LoadingPanel(loadingCard, this);
-        loadingPanel.nextPanel(loadingCard, "");
+        loadingPanel.nextPanel(campaignsMenuCard, "");
         mainPanel.add(loadingPanel, loadingCard);
         add(mainPanel, BorderLayout.CENTER);
         cardLayout.show(mainPanel, loadingCard);
@@ -72,7 +72,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
             }
             case missionsMenuCard -> missionsPanel.updateContentForMenu(menuID);
             case gameCanvasCard -> {
-                Assets.loadGame(menuID);
+                //Assets.loadGame(menuID);
                 gameCanvas.playGame();
             }
             //System.out.println(cardName+" soy genio");

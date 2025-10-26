@@ -28,11 +28,11 @@ import thecelestials.view.ui.Factory.MenuComponentFactory;
  */
 public class LoadingPanel extends JPanel {
 
-    private String nextPanel, missionID;
+    //private String nextPanel, missionID;
     private final JLabel nextButton;
     private Timer progressTimer;
     private final ScreenSwitcher switcher;
-
+    //private String destinationCard;
     public LoadingPanel(String menuType, ScreenSwitcher switcher) {
         //setLayout(new BorderLayout());
         //setBackground(Color.BLACK);
@@ -46,7 +46,8 @@ public class LoadingPanel extends JPanel {
         //setBackground(Color.BLACK);
         //revalidate();
         this.switcher = switcher;
-        nextButton = MenuComponentFactory.createClickableLabel("SIGUIENTE", 0, e -> switcher.showCard(nextPanel, missionID));
+        //nextButton = MenuComponentFactory.createClickableLabel("SIGUIENTE", 0, e -> switcher.showCard(nextPanel, missionID));
+        nextButton = MenuComponentFactory.sampleLabel("SIGUIENTE", 0, 1);
         add(nextButton, BorderLayout.CENTER);
         for (MouseListener ml : nextButton.getMouseListeners()) {
             nextButton.removeMouseListener(ml);
@@ -55,25 +56,29 @@ public class LoadingPanel extends JPanel {
     }
 
     public void nextPanel(String nextPanel, String missionID) {
-        this.nextPanel = nextPanel;
-        this.missionID = missionID;
+        for (MouseListener ml : nextButton.getMouseListeners()) {
+            nextButton.removeMouseListener(ml);
+        }
+        nextButton.setVisible(false);
         
-
+        Assets.setear();
+        //final String destinationCard ;
+        //repaint();
         progressTimer = new Timer(30, e -> {
             repaint();
             System.out.println(Assets.count);
         });
         progressTimer.start();
-
         // 2. INICIAR EL HILO DE CARGA (El trabajo pesado en segundo plano)
         Thread loadingThread = new Thread(() -> {
-            if (nextPanel.equals("loadingCard")) {
+            if (nextPanel.equals("campaignMenuCard")) {
                 Assets.init(); // <--- 1. ESTO HACE Assets.loaded = true
-                this.nextPanel = "campaignMenuCard";
+                //destinationCard = "campaignMenuCard";
             } else if (nextPanel.equals("gameCanvasCard")) {
-                Assets.setear();
                 Assets.loadGame(missionID);
-                System.out.println("esty aqui");
+                //destinationCard = nextPanel;
+                //repaint();
+                //System.out.println("esty aqui");
             }
 
             // 2. Notificación al Hilo de la UI (EDT)
@@ -86,17 +91,20 @@ public class LoadingPanel extends JPanel {
                     nextButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            System.err.println("click de mrd"+nextPanel);
+                            //System.err.println("click de mrd"+nextPanel);
                             // Esta acción usa los valores actualizados de this.nextPanel y this.missionID
-                            switcher.showCard(LoadingPanel.this.nextPanel, LoadingPanel.this.missionID);
+                            switcher.showCard(nextPanel, missionID);
                         }
                     });
                     //nextButton.setText("SIGUIENTE");
-                    nextButton.setFont(Assets.fontMed);
+                    
+                    if(nextPanel.equals("campaignMenuCard")){
+                        nextButton.setFont(Assets.fontMed);
+                        switcher.initializeMenus();
+                    }
                     nextButton.setVisible(true);
                     repaint(); // Para asegurar el 100%
-                    if(nextPanel.equals("loadingCard"))
-                        switcher.initializeMenus();
+                    
                     //switcher.showCard(nextPanel, missionID);
                 }
             });

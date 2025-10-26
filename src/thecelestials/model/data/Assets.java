@@ -63,6 +63,7 @@ public class Assets {
         effect = loadImage("/images/effects/fire08.png");
         images.put("effect", loadImage("/images/effects/fire08.png"));
         //System.out.println(count+"es el contador");
+        System.out.println(count+"total de webadas");
         count = MAX_COUNT;
         loaded = true;
     }
@@ -86,10 +87,11 @@ public class Assets {
             campaigns.get(campaignID).setState();
         }
         //DESBLOQUEAR EN CAMPANIA
+        /*
         String shipID = db.readIDShipUnlock();
         if (shipID != null) {
             db.updateShipState(shipID);
-        }
+        }*/
     }
 
     private static void setImageLaser(EntityStats bullet) {
@@ -143,10 +145,12 @@ public class Assets {
     public static void setear(){
         loaded = false;
         count = 0;
+        //MAX_COUNT = 11;
     }
 
     public static void loadGame(String missionID) {
-        
+        MAX_COUNT = 11;
+        //setear();
         Mission mission = db.readMissionsByID(missionID);
         List<ShipStats>[] shipsList = db.readShipsByMission(missionID);
         loadSpriteShips(shipsList[2]);
@@ -162,6 +166,7 @@ public class Assets {
         MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, mission.getCampaignID());
         loadSpriteShips(MissionStats.allies);
         loadSpriteShips(MissionStats.axis);
+        System.out.println(count+"total de webadas por mision");
         loaded = true;
     }
 
@@ -202,6 +207,7 @@ public class Assets {
     private static void loadMediaSound(String key, String path, Map<String, MediaPlayer> media) {
         String path2 = Loader.loadMedia(path);
         if (path2 != null) {
+            count++;
             Platform.runLater(() -> {
                 media.put(key, new MediaPlayer(new Media(path2)));
             });

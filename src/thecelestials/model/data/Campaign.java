@@ -43,6 +43,10 @@ public class Campaign extends GameEntity {
             if (missions.get(missionID).getState() == 0) {
                 missions.get(missionID).setState();
                 DataBaseManager.getInstance("").updateMissionState(missionID);
+                String shipID = DataBaseManager.getInstance("").readIDShipUnlock();
+                if (shipID != null) {
+                    DataBaseManager.getInstance("").updateShipState(shipID);
+                }
             }
             flag = true;
         }
