@@ -160,6 +160,7 @@ public class PlayerShip extends Ship {
 
         updateSpawningState(dt);
         if (isMovementLocked()) {
+            accelerating = false;
             return;
         }
         updateValuesShip(dt);
