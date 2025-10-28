@@ -4,10 +4,13 @@
  */
 package thecelestials.model.managers;
 
+import thecelestials.model.gameObjects.PowerUp;
+
 /**
  *
  * @author pc
  */
 public interface GameNotificationListener {
     public void onGameNotify(String type);
+    public void notifyPowerUp(PowerUp po);
 }

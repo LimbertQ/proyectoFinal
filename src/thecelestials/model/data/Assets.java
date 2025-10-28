@@ -28,8 +28,7 @@ public class Assets {
     public static int currentShip = 0;
     public static boolean loaded = false;
     public static BufferedImage player, effect, fondo;
-    //public static BufferedImage[] numbers = new BufferedImage[11];
-    public static BufferedImage[] meteors = new BufferedImage[10];
+    public static BufferedImage[] shieldEffects = new BufferedImage[3];
     //public static BufferedImage[] explosions = new BufferedImage[9];
     public static Map<String, BufferedImage> images = new HashMap<>();
     public static Map<String, BufferedImage> missionMaps = new HashMap<>();
@@ -61,6 +60,9 @@ public class Assets {
         }
         player = loadImage("/images/ships/fighter01.png");
         effect = loadImage("/images/effects/fire08.png");
+        for(int i=0;i<3;i++){
+            shieldEffects[i] = loadImage("/images/effects/shield"+i+".png");
+        }
         images.put("effect", loadImage("/images/effects/fire08.png"));
         //System.out.println(count+"es el contador");
         System.out.println(count+"total de webadas");

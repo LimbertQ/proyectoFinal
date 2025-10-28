@@ -10,6 +10,7 @@ import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PlayerShip;
+import thecelestials.model.gameObjects.PowerUp;
 import thecelestials.model.gameObjects.Ship;
 import thecelestials.model.math.Constants;
 
@@ -17,9 +18,10 @@ import thecelestials.model.math.Constants;
  *
  * @author pc
  */
-public class HUDManager implements GameObjectDestroyedListener {
+public class HUDManager implements GameObjectDestroyedListener, GameNotificationListener, ScoreChangeListener {
 
     private int score = 0;
+    private byte finalScore = 1;
     private PlayerShip player;
     private final BufferedImage[] numbers;
 
@@ -31,6 +33,7 @@ public class HUDManager implements GameObjectDestroyedListener {
     public void clear() {
         player = null;
         score = 0;
+        finalScore = 1;
     }
 
     public void playGame(PlayerShip p) {
@@ -73,9 +76,26 @@ public class HUDManager implements GameObjectDestroyedListener {
     @Override
     public void onGameObjectDestroyed(MovingObject destroyedObject) {
         if (destroyedObject instanceof Meteor) {
-            score += Constants.METEOR_SCORE;
+            score += Constants.METEOR_SCORE*finalScore;
         } else if (destroyedObject instanceof Ship ship && ship.getTeam() == 0) {
-            score += Constants.UFO_SCORE;
+            score += Constants.UFO_SCORE*finalScore;
         }
+    }
+
+    @Override
+    public void onGameNotify(String type) {
+        
+    }
+
+    @Override
+    public void notifyPowerUp(PowerUp type) {
+        if(type.getType().textureKey.equals("star")){
+            score += 1000;
+        }
+    }
+
+    @Override
+    public void onScoreChanged(byte finalScore) {
+        this.finalScore = finalScore;
     }
 }

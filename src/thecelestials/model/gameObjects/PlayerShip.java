@@ -13,6 +13,7 @@ import thecelestials.model.data.ShipStats;
 import thecelestials.model.managers.GameObjectCreator;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
+import thecelestials.view.ui.animations.Animation;
 
 /**
  *
@@ -27,8 +28,10 @@ public class PlayerShip extends Ship {
     private final int copyHealt;
     private final double x, y;
     private long spawnTime, flickerTime = 0;
+    private final Animation shield;
+    private boolean shieldOn, doubleScoreOn, fastFireOn, doubleGunOn;
 
-    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, BufferedImage effect) {
+    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, BufferedImage effect, Animation shield) {
         super(position, shipStats, velocity, maxVel, creator, effect, 1, Constants.FIRERATE);
         x = position.getX();
         y = position.getY();
@@ -36,10 +39,35 @@ public class PlayerShip extends Ship {
         acceleration = new Vector2D();
         lives = 23;
         copyHealt = shipStats.getHealth();
+        shieldOn = false;
+        doubleGunOn = false;
+        fastFireOn = false;
+        doubleScoreOn = false;
+        this.shield = shield;
     }
 
     public int getLives() {
         return lives;
+    }
+
+    public void addLives() {
+        lives++;
+    }
+
+    public void setShield(boolean flag) {
+        shieldOn = flag;
+    }
+
+    public boolean isShieldOn() {
+        return shieldOn;
+    }
+
+    public void setFastFire(boolean flag) {
+
+    }
+
+    public void setDoubleGun(boolean flag) {
+        doubleGunOn = flag;
     }
 
     private void handleInput() {
@@ -92,7 +120,7 @@ public class PlayerShip extends Ship {
 
     @Override
     public void destroy(int da) {
-        
+
         healt -= da;
         if (healt < 1) {
             lives--;
@@ -113,6 +141,20 @@ public class PlayerShip extends Ship {
         switchLocked(false);
     }
 
+    private void shootFire(Vector2D center) {
+        if (doubleGunOn) {
+            Vector2D left = new Vector2D(-heading.getY(), heading.getX());
+            Vector2D leftWingPosition = center.copy().add(left.scale(-width * 0.3));
+            shooti(leftWingPosition, heading);
+
+            Vector2D right = new Vector2D(-heading.getY(), heading.getX());
+            Vector2D rightWingPosition = center.copy().add(right.scale(width * 0.3));
+            shooti(rightWingPosition, heading);
+        } else {
+            shooti(center, heading);
+        }
+    }
+
     @Override
     public void update(float dt) {
 
@@ -122,13 +164,13 @@ public class PlayerShip extends Ship {
         }
         updateValuesShip(dt);
         handleInput();
-
+        if(shieldOn){
+            shield.update(dt);
+        }
         if (Keyboard.SHOOT) {
             Vector2D center = getCenter();
 
-            //Vector2D left = new Vector2D(-heading.getY(),heading.getX());
-            //Vector2D leftWingPosition = center.copy().add(left.scale(width*0.3));
-            shooti(center, heading);
+            shootFire(center);
         }
         if (Keyboard.SPECIAL) {
             Vector2D muzzle = getCenter().add(heading.scale(width));
@@ -158,9 +200,17 @@ public class PlayerShip extends Ship {
             return;
         }
         Graphics2D g2d = (Graphics2D) g;
-        
+
         drawSpeed(g2d);
         drawRectangle(g2d);
+        if (shieldOn) {
+            BufferedImage frame = shield.getCurrentFrame();
+            AffineTransform atShield = AffineTransform.getTranslateInstance(
+                    position.getX() - frame.getWidth() / 2 + width / 2,
+                    position.getY() - frame.getHeight() / 2 + height / 2);
+            atShield.rotate(angle, frame.getWidth() / 2.0, frame.getHeight() / 2.0);
+            g2d.drawImage(frame, atShield, null);
+        }
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);

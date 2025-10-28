@@ -20,11 +20,18 @@ public class Meteor extends MovingObject {
 
     private final MeteorSize size;
     private final GameObjectCreator creator;
-    public Meteor(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel, MeteorSize size, GameObjectCreator creator) {
+    private final PlayerShip player;
+    public Meteor(Vector2D position, BufferedImage texture, Vector2D velocity, double maxVel, MeteorSize size, GameObjectCreator creator, PlayerShip player) {
         super(position, texture, velocity, maxVel, size.getHealt(), size.getDamage());
         this.velocity = velocity.scale(maxVel);
         this.size = size;
         this.creator = creator;
+        this.player = player;
+    }
+    
+    private Vector2D fleeForce(Vector2D meteorCenter, Vector2D playerCenter) {
+        Vector2D desiredVelocity = playerCenter.subtract(meteorCenter).normalize().scale(Constants.METEOR_MAX_VEL);
+        return velocity.subtract(desiredVelocity);
     }
 
     @Override
@@ -32,6 +39,18 @@ public class Meteor extends MovingObject {
         if(isMovementLocked()){
             return;
         }
+        
+        if (player.isShieldOn()) {
+                Vector2D center = getCenter();
+                Vector2D playerCenter = player.getCenter();
+                double distanceToPlayer = playerCenter.subtract(center).getMagnitude();
+                // Comprobar si está dentro del rango del escudo
+                double shieldRadius = Constants.SHIELD_DISTANCE * 0.5 + width * 0.5;
+                if (distanceToPlayer < shieldRadius) {
+                    Vector2D fleeForce = fleeForce(center, playerCenter);
+                    velocity = velocity.add(fleeForce);
+                }
+            }
         // Limitar la velocidad si excede la máxima
         if (velocity.getMagnitudeSq() >= maxVel * maxVel) {
             velocity = velocity.add(velocity.normalize().scale(-0.01f)); // ligera desaceleración

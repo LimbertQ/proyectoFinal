@@ -15,6 +15,8 @@ import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
+import thecelestials.model.gameObjects.PowerUp;
+import thecelestials.model.gameObjects.PowerUpTypes;
 import thecelestials.model.gameObjects.Ship;
 
 /**
@@ -117,6 +119,11 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
                 mediaPlayer.play();
             }
         }
+    }
+    
+    @Override
+    public void notifyPowerUp(PowerUp type){
+        playSound("powerUp");
     }
 
     @Override

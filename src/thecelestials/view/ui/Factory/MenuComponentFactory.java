@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -29,6 +31,10 @@ import thecelestials.view.ui.ShipSelectorPanel;
  * @author pc
  */
 public class MenuComponentFactory {
+    private static JDialog exitDialog, looseDialog, winDialog;
+    public static void createDialogs(JFrame switcher){
+        
+    }
 
     public static JPanel createContentPanelForType(String menuType, ScreenSwitcher switcher, int campaignId) {// campaignId para misiones
         JPanel panel = new JPanel();

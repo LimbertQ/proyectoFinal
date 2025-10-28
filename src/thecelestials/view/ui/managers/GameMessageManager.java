@@ -14,8 +14,10 @@ import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.NPCShip;
 import thecelestials.model.gameObjects.PlayerShip;
+import thecelestials.model.gameObjects.PowerUp;
 import thecelestials.model.managers.GameNotificationListener;
 import thecelestials.model.managers.GameObjectDestroyedListener;
+import thecelestials.model.managers.ScoreChangeListener;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
 import thecelestials.view.ui.animations.Message;
@@ -24,12 +26,13 @@ import thecelestials.view.ui.animations.Message;
  *
  * @author pc
  */
-public class GameMessageManager implements GameObjectDestroyedListener, GameNotificationListener {
+public class GameMessageManager implements GameObjectDestroyedListener, GameNotificationListener, ScoreChangeListener {
 
     private final List<Message> activeMessages;
     private final Vector2D left;
     private final Vector2D center;
     private byte waves = 0;
+    private byte finalScore = 1;
     public GameMessageManager(Vector2D left, Vector2D center) {
         activeMessages = new ArrayList<>();
         this.left = left;
@@ -39,6 +42,7 @@ public class GameMessageManager implements GameObjectDestroyedListener, GameNoti
     public void clear(){
         waves = 0;
         activeMessages.clear();
+        finalScore = 1;
     }
 
     public void showMessage(Vector2D pos, String text, Color color) {
@@ -51,6 +55,11 @@ public class GameMessageManager implements GameObjectDestroyedListener, GameNoti
     
     private void showMessage(String text, boolean flag){
         activeMessages.add(new Message(center, flag, text, Color.WHITE, true, Assets.fontBig, 1));
+    }
+    
+    @Override
+    public void notifyPowerUp(PowerUp type){
+        showMessage(type.getPosition(), type.getType().type, type.getType().colorPowerUp);
     }
     
     @Override
@@ -79,11 +88,11 @@ public class GameMessageManager implements GameObjectDestroyedListener, GameNoti
     @Override
     public void onGameObjectDestroyed(MovingObject destroyedObject) {
         if (destroyedObject instanceof Meteor) {
-            showMessage(destroyedObject.getPosition(), "+" + Constants.METEOR_SCORE + " SCORE", Color.WHITE);
+            showMessage(destroyedObject.getPosition(), "+" + (Constants.METEOR_SCORE*finalScore) + " SCORE", Color.WHITE);
         } else if (destroyedObject instanceof PlayerShip player && player.isDead()) {
             showMessage(destroyedObject.getPosition(), "-1 LIFE", Color.RED);
         } else if (destroyedObject instanceof NPCShip npcShip && npcShip.getTeam() == 0) {
-            showMessage(destroyedObject.getPosition(), "+" + Constants.UFO_SCORE + " SCORE", Color.WHITE);
+            showMessage(destroyedObject.getPosition(), "+" + (Constants.UFO_SCORE*finalScore) + " SCORE", Color.WHITE);
         }    
     }
 
@@ -96,5 +105,10 @@ public class GameMessageManager implements GameObjectDestroyedListener, GameNoti
             msg.draw(g);
         }
         activeMessages.removeIf(Message::isDead);
+    }
+
+    @Override
+    public void onScoreChanged(byte finalScore) {
+        this.finalScore = finalScore;
     }
 }

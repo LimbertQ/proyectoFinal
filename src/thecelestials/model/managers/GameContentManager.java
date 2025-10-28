@@ -27,6 +27,7 @@ import thecelestials.model.gameObjects.Ship;
 import thecelestials.model.gameObjects.Vortex;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
+import thecelestials.view.ui.animations.Animation;
 import thecelestials.view.ui.managers.GameEffectManager;
 import thecelestials.view.ui.managers.GameMessageManager;
 
@@ -49,6 +50,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final GameMessageManager gameMessageManager;
     private final CollisionManager gameCollisionManager;
     private final GameEffectManager gameEffectManager;
+    private final GamePowerUpManager gamePowerUpManager;
     private final Random random = new Random();
     private final Map<String, BufferedImage> images;
 
@@ -72,7 +74,12 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
         gameEventManager.addGameNotificationListener(gameSoundManager);
         gameEventManager.addGameNotificationListener(gameMessageManager);
+        gameEventManager.addGameNotificationListener(gameHudManager);
+        
+        gameEventManager.addGameScoreListener(gameHudManager);
+        gameEventManager.addGameScoreListener(gameMessageManager);
         images = Assets.images;
+        gamePowerUpManager = new GamePowerUpManager(images, gameEventManager);
     }
 
     public void clear() {
@@ -90,6 +97,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
         //---------
         gravitationalsFields.clear();
+        gamePowerUpManager.clear();
         movingObjects.clear();
         listToAdd.clear();
         enemys.clear();
@@ -103,10 +111,11 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
-        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect);
+        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect, new Animation(Assets.shieldEffects, 80, null));
         movingObjects.add(player);
 
         gameHudManager.playGame(player);
+        gamePowerUpManager.playGame(player);
         gameSoundManager.playGame();
         gameEventManager.notifyGameEvent("DESCRIPTION");
         if(MissionStats.stars.containsKey("big1")){
@@ -159,7 +168,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             }
 
             BufferedImage texture = MissionStats.stars.get("big" + 2);
-            createGameObject(new Meteor(new Vector2D(x, y), texture, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * random.nextDouble() + 1, MeteorSize.BIG, this));
+            createGameObject(new Meteor(new Vector2D(x, y), texture, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * random.nextDouble() + 1, MeteorSize.BIG, this, player));
         }
     }
 
@@ -257,6 +266,9 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             gf.update(dt, movingObjects);
         }
         gameMessageManager.update(dt);
+        
+        gamePowerUpManager.update(dt);
+        
         if(type < 0)
             spawnObjects(dt);
         if (type > -1) {
@@ -314,6 +326,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameEffectManager.draw(g);
         gameHudManager.draw(g);
         gameMessageManager.draw(g2d);
+        gamePowerUpManager.draw(g);
     }
 
     @Override
@@ -335,7 +348,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         MeteorSize nextSize = meteor.getSize().getNextSize();
         for (int i = 0; i < 2; i++) {
             int nro = random.nextInt(2) + 1;
-            listToAdd.add(new Meteor(meteor.getPosition(), MissionStats.stars.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this));
+            listToAdd.add(new Meteor(meteor.getPosition(), MissionStats.stars.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this, player));
         }
     }
 
