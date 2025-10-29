@@ -27,6 +27,7 @@ public class Assets {
     public static int MAX_COUNT = 100;
     public static int currentShip = 0;
     public static boolean loaded = false;
+    public static boolean unlock = false;
     public static BufferedImage player, effect, fondo;
     public static BufferedImage[] shieldEffects = new BufferedImage[3];
     //public static BufferedImage[] explosions = new BufferedImage[9];
@@ -87,13 +88,8 @@ public class Assets {
             campaignID = campaignID.substring(0, length - 1) + digit;
             campaigns.get(campaignID).unlocks(MissionStats.missionID);
             campaigns.get(campaignID).setState();
+            unlock = true;
         }
-        //DESBLOQUEAR EN CAMPANIA
-        /*
-        String shipID = db.readIDShipUnlock();
-        if (shipID != null) {
-            db.updateShipState(shipID);
-        }*/
     }
 
     private static void setImageLaser(EntityStats bullet) {

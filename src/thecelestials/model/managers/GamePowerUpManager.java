@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.gameObjects.PowerUp;
 import thecelestials.model.gameObjects.PowerUpTypes;
@@ -28,6 +29,7 @@ public class GamePowerUpManager {
     private long powerUpSpawner = 0;
     private final GameEventManager gameEventManager;
     protected byte scoreMultiplier = 1;
+    private int aleatorio = 0;
     
     private long shieldTimer, doubleGunTimer, fasterFireTimer, scoreTimer;
     public GamePowerUpManager(Map<String, BufferedImage> imagesCache, GameEventManager gameEventManager) {
@@ -110,9 +112,6 @@ public class GamePowerUpManager {
         int x = (int) ((Constants.WIDTH - 64) * Math.random());
         int y = (int) ((Constants.HEIGHT - 64) * Math.random());
         Vector2D pos = new Vector2D(x, y);
-        int aleatorio = PowerUpTypes.values().length;
-        /*if(!MissionStats.)
-            aleatorio--;*/
         PowerUpTypes type = PowerUpTypes.values()[(int) (Math.random() * aleatorio)];
         
         activePowerUps.add(new PowerUp(pos, imagesCache.get(type.textureKey), imagesCache.get("orb"), type, player));
@@ -129,10 +128,14 @@ public class GamePowerUpManager {
         fasterFireTimer = -1;
         scoreTimer = -1;
         scoreMultiplier = 1;
+        aleatorio = PowerUpTypes.values().length;
     }
     
     public void playGame(PlayerShip player){
         this.player = player;
+        if(!MissionStats.stars.containsKey("big1")){
+            aleatorio--;
+        }
     }
     
     public void update(float dt){

@@ -29,7 +29,7 @@ public class PlayerShip extends Ship {
     private final double x, y;
     private long spawnTime, flickerTime = 0;
     private final Animation shield;
-    private boolean shieldOn, doubleScoreOn, fastFireOn, doubleGunOn;
+    private boolean shieldOn, doubleGunOn;
     private long fireRate = 0;
     private long fireRateConstants = 0;
     public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, BufferedImage effect, Animation shield) {
@@ -42,8 +42,6 @@ public class PlayerShip extends Ship {
         copyHealt = shipStats.getHealth();
         shieldOn = false;
         doubleGunOn = false;
-        fastFireOn = false;
-        doubleScoreOn = false;
         this.shield = shield;
         fireRateConstants = Constants.FIRERATE;
     }

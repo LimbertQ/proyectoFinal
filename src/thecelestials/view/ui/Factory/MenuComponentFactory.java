@@ -43,7 +43,7 @@ public class MenuComponentFactory {
         putButtonsDialog(e -> {looseDialog.dispose(); switcher.showCard("loadingGameCard", MissionStats.missionID);}, looseDialog, switcher, "REINTENTAR");
         
         winDialog = createJDialog(frame, "Deseas continuar?");
-        putButtonsDialog(e -> {winDialog.dispose(); switcher.resume();}, winDialog, switcher, "CONTINUAR");
+        putButtonsDialog(e -> {winDialog.dispose(); switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));}, winDialog, switcher, "CONTINUAR");
     }
     
     private static void putButtonsDialog(ActionListener action, JDialog dialog, ScreenSwitcher switcher, String textButton1){

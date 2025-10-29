@@ -21,25 +21,25 @@ import thecelestials.view.ui.Factory.MenuComponentFactory;
  *
  * @author pc
  */
-public class MenuPanel extends JPanel{
+public class MenuPanel extends JPanel {
+
     private final ScreenSwitcher switcher;
     private JPanel contentWest;
     private JPanel contentCenter; // Contendrá los componentes específicos del menú (botones, sliders, etc.)
 
     public MenuPanel(ScreenSwitcher switcher, String menuType) {
         this.switcher = switcher;
-        
+
         setLayout(new BorderLayout());
 
         // 1. Crear contentPanel UNA SOLA VEZ
         setBorder(BorderFactory.createEmptyBorder(80, 40, 80, 40)); // Borde para separación y posición
 
-        
         loadMenuContent(menuType);
         revalidate();
         repaint();
     }
-    
+
     private void loadMenuContent(String menuType) {
         // 1. Limpiar el contentPanel EXISTENTE
 
@@ -60,42 +60,55 @@ public class MenuPanel extends JPanel{
         contentWest.repaint();
 
         //if (!menuType.equals(MenuComponentFactory.TYPE_MAIN_MENU)) {
-            //poner el panel central
-            contentCenter = (JPanel) comps[2];
-            add(contentCenter, BorderLayout.CENTER);
-            //poner el boton atras o el shipSelectorPanel
-            add(comps[3], BorderLayout.EAST);
+        //poner el panel central
+        contentCenter = (JPanel) comps[2];
+        add(contentCenter, BorderLayout.CENTER);
+        //poner el boton atras o el shipSelectorPanel
+        add(comps[3], BorderLayout.EAST);
 
-            contentCenter.revalidate();
-            contentCenter.repaint();
+        contentCenter.revalidate();
+        contentCenter.repaint();
         //}
         // 6. Opcional: limpiar el panel temporal si ya no lo necesitas
         newContentFromFactory.removeAll();
 
         // 7. Revalidar y repintar el contentPanel EXISTENTE
     }
-    
+
     public void updateContentForMenu(String type) {
         //int typ = 0;
-        contentCenter.removeAll();
-        JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, type));
-        
-        Component[] comps = newContentFromFactory.getComponents();
-        for (Component comp : comps) {
-            contentCenter.add(comp);
+        if (type.equals("unlock")) {
+            contentCenter.removeAll();
+            JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, "MENU"));
+
+            Component[] comps = newContentFromFactory.getComponents();
+            for (Component comp : comps) {
+                contentCenter.add(comp);
+            }
+        } else {
+            JPanel ti = (JPanel) this.getComponent(0);
+            JLabel title = (JLabel) ti.getComponent(0);
+            title.setText(Assets.campaigns.get(type).getName());
+            contentCenter.removeAll();
+            JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, type));
+
+            Component[] comps = newContentFromFactory.getComponents();
+            for (Component comp : comps) {
+                contentCenter.add(comp);
+            }
+            //PONER LA IMAGEN DE LOS MAPAS
+            contentWest.removeAll();
+            JLabel imageShow = new JLabel();
+            ImageIcon imagen = new ImageIcon(Assets.campaigns.get(type).getProfile());
+            imageShow.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+            contentWest.add(imageShow);
         }
-        //PONER LA IMAGEN DE LOS MAPAS
-        contentWest.removeAll();
-        JLabel imageShow = new JLabel();
-        ImageIcon imagen = new ImageIcon(Assets.campaigns.get(type).getProfile());
-        imageShow.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
-        contentWest.add(imageShow);
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         g.drawImage(Assets.fondo, 0, 0, getWidth(), getHeight(), this);
     }
 }

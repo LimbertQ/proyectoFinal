@@ -65,10 +65,12 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
 
     @Override
     public void showCard(String cardName, String menuID) {
-        
+        if(Assets.unlock){
+            Assets.unlock = false;
+            menuPanel.updateContentForMenu("unlock");
+        }
         switch (cardName) {
             case "loadingGameCard" -> {
-                System.err.println(menuID);
                 loadingPanel.nextPanel(gameCanvasCard, menuID);
                 cardName = loadingCard;
             }
