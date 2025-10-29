@@ -100,6 +100,6 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     
     @Override
     public void resume(){
-        //gameCanvas.resume();
+        gameCanvas.resume();
     }
 }

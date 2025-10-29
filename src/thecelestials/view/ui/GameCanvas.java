@@ -104,8 +104,8 @@ public class GameCanvas extends Canvas implements Runnable {
     public void playGame() {
         lastTime = System.nanoTime();
         gcm.clear();
-        isPaused = false;
         gcm.playGame();
+        isPaused = false;
     }
 
     public void resume() {

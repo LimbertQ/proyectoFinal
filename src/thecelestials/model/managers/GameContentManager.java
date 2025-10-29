@@ -42,7 +42,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private final List<Ship> enemys = new ArrayList<>();
     private final List<Ship> allies = new ArrayList<>();
     private Ship cruiser;
-    private PlayerShip player;
+    private PlayerShip player = null;
     private final List<GravitationalField> gravitationalsFields = new ArrayList<>();
     private final HUDManager gameHudManager;
     private final GameEventManager gameEventManager;
@@ -111,7 +111,8 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
-        player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect, new Animation(Assets.shieldEffects, 80, null));
+        this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect, new Animation(Assets.shieldEffects, 80, null));
+        
         movingObjects.add(player);
 
         gameHudManager.playGame(player);

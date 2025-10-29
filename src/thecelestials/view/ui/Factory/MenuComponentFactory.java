@@ -35,27 +35,21 @@ import thecelestials.view.ui.ShipSelectorPanel;
 public class MenuComponentFactory {
     private static JDialog exitDialog, looseDialog, winDialog;
     public static void createDialogs(GameFrame frame){
-        exitDialog = createDialogos(frame, "Estas seguro que deseas salir");
-        looseDialog = createDialogos(frame, "Perdiste");
-        winDialog = createDialogos(frame, "Deseas ir a la siguiente Mision");
+        ScreenSwitcher switcher = frame;
+        exitDialog = createJDialog(frame, "Estas seguro que deseas salir?");
+        putButtonsDialog(e -> {exitDialog.dispose(); switcher.resume();}, exitDialog, switcher, "CONTINUAR");
+        
+        looseDialog = createJDialog(frame, "Deseas reintentar mission?");
+        putButtonsDialog(e -> {looseDialog.dispose(); switcher.showCard("loadingGameCard", MissionStats.missionID);}, looseDialog, switcher, "REINTENTAR");
+        
+        winDialog = createJDialog(frame, "Deseas continuar?");
+        putButtonsDialog(e -> {winDialog.dispose(); switcher.resume();}, winDialog, switcher, "CONTINUAR");
     }
     
-    public static void showDialog(int type){
-        switch (type) {
-            case 1 -> looseDialog.setVisible(true);
-            case 2 -> winDialog.setVisible(true);
-            default -> exitDialog.setVisible(true);
-        }
-    }
-    
-    private static JDialog createDialogos(GameFrame frame, String text){
-        JDialog dialog = createJDialog(frame, text);
+    private static void putButtonsDialog(ActionListener action, JDialog dialog, ScreenSwitcher switcher, String textButton1){
+        JLabel button1 = createClickableLabel(textButton1, 1, action);
+        JLabel button2 = createClickableLabel("ABANDONAR", 0, e->{dialog.dispose(); switcher.showCard("missionsMenuCard", MissionStats.campaignID);});
         
-        JLabel button1 = createClickableLabel("CONTINUAR", 1, e -> {dialog.dispose(); frame.resume();});
-        
-        JLabel button2 = createClickableLabel("ABANDONAR", 0, e -> {dialog.dispose(); frame.showCard("missionsMenuCard", MissionStats.campaignID);});
-        
-        // Panel para los botones ACEPTAR y CANCELAR
         JPanel buttonPanel = new JPanel(); // Añadir un poco de espacio horizontal
         buttonPanel.setOpaque(false); // Hacerlo transparente para ver el fondo del diálogo
         
@@ -64,9 +58,15 @@ public class MenuComponentFactory {
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 
         dialog.pack(); // Empaqueta el diálogo para ajustar el tamaño al contenido
-        dialog.setLocationRelativeTo(frame); // Centra el diálogo en relación al marco principal
-        //mainDialog.setVisible(true);
-        return dialog;
+        
+    }
+    
+    public static void showDialog(int type){
+        switch (type) {
+            case 1 -> looseDialog.setVisible(true);
+            case 2 -> winDialog.setVisible(true);
+            default -> exitDialog.setVisible(true);
+        }
     }
     
     private static JDialog createJDialog(JFrame frame, String text){
@@ -81,6 +81,7 @@ public class MenuComponentFactory {
         dialog.setLayout(new BorderLayout(10, 10));
         
         dialog.add(sampleLabel(text, 1, 0), BorderLayout.CENTER);
+        dialog.setLocationRelativeTo(frame); // Centra el diálogo en relación al marco principal
         return dialog;
     }
 
