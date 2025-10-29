@@ -30,7 +30,8 @@ public class PlayerShip extends Ship {
     private long spawnTime, flickerTime = 0;
     private final Animation shield;
     private boolean shieldOn, doubleScoreOn, fastFireOn, doubleGunOn;
-
+    private long fireRate = 0;
+    private long fireRateConstants = 0;
     public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, BufferedImage effect, Animation shield) {
         super(position, shipStats, velocity, maxVel, creator, effect, 1, Constants.FIRERATE);
         x = position.getX();
@@ -44,6 +45,7 @@ public class PlayerShip extends Ship {
         fastFireOn = false;
         doubleScoreOn = false;
         this.shield = shield;
+        fireRateConstants = Constants.FIRERATE;
     }
 
     public int getLives() {
@@ -63,7 +65,11 @@ public class PlayerShip extends Ship {
     }
 
     public void setFastFire(boolean flag) {
-
+        if (flag) {
+            fireRateConstants /= 2;
+        } else {
+            fireRateConstants = Constants.FIRERATE;
+        }
     }
 
     public void setDoubleGun(boolean flag) {
@@ -141,17 +147,21 @@ public class PlayerShip extends Ship {
         switchLocked(false);
     }
 
-    private void shootFire(Vector2D center) {
-        if (doubleGunOn) {
-            Vector2D left = new Vector2D(-heading.getY(), heading.getX());
-            Vector2D leftWingPosition = center.copy().add(left.scale(-width * 0.3));
-            shooti(leftWingPosition, heading);
+    private void shootFire(Vector2D center, float dt) {
+        if (fireRate > fireRateConstants) {
+            fireRate = 0;
+            if (doubleGunOn) {
+                
+                Vector2D left = new Vector2D(-heading.getY(), heading.getX());
+                Vector2D leftWingPosition = center.copy().add(left.scale(-width * 0.35));
+                shooti(leftWingPosition, heading);
 
-            Vector2D right = new Vector2D(-heading.getY(), heading.getX());
-            Vector2D rightWingPosition = center.copy().add(right.scale(width * 0.3));
-            shooti(rightWingPosition, heading);
-        } else {
-            shooti(center, heading);
+                Vector2D right = new Vector2D(-heading.getY(), heading.getX());
+                Vector2D rightWingPosition = center.copy().add(right.scale(width * 0.35));
+                shooti(rightWingPosition, heading);
+            } else {
+                shooti(center, heading);
+            }
         }
     }
 
@@ -164,14 +174,15 @@ public class PlayerShip extends Ship {
             return;
         }
         updateValuesShip(dt);
+        fireRate += dt;
         handleInput();
-        if(shieldOn){
+        if (shieldOn) {
             shield.update(dt);
         }
         if (Keyboard.SHOOT) {
             Vector2D center = getCenter();
 
-            shootFire(center);
+            shootFire(center, dt);
         }
         if (Keyboard.SPECIAL) {
             Vector2D muzzle = getCenter().add(heading.scale(width));

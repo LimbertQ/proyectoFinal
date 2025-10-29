@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
+import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
  *
@@ -67,6 +68,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         
         switch (cardName) {
             case "loadingGameCard" -> {
+                System.err.println(menuID);
                 loadingPanel.nextPanel(gameCanvasCard, menuID);
                 cardName = loadingCard;
             }
@@ -92,6 +94,12 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         
         gameCanvas = new GameCanvas();
         mainPanel.add(gameCanvas, gameCanvasCard);
+        MenuComponentFactory.createDialogs(this);
         gameCanvas.start();
+    }
+    
+    @Override
+    public void resume(){
+        //gameCanvas.resume();
     }
 }

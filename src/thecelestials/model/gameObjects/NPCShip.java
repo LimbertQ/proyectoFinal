@@ -26,6 +26,7 @@ public class NPCShip extends Ship {
     private int currentPattern = 0;
     private final Vector2D centerBattle;
     private final Vector2D goal;
+    private long fireRate = 0;
 
     public NPCShip(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team, TargetProvider provider) {
         super(position, shipStats, velocity, maxVel, creator, effect, team, Constants.UFO_FIRE_RATE);
@@ -52,7 +53,10 @@ public class NPCShip extends Ship {
 
     private void shoot(Vector2D direction) {
         specialTechnique(getCenter(), direction, 1000f);
-        shooti(getCenter(), direction);
+        if (fireRate > Constants.UFO_FIRE_RATE) {
+            shooti(getCenter(), direction);
+            fireRate = 0;
+        }
 
     }
 
@@ -146,6 +150,7 @@ public class NPCShip extends Ship {
             }
         } else {
             updateValuesShip(dt);
+            fireRate += dt;
             if (contMoves > 5000) {
                 contMoves = 0;
                 currentPattern = (int) (Math.random() * 4);

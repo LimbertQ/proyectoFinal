@@ -8,6 +8,8 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import thecelestials.controller.Keyboard;
 import thecelestials.model.data.Assets;
 import thecelestials.model.managers.GameContentManager;
@@ -43,15 +45,28 @@ public class GameCanvas extends Canvas implements Runnable {
         gcm = new GameContentManager();
     }
 
+    private void showDialog(int n) {
+        if (!(n > 0 && n < 3)) {
+            n = 0;
+            Keyboard.ESC = false;
+        }
+        MenuComponentFactory.showDialog(n);
+    }
+
     private void update(float dt) {
 
-        if (gcm.gameOver() > 0 && gcm.gameOver() < 3) {
+        if (Keyboard.ESC || gcm.gameOver() > 0 && gcm.gameOver() < 3) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GameCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            }
             isPaused = true;
             gcm.pause();
-            if(gcm.gameOver() == 2){
+            if (gcm.gameOver() == 2) {
                 Assets.unlocks();
             }
-            //MenuComponentFactory
+            showDialog(gcm.gameOver());
         } else {
             keyboard.update();
             gcm.update(dt);
@@ -89,8 +104,8 @@ public class GameCanvas extends Canvas implements Runnable {
     public void playGame() {
         lastTime = System.nanoTime();
         gcm.clear();
-        gcm.playGame();
         isPaused = false;
+        gcm.playGame();
     }
 
     public void resume() {

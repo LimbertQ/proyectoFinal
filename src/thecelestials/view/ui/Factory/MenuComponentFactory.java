@@ -24,6 +24,8 @@ import javax.swing.SwingConstants;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.GameEntity;
+import thecelestials.model.data.MissionStats;
+import thecelestials.view.ui.GameFrame;
 import thecelestials.view.ui.ShipSelectorPanel;
 
 /**
@@ -32,8 +34,54 @@ import thecelestials.view.ui.ShipSelectorPanel;
  */
 public class MenuComponentFactory {
     private static JDialog exitDialog, looseDialog, winDialog;
-    public static void createDialogs(JFrame switcher){
+    public static void createDialogs(GameFrame frame){
+        exitDialog = createDialogos(frame, "Estas seguro que deseas salir");
+        looseDialog = createDialogos(frame, "Perdiste");
+        winDialog = createDialogos(frame, "Deseas ir a la siguiente Mision");
+    }
+    
+    public static void showDialog(int type){
+        switch (type) {
+            case 1 -> looseDialog.setVisible(true);
+            case 2 -> winDialog.setVisible(true);
+            default -> exitDialog.setVisible(true);
+        }
+    }
+    
+    private static JDialog createDialogos(GameFrame frame, String text){
+        JDialog dialog = createJDialog(frame, text);
         
+        JLabel button1 = createClickableLabel("CONTINUAR", 1, e -> {dialog.dispose(); frame.resume();});
+        
+        JLabel button2 = createClickableLabel("ABANDONAR", 0, e -> {dialog.dispose(); frame.showCard("missionsMenuCard", MissionStats.campaignID);});
+        
+        // Panel para los botones ACEPTAR y CANCELAR
+        JPanel buttonPanel = new JPanel(); // Añadir un poco de espacio horizontal
+        buttonPanel.setOpaque(false); // Hacerlo transparente para ver el fondo del diálogo
+        
+        buttonPanel.add(button1);
+        buttonPanel.add(button2);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.pack(); // Empaqueta el diálogo para ajustar el tamaño al contenido
+        dialog.setLocationRelativeTo(frame); // Centra el diálogo en relación al marco principal
+        //mainDialog.setVisible(true);
+        return dialog;
+    }
+    
+    private static JDialog createJDialog(JFrame frame, String text){
+        JDialog dialog = new JDialog(frame, true);
+        // En tu MenuComponentFactory, dentro del switch para cada tipo de diálogo:
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setSize(300, 150);
+        dialog.setResizable(false);
+        dialog.setUndecorated(true);
+        dialog.setBackground(new Color(0, 0, 0, 0));
+
+        dialog.setLayout(new BorderLayout(10, 10));
+        
+        dialog.add(sampleLabel(text, 1, 0), BorderLayout.CENTER);
+        return dialog;
     }
 
     public static JPanel createContentPanelForType(String menuType, ScreenSwitcher switcher, int campaignId) {// campaignId para misiones

@@ -11,6 +11,7 @@ package thecelestials.controller;
 public interface ScreenSwitcher {
     void showCard(String cardName, String menuID);
     void initializeMenus();
+    void resume();
     /*
     void backCard(String cardName);
     void endMission();
