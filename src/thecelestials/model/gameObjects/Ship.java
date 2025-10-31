@@ -35,10 +35,14 @@ public abstract class Ship extends MovingObject {
         this.creator = creator;
         this.team = team;
         this.shipStats = shipStats;
-        if (team == 1) {
-            color = Color.BLUE;
+        if (this instanceof PlayerShip) {
+            color = Color.GREEN;
         } else {
-            color = Color.RED;
+            if (team == 1) {
+                color = Color.BLUE;
+            } else {
+                color = Color.RED;
+            }
         }
     }
 

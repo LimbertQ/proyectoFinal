@@ -144,14 +144,19 @@ public class Assets {
         loaded = false;
         count = 0;
         //MAX_COUNT = 11;
+        
     }
 
     public static void loadGame(String missionID) {
-        MAX_COUNT = 11;
         //setear();
+        MAX_COUNT = 10;
         Mission mission = db.readMissionsByID(missionID);
         List<ShipStats>[] shipsList = db.readShipsByMission(missionID);
+        MAX_COUNT = shipsList[0].size()*3+shipsList[1].size()*3+shipsList[2].size()*3+2;
+        Map<String, BufferedImage> stars = readStarsImages(missionID);
+        //MAX_COUNT = shipsList.length;
         loadSpriteShips(shipsList[2]);
+        
         byte challenge = 0;
         if (mission.getChallenge().equals("WAVES")) {
             challenge++;
@@ -160,11 +165,10 @@ public class Assets {
         loadMediaSound("voiceStartPath", mission.getVoiceStartPath(), audioMission);
         loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
 
-        Map<String, BufferedImage> stars = readStarsImages(missionID);
+        
         MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, mission.getCampaignID());
         loadSpriteShips(MissionStats.allies);
         loadSpriteShips(MissionStats.axis);
-        System.out.println(count+"total de webadas por mision");
         loaded = true;
     }
 
@@ -227,12 +231,12 @@ public class Assets {
 
     private static Map<String, BufferedImage> readStarsImages(String missionID) {
         List<Map<String, String>> AllImages = db.readStarsByMission(missionID);
-
+        MAX_COUNT += AllImages.size();
         Map<String, BufferedImage> starsMission = new HashMap<>();
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("starAssetPath"));
             starsMission.put(image.get("starName"), imagen);
-            System.out.println(image.get("starName") + ":_:" + image.get("starAssetPath"));
+            //System.out.println(image.get("starName") + ":_:" + image.get("starAssetPath"));
             if (imagen == null) {
                 System.err.println(false);
             } else {
