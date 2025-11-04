@@ -20,6 +20,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
@@ -34,6 +35,7 @@ import thecelestials.view.ui.ShipSelectorPanel;
  */
 public class MenuComponentFactory {
     private static JDialog exitDialog, looseDialog, winDialog;
+    private static JDialog closeDialog;
     public static void createDialogs(GameFrame frame){
         ScreenSwitcher switcher = frame;
         exitDialog = createJDialog(frame, "Estas seguro que deseas salir?");
@@ -44,6 +46,10 @@ public class MenuComponentFactory {
         
         winDialog = createJDialog(frame, "Deseas continuar?");
         putButtonsDialog(e -> {winDialog.dispose(); switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));}, winDialog, switcher, "CONTINUAR");
+        
+        closeDialog = createJDialog(frame, "¿Desea salir del juego");
+        putButtonsDialog(e -> {winDialog.dispose(); switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));}, winDialog, switcher, "CONTINUAR");
+        
     }
     
     private static void putButtonsDialog(ActionListener action, JDialog dialog, ScreenSwitcher switcher, String textButton1){
@@ -98,6 +104,47 @@ public class MenuComponentFactory {
 
         Map<String, ActionListener> actions;
         switch (menuType) {
+            case "mainMenuCard" -> {
+                //System.out.println(menug+"mrd");
+                title = titleMenu("LOS CELESTIALES");
+                actions = new LinkedHashMap<>();
+                actions.put("SELECCION DE MISION", e -> switcher.showCard("campaignMenuCard", ""));
+                actions.put("OPCIONES", e -> switcher.showCard("optionsMenuCard", ""));
+                actions.put("EXTRAS", e -> switcher.showCard("extraMenuCard", ""));
+                actions.put("SALIR", e -> switcher.showCard("campaignMenuCard", ""));
+                panel.add(putButtons(25, true, actions));
+                //------------
+                //panel.add(new JPanel());
+                //panel.add(new JPanel());
+                //------------------------------
+
+            }
+            case "optionsMenuCard" -> {
+                title = titleMenu("OPCIONES");
+                panel.add(createMenuLabel(1));
+                //----------------
+                actions = new LinkedHashMap<>();
+                actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", ""));
+                actions.put("INSTRUCCIONES", e -> switcher.showCard("optionsMenuCard", ""));
+                actions.put("COMPRAS", e -> switcher.showCard("extrasMenuCard", ""));
+                panel.add(putButtons(34, false, actions));
+                //------------
+                
+                panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
+            }
+            case "extraMenuCard" -> {
+                title = titleMenu("EXTRAS");
+                panel.add(createMenuLabel(2));
+                //----------------
+                actions = new LinkedHashMap<>();
+                actions.put("GALERIA", e -> switcher.showCard("campaignMenuCard", ""));
+                actions.put("CINEMATICA", e -> switcher.showCard("optionsMenuCard", ""));
+                actions.put("CIVILIZACIONES", e -> switcher.showCard("extrasMenuCard", ""));
+                panel.add(putButtons(34, false, actions));
+                //------------
+                
+                panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
+            }
             case "campaignMenuCard" -> {
                 //System.out.println(menug+"mrd");
                 title = titleMenu("campaña");
@@ -109,8 +156,17 @@ public class MenuComponentFactory {
                 panel.add(putButtons(34, false, actions));
                 //------------------------------
 
-                panel.add(createBackPanel(e -> switcher.showCard("MAIN_MENU_CARD", "1")));
+                panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
                 //System.out.println("grrrr");
+            }
+            case "selectorMenuCard" -> {
+                title = titleMenu("SELECTOR CARD");
+                panel.add(createMenuLabel(2));
+                //----------------
+                panel.add(textArea());
+                //------------
+                
+                panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "missionsMenuCard" -> {
                 title = titleMenu("misiones");
@@ -135,6 +191,28 @@ public class MenuComponentFactory {
         }
         panelTitle.add(title);
         return panel;
+    }
+    
+    private static JPanel textArea(){
+        JPanel contentPanel = new JPanel();
+        //contentPanel.setLayout(new BorderLayout());
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(250, 50, 50, 50));
+        contentPanel.setOpaque(false);
+        
+        JTextArea texto = new JTextArea();
+        //texto.setMaximumSize(new Dimension(Integer.MAX_VALUE, texto.getPreferredSize().height));
+        texto.setFont(Assets.fontMed);
+        texto.setBackground(new Color(41, 41, 41, 130));
+        texto.setLineWrap(true);
+        texto.setWrapStyleWord(true);
+        texto.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        //texto.setText("alison de mrd");
+        texto.setForeground(Color.WHITE);
+        texto.setOpaque(true);
+        contentPanel.add(texto);
+        //contentPanel.add(texto, BorderLayout.CENTER);
+        return contentPanel;
     }
 
     public static JPanel putButtons(int strut, boolean flag, Map<String, ActionListener> botones) {

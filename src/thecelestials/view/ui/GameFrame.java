@@ -25,11 +25,19 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     private final LoadingPanel loadingPanel;
     private final JPanel mainPanel;
     private MenuPanel menuPanel;
+    private MenuPanel optionsMenuPanel;
+    private MenuPanel extraMenuPanel;
+    private MenuPanel campaignPanel;
     private MenuPanel missionsPanel;
+    private MenuSelectorPanel selectorMenuPanel;
     private GameCanvas gameCanvas;
     private final String gameCanvasCard = "gameCanvasCard";
+    private final String extraMenuCard = "extraMenuCard";
+    private final String optionsMenuCard = "optionsMenuCard";
     private final String campaignsMenuCard = "campaignMenuCard";
+    private final String selectorMenuCard = "selectorMenuCard";
     private final String missionsMenuCard = "missionsMenuCard";
+    private final String mainMenuCard = "mainMenuCard";
     private final String loadingCard = "loadingCard";
     
     public GameFrame(){
@@ -52,7 +60,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         loadingPanel = new LoadingPanel(loadingCard, this);
-        loadingPanel.nextPanel(campaignsMenuCard, "");
+        loadingPanel.nextPanel(mainMenuCard, "");
         mainPanel.add(loadingPanel, loadingCard);
         add(mainPanel, BorderLayout.CENTER);
         cardLayout.show(mainPanel, loadingCard);
@@ -67,7 +75,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     public void showCard(String cardName, String menuID) {
         if(Assets.unlock){
             Assets.unlock = false;
-            menuPanel.updateContentForMenu("unlock");
+            campaignPanel.updateContentForMenu("unlock");
         }
         switch (cardName) {
             case "loadingGameCard" -> {
@@ -88,10 +96,18 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     
     @Override
     public void initializeMenus(){
-        menuPanel = new MenuPanel(this, campaignsMenuCard);
+        menuPanel = new MenuPanel(this, mainMenuCard);
+        optionsMenuPanel = new MenuPanel(this, optionsMenuCard);
+        extraMenuPanel = new MenuPanel(this, extraMenuCard);
+        campaignPanel = new MenuPanel(this, campaignsMenuCard);
+        selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
         
-        mainPanel.add(menuPanel, campaignsMenuCard);
+        mainPanel.add(menuPanel, mainMenuCard);
+        mainPanel.add(optionsMenuPanel, optionsMenuCard);
+        mainPanel.add(extraMenuPanel, extraMenuCard);
+        mainPanel.add(campaignPanel, campaignsMenuCard);
+        mainPanel.add(selectorMenuPanel, selectorMenuCard);
         mainPanel.add(missionsPanel, missionsMenuCard);
         
         gameCanvas = new GameCanvas();

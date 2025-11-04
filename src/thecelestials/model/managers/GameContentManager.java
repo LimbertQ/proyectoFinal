@@ -111,7 +111,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
-        this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, Assets.effect, new Animation(Assets.shieldEffects, 80, null));
+        this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null));
         
         movingObjects.add(player);
 
@@ -135,10 +135,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         if(MissionStats.cruiser != null){
             Ship cruisero;
             if(MissionStats.cruiser.getTeam() == 1)
-                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), 1, this);
+                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             
             else{
-                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), 0, this);
+                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             }
             movingObjects.add(cruisero);
             cruiser = cruisero;
@@ -175,7 +175,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     private void spawnShip(int limit, int x, int y, int team, List<ShipStats> shipsList) {
         for (int i = 0; i < limit; i++) {
-            Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+            Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             createGameObject(ship);
         }
     }
@@ -376,7 +376,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     @Override
     public void cloneShip(Vector2D position, int team) {
-        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size() - 1)), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size() - 1)), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
         createGameObject(ship);
     }
 }

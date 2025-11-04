@@ -5,7 +5,6 @@
 package thecelestials.view.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -26,10 +25,10 @@ public class MenuPanel extends JPanel {
     private final ScreenSwitcher switcher;
     private JPanel contentWest;
     private JPanel contentCenter; // Contendrá los componentes específicos del menú (botones, sliders, etc.)
-
+    private final String MenuPanelType;
     public MenuPanel(ScreenSwitcher switcher, String menuType) {
         this.switcher = switcher;
-
+        this.MenuPanelType = menuType;
         setLayout(new BorderLayout());
 
         // 1. Crear contentPanel UNA SOLA VEZ
@@ -59,7 +58,7 @@ public class MenuPanel extends JPanel {
         contentWest.revalidate();
         contentWest.repaint();
 
-        //if (!menuType.equals(MenuComponentFactory.TYPE_MAIN_MENU)) {
+        if (!menuType.equals("mainMenuCard")) {
         //poner el panel central
         contentCenter = (JPanel) comps[2];
         add(contentCenter, BorderLayout.CENTER);
@@ -68,7 +67,7 @@ public class MenuPanel extends JPanel {
 
         contentCenter.revalidate();
         contentCenter.repaint();
-        //}
+        }
         // 6. Opcional: limpiar el panel temporal si ya no lo necesitas
         newContentFromFactory.removeAll();
 

@@ -71,7 +71,7 @@ public class LoadingPanel extends JPanel {
         progressTimer.start();
         // 2. INICIAR EL HILO DE CARGA (El trabajo pesado en segundo plano)
         Thread loadingThread = new Thread(() -> {
-            if (nextPanel.equals("campaignMenuCard")) {
+            if (nextPanel.equals("mainMenuCard")) {
                 Assets.init(); // <--- 1. ESTO HACE Assets.loaded = true
                 //destinationCard = "campaignMenuCard";
             } else if (nextPanel.equals("gameCanvasCard")) {
@@ -98,7 +98,7 @@ public class LoadingPanel extends JPanel {
                     });
                     //nextButton.setText("SIGUIENTE");
                     
-                    if(nextPanel.equals("campaignMenuCard")){
+                    if(nextPanel.equals("mainMenuCard")){
                         nextButton.setFont(Assets.fontMed);
                         switcher.initializeMenus();
                     }

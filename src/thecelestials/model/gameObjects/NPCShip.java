@@ -28,8 +28,8 @@ public class NPCShip extends Ship {
     private final Vector2D goal;
     private long fireRate = 0;
 
-    public NPCShip(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team, TargetProvider provider) {
-        super(position, shipStats, velocity, maxVel, creator, effect, team, Constants.UFO_FIRE_RATE);
+    public NPCShip(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, TargetProvider provider) {
+        super(position, shipStats, velocity, maxVel, creator, Constants.UFO_FIRE_RATE);
         goal = new Vector2D();
         centerBattle = new Vector2D(Constants.WIDTH / 2.0, Constants.HEIGHT / 2.0);
         this.provider = provider;

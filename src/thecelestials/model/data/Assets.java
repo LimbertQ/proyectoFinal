@@ -140,6 +140,11 @@ public class Assets {
         }
     }
     
+    public static String getInformation(){
+        String texto = "tu puedes nada te detiene eres un ser unico \n un humano diferente a todos eres Limbert";
+        return texto;    
+    }
+    
     public static void setear(){
         loaded = false;
         count = 0;
@@ -221,11 +226,7 @@ public class Assets {
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("imagePath"));
             images.put(image.get("imageName"), imagen);
-            if (imagen == null) {
-                System.err.println(false);
-            } else {
-                System.err.println(true);
-            }
+            
         }
     }
 
@@ -236,12 +237,7 @@ public class Assets {
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("starAssetPath"));
             starsMission.put(image.get("starName"), imagen);
-            //System.out.println(image.get("starName") + ":_:" + image.get("starAssetPath"));
-            if (imagen == null) {
-                System.err.println(false);
-            } else {
-                System.err.println(true);
-            }
+            
         }
         return starsMission;
     }

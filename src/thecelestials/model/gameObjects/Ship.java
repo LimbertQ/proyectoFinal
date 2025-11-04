@@ -7,7 +7,6 @@ package thecelestials.model.gameObjects;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.EntityStats;
 import thecelestials.model.data.ShipStats;
@@ -29,11 +28,11 @@ public abstract class Ship extends MovingObject {
     private final int team;
     private final Color color;
 
-    public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, BufferedImage effect, int team, long shipFireRate) {
+    public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, long shipFireRate) {
         super(position, shipStats, velocity, maxVel);
         this.bullet = shipStats.getEntityStats();
         this.creator = creator;
-        this.team = team;
+        this.team = shipStats.getTeam();
         this.shipStats = shipStats;
         if (this instanceof PlayerShip) {
             color = Color.GREEN;
@@ -115,7 +114,7 @@ public abstract class Ship extends MovingObject {
     protected void drawRectangle(Graphics2D g2d) {
         // 1. **GUARDAR** el estado original de Graphics2D. ¡Crucial!
         AffineTransform originalTransform = g2d.getTransform();
-
+        
         // 2. **DEFINIR la Transformación** para el rectángulo:
         // A. Traslación: Mueve el origen a la posición (x, y) de la nave.
         // B. Rotación: Rota alrededor del centro de la nave (si la nave rota).
