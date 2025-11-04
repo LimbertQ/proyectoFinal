@@ -1,0 +1,80 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package thecelestials.view.ui;
+
+import java.awt.BorderLayout;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javax.swing.JPanel;
+import thecelestials.controller.ScreenSwitcher;
+import thecelestials.model.data.Assets;
+
+/**
+ *
+ * @author pc
+ */
+public class MediaPlayerPanel extends JPanel{
+    private MediaPlayer mediaPlayer;
+    private MediaView mediaView;
+    private final ScreenSwitcher switcher;
+    public MediaPlayerPanel(ScreenSwitcher switcher, String menuType) {
+        setLayout(new BorderLayout());
+        JFXPanel fxPanel = new JFXPanel();
+        add(fxPanel, BorderLayout.CENTER);
+        this.switcher = switcher;
+
+        Platform.runLater(() -> {
+            BorderPane root = new BorderPane();
+            Scene scene = new Scene(root);
+            fxPanel.setScene(scene);
+            mediaView = new MediaView();
+            root.setCenter(mediaView);
+
+            mediaView.fitWidthProperty().bind(root.widthProperty());
+            mediaView.fitHeightProperty().bind(root.heightProperty());
+            mediaView.setPreserveRatio(false);
+        });
+    }
+    
+    public void updateVideo(String menuCard, String campaignID){
+        abrirArchivo(menuCard, campaignID);
+    }
+
+    private void abrirArchivo(String menuCard, String campaignID) {
+        Platform.runLater(() -> {
+            // Limpiar el reproductor viejo antes de crear uno nuevo
+            if (mediaPlayer != null) {
+                mediaPlayer.dispose();
+            }
+            System.out.println(campaignID+" te odio");
+            String mediaURL = getClass().getResource(Assets.campaigns.get(campaignID).getVideoPath()).toExternalForm();
+            Media media = new Media(mediaURL);
+            mediaPlayer = new MediaPlayer(media);
+            mediaView.setMediaPlayer(mediaPlayer);
+
+            mediaView.setOnMouseClicked(event -> {
+                mediaPlayer.stop();
+                mediaPlayer.dispose(); // Agrega dispose() aquí
+                
+                switcher.showCard(menuCard, "cinematic");
+            });
+
+            mediaPlayer.setOnReady(() -> {
+                mediaPlayer.play();
+            });
+
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.stop();
+                mediaPlayer.dispose(); // Agrega dispose() aquí
+                switcher.showCard(menuCard, "cinematic");
+            });
+        });
+    }
+}

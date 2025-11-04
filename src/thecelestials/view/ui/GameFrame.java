@@ -30,6 +30,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     private MenuPanel campaignPanel;
     private MenuPanel missionsPanel;
     private MenuSelectorPanel selectorMenuPanel;
+    private MediaPlayerPanel mediaPlayerPanel;
     private GameCanvas gameCanvas;
     private final String gameCanvasCard = "gameCanvasCard";
     private final String extraMenuCard = "extraMenuCard";
@@ -39,6 +40,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     private final String missionsMenuCard = "missionsMenuCard";
     private final String mainMenuCard = "mainMenuCard";
     private final String loadingCard = "loadingCard";
+    private final String mediaPlayerCard = "mediaPlayerCard";
     
     public GameFrame(){
         setTitle("Los Celestiales");
@@ -82,6 +84,8 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
                 loadingPanel.nextPanel(gameCanvasCard, menuID);
                 cardName = loadingCard;
             }
+            case mediaPlayerCard -> mediaPlayerPanel.updateVideo("selectorMenuCard", menuID);
+            case selectorMenuCard -> selectorMenuPanel.updateContentForMenu(menuID);
             case missionsMenuCard -> missionsPanel.updateContentForMenu(menuID);
             case gameCanvasCard -> {
                 //Assets.loadGame(menuID);
@@ -102,6 +106,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         campaignPanel = new MenuPanel(this, campaignsMenuCard);
         selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
+        mediaPlayerPanel = new MediaPlayerPanel(this, mediaPlayerCard);
         
         mainPanel.add(menuPanel, mainMenuCard);
         mainPanel.add(optionsMenuPanel, optionsMenuCard);
@@ -109,6 +114,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         mainPanel.add(campaignPanel, campaignsMenuCard);
         mainPanel.add(selectorMenuPanel, selectorMenuCard);
         mainPanel.add(missionsPanel, missionsMenuCard);
+        mainPanel.add(mediaPlayerPanel, mediaPlayerCard);
         
         gameCanvas = new GameCanvas();
         mainPanel.add(gameCanvas, gameCanvasCard);

@@ -37,6 +37,7 @@ public class Assets {
     public static Map<String, MediaPlayer> audioMediaCache = new HashMap<>();
     public static List<ShipStats> shipsAvaible = new ArrayList<>();
     public static Map<String, Campaign> campaigns = null;
+    public static Map<String, List> informations = new HashMap<>();
     public static EntityStats powerBullet;
 
     public static Font fontBig, fontMed;
@@ -51,6 +52,8 @@ public class Assets {
             campaigns = loadCampaigns();
             fondo = loadImage("/images/maps/exoplaneta.jpeg");
             loadShipAvaible();
+            loadCivilizations();
+            getInformation();
             readAllSounds();
             readAllSoundsMedia();
             readAllImages();
@@ -140,9 +143,18 @@ public class Assets {
         }
     }
     
-    public static String getInformation(){
-        String texto = "tu puedes nada te detiene eres un ser unico \n un humano diferente a todos eres Limbert";
-        return texto;    
+    public static void getInformation(){
+        
+        
+        String[][] infoGame = {{"credits", "LIMBERT ES UNA BUENA PERSONA", "/images/others/dev.png", "credits"},
+                                   {"tutorial", "EL TECLADO ES Y DEBES HACER, TAMBIEN", "/images/others/tutorial.png", "tutorial"}};
+        for(int i=0;i<infoGame.length;i++){
+            AssetDefinition info = new AssetDefinition("DES0"+(i+1), infoGame[i][0], infoGame[i][1], infoGame[0][2]);
+            List<AssetDefinition> infoList = new ArrayList<>();
+            infoList.add(info);
+            images.put(infoGame[i][3], loadImage(infoGame[i][2]));
+            informations.put(infoGame[i][3], infoList);
+        }
     }
     
     public static void setear(){
@@ -190,10 +202,14 @@ public class Assets {
             media.dispose();
         }
     }
-
-    public static List<AssetDefinition> loadCivilizations() {
+    
+    private static void loadCivilizations() {
+        //civilizations = db.readAvailableCivilization();
         List<AssetDefinition> civilizations = db.readAvailableCivilization();
-        return civilizations;
+        for(AssetDefinition civilization: civilizations){
+            images.put(civilization.getName(), loadImage(civilization.getProfileImagePath()));
+        }
+        informations.put("civilizations", civilizations);
     }
 
     private static void readAllSounds() {

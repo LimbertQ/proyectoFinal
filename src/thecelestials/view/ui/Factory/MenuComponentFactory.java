@@ -124,8 +124,8 @@ public class MenuComponentFactory {
                 panel.add(createMenuLabel(1));
                 //----------------
                 actions = new LinkedHashMap<>();
-                actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", ""));
-                actions.put("INSTRUCCIONES", e -> switcher.showCard("optionsMenuCard", ""));
+                actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", "credits"));
+                actions.put("INSTRUCCIONES", e -> switcher.showCard("selectorMenuCard", "tutorial"));
                 actions.put("COMPRAS", e -> switcher.showCard("extrasMenuCard", ""));
                 panel.add(putButtons(34, false, actions));
                 //------------
@@ -137,9 +137,9 @@ public class MenuComponentFactory {
                 panel.add(createMenuLabel(2));
                 //----------------
                 actions = new LinkedHashMap<>();
-                actions.put("GALERIA", e -> switcher.showCard("campaignMenuCard", ""));
-                actions.put("CINEMATICA", e -> switcher.showCard("optionsMenuCard", ""));
-                actions.put("CIVILIZACIONES", e -> switcher.showCard("extrasMenuCard", ""));
+                actions.put("GALERIA", e -> switcher.showCard("selectorMenuCard", "galery"));
+                actions.put("CINEMATICA", e -> switcher.showCard("selectorMenuCard", "cinematic"));
+                actions.put("CIVILIZACIONES", e -> switcher.showCard("selectorMenuCard", "civilizations"));
                 panel.add(putButtons(34, false, actions));
                 //------------
                 
@@ -165,8 +165,8 @@ public class MenuComponentFactory {
                 //----------------
                 panel.add(textArea());
                 //------------
-                
-                panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
+                panel.add(createClickableLabel("ATRAS", 0, e -> switcher.showCard("optionsMenuCard", "1")));
+                //panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "missionsMenuCard" -> {
                 title = titleMenu("misiones");

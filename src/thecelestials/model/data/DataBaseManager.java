@@ -138,7 +138,7 @@ public class DataBaseManager {
 
             while (rs.next()) {
                 AssetDefinition civilization = new AssetDefinition(rs.getString("civilizationID"),
-                        rs.getString("civilizationName"), rs.getString("civilizationPath"), rs.getString("civilizationDescription"));
+                        rs.getString("civilizationName"), rs.getString("civilizationDescription"), rs.getString("civilizationPath"));
                 
                 //team = 1;
                 list.add(civilization);
