@@ -30,6 +30,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     private MenuPanel campaignPanel;
     private MenuPanel missionsPanel;
     private MenuSelectorPanel selectorMenuPanel;
+    private ButtonSelectorPanel buttonSelectorPanel;
     private MediaPlayerPanel mediaPlayerPanel;
     private GameCanvas gameCanvas;
     private final String gameCanvasCard = "gameCanvasCard";
@@ -37,6 +38,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     private final String optionsMenuCard = "optionsMenuCard";
     private final String campaignsMenuCard = "campaignMenuCard";
     private final String selectorMenuCard = "selectorMenuCard";
+    private final String buttonSelectorCard = "buttonSelectorCard";
     private final String missionsMenuCard = "missionsMenuCard";
     private final String mainMenuCard = "mainMenuCard";
     private final String loadingCard = "loadingCard";
@@ -86,6 +88,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
             }
             case mediaPlayerCard -> mediaPlayerPanel.updateVideo("selectorMenuCard", menuID);
             case selectorMenuCard -> selectorMenuPanel.updateContentForMenu(menuID);
+            case buttonSelectorCard -> buttonSelectorPanel.updateContentForMenu(menuID);
             case missionsMenuCard -> missionsPanel.updateContentForMenu(menuID);
             case gameCanvasCard -> {
                 //Assets.loadGame(menuID);
@@ -105,6 +108,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         extraMenuPanel = new MenuPanel(this, extraMenuCard);
         campaignPanel = new MenuPanel(this, campaignsMenuCard);
         selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
+        buttonSelectorPanel = new ButtonSelectorPanel(this, buttonSelectorCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
         mediaPlayerPanel = new MediaPlayerPanel(this, mediaPlayerCard);
         
@@ -113,6 +117,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         mainPanel.add(extraMenuPanel, extraMenuCard);
         mainPanel.add(campaignPanel, campaignsMenuCard);
         mainPanel.add(selectorMenuPanel, selectorMenuCard);
+        mainPanel.add(buttonSelectorPanel, buttonSelectorCard);
         mainPanel.add(missionsPanel, missionsMenuCard);
         mainPanel.add(mediaPlayerPanel, mediaPlayerCard);
         

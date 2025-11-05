@@ -28,6 +28,10 @@ public class Assets {
     public static int currentShip = 0;
     public static boolean loaded = false;
     public static boolean unlock = false;
+    
+    public static int lives = 3;
+    public static int money = 0;
+    
     public static BufferedImage player, effect, fondo;
     public static BufferedImage[] shieldEffects = new BufferedImage[3];
     //public static BufferedImage[] explosions = new BufferedImage[9];
@@ -109,6 +113,16 @@ public class Assets {
             setImageLaser(bullet);
             //System.out.println("ship dispo");
         }
+    }
+    
+    public static void updatePlayerStatus(int life, int coins){
+        lives += lives;
+        if(lives < 3){
+            lives = 3;
+        }
+        money += coins;
+        //UPDATE DATABASE
+        
     }
 
     public static ShipStats getCurrentShip() {

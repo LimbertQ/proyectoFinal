@@ -34,48 +34,68 @@ import thecelestials.view.ui.ShipSelectorPanel;
  * @author pc
  */
 public class MenuComponentFactory {
+
     private static JDialog exitDialog, looseDialog, winDialog;
     private static JDialog closeDialog;
-    public static void createDialogs(GameFrame frame){
+
+    public static void createDialogs(GameFrame frame) {
         ScreenSwitcher switcher = frame;
         exitDialog = createJDialog(frame, "Estas seguro que deseas salir?");
-        putButtonsDialog(e -> {exitDialog.dispose(); switcher.resume();}, exitDialog, switcher, "CONTINUAR");
-        
+        putButtonsDialog(e -> {
+            exitDialog.dispose();
+            switcher.resume();
+        }, exitDialog, switcher, "CONTINUAR");
+
         looseDialog = createJDialog(frame, "Deseas reintentar mission?");
-        putButtonsDialog(e -> {looseDialog.dispose(); switcher.showCard("loadingGameCard", MissionStats.missionID);}, looseDialog, switcher, "REINTENTAR");
-        
+        putButtonsDialog(e -> {
+            looseDialog.dispose();
+            switcher.showCard("loadingGameCard", MissionStats.missionID);
+        }, looseDialog, switcher, "REINTENTAR");
+
         winDialog = createJDialog(frame, "Deseas continuar?");
-        putButtonsDialog(e -> {winDialog.dispose(); switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));}, winDialog, switcher, "CONTINUAR");
-        
+        putButtonsDialog(e -> {
+            winDialog.dispose();
+            switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));
+        }, winDialog, switcher, "CONTINUAR");
+
         closeDialog = createJDialog(frame, "¿Desea salir del juego");
-        putButtonsDialog(e -> {winDialog.dispose(); switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));}, winDialog, switcher, "CONTINUAR");
-        
+        putButtonsDialog(e -> {
+            winDialog.dispose();
+            switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));
+        }, winDialog, switcher, "CONTINUAR");
+
     }
-    
-    private static void putButtonsDialog(ActionListener action, JDialog dialog, ScreenSwitcher switcher, String textButton1){
+
+    private static void putButtonsDialog(ActionListener action, JDialog dialog, ScreenSwitcher switcher, String textButton1) {
         JLabel button1 = createClickableLabel(textButton1, 1, action);
-        JLabel button2 = createClickableLabel("ABANDONAR", 0, e->{dialog.dispose(); switcher.showCard("missionsMenuCard", MissionStats.campaignID);});
-        
+        JLabel button2 = createClickableLabel("ABANDONAR", 0, e -> {
+            dialog.dispose();
+            switcher.showCard("missionsMenuCard", MissionStats.campaignID);
+        });
+
         JPanel buttonPanel = new JPanel(); // Añadir un poco de espacio horizontal
         buttonPanel.setOpaque(false); // Hacerlo transparente para ver el fondo del diálogo
-        
+
         buttonPanel.add(button1);
         buttonPanel.add(button2);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 
         dialog.pack(); // Empaqueta el diálogo para ajustar el tamaño al contenido
-        
+
     }
-    
-    public static void showDialog(int type){
+
+    public static void showDialog(int type) {
         switch (type) {
-            case 1 -> looseDialog.setVisible(true);
-            case 2 -> winDialog.setVisible(true);
-            default -> exitDialog.setVisible(true);
+            case 1 ->
+                looseDialog.setVisible(true);
+            case 2 ->
+                winDialog.setVisible(true);
+            default ->
+                exitDialog.setVisible(true);
         }
     }
-    
-    private static JDialog createJDialog(JFrame frame, String text){
+
+    private static JDialog createJDialog(JFrame frame, String text) {
         JDialog dialog = new JDialog(frame, true);
         // En tu MenuComponentFactory, dentro del switch para cada tipo de diálogo:
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -85,7 +105,7 @@ public class MenuComponentFactory {
         dialog.setBackground(new Color(0, 0, 0, 0));
 
         dialog.setLayout(new BorderLayout(10, 10));
-        
+
         dialog.add(sampleLabel(text, 1, 0), BorderLayout.CENTER);
         dialog.setLocationRelativeTo(frame); // Centra el diálogo en relación al marco principal
         return dialog;
@@ -126,10 +146,10 @@ public class MenuComponentFactory {
                 actions = new LinkedHashMap<>();
                 actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", "credits"));
                 actions.put("INSTRUCCIONES", e -> switcher.showCard("selectorMenuCard", "tutorial"));
-                actions.put("COMPRAS", e -> switcher.showCard("extrasMenuCard", ""));
+                actions.put("COMPRAS", e -> switcher.showCard("buttonSelectorCard", ""));
                 panel.add(putButtons(34, false, actions));
                 //------------
-                
+
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "extraMenuCard" -> {
@@ -142,7 +162,6 @@ public class MenuComponentFactory {
                 actions.put("CIVILIZACIONES", e -> switcher.showCard("selectorMenuCard", "civilizations"));
                 panel.add(putButtons(34, false, actions));
                 //------------
-                
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "campaignMenuCard" -> {
@@ -161,6 +180,15 @@ public class MenuComponentFactory {
             }
             case "selectorMenuCard" -> {
                 title = titleMenu("SELECTOR CARD");
+                panel.add(createMenuLabel(2));
+                //----------------
+                panel.add(textArea());
+                //------------
+                panel.add(createClickableLabel("ATRAS", 0, e -> switcher.showCard("optionsMenuCard", "1")));
+                //panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
+            }
+            case "buttonSelectorCard" -> {
+                title = titleMenu("COMPRAS");
                 panel.add(createMenuLabel(2));
                 //----------------
                 panel.add(textArea());
@@ -192,21 +220,21 @@ public class MenuComponentFactory {
         panelTitle.add(title);
         return panel;
     }
-    
-    private static JPanel textArea(){
+
+    private static JPanel textArea() {
         JPanel contentPanel = new JPanel();
         //contentPanel.setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(250, 50, 50, 50));
         contentPanel.setOpaque(false);
-        
+
         JTextArea texto = new JTextArea();
         //texto.setMaximumSize(new Dimension(Integer.MAX_VALUE, texto.getPreferredSize().height));
         texto.setFont(Assets.fontMed);
         texto.setBackground(new Color(41, 41, 41, 130));
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
-        texto.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        texto.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         //texto.setText("alison de mrd");
         texto.setForeground(Color.WHITE);
         texto.setOpaque(true);
@@ -411,32 +439,43 @@ public class MenuComponentFactory {
 
     public static Map<String, ActionListener> createActionsContent(ScreenSwitcher switcher, String menuID) {
         Map<String, ActionListener> actions = new LinkedHashMap<>();
-        Map<String, ? extends GameEntity> mapEntitys;
-        String ID = menuID.substring(0, 4);
-        String menuCard;
-        switch (ID) {
-            //CAMP01 soy mision->gameCanvasCard
-            case "CAMP" -> {
-                //cargando misiones ---CORREGIR
-                menuCard = "loadingGameCard";
-                //menuCard = "gameCanvasCard";
-                mapEntitys = Assets.loadMissionsByCampaign(menuID);
+        if (menuID.equals("buyPanel")) {
+            int cost = 5000;
+            actions.put("monedas: "+Assets.money, null);
+            for(int i=5; i<=20; i*=2){
+                cost+=3000;
+                final int ii = i;
+                final int costLife = cost;
+                actions.put(i+"LIFE X "+cost+" Bs", e -> {Assets.updatePlayerStatus(ii, costLife);});
             }
-            //CAMPA soy menuCamp
-            default -> {
-                //cargando campanias->misiones
-                menuCard = "missionsMenuCard";
-                mapEntitys = Assets.campaigns;
+        }else{
+            Map<String, ? extends GameEntity> mapEntitys;
+            String ID = menuID.substring(0, 4);
+            String menuCard;
+            switch (ID) {
+                //CAMP01 soy mision->gameCanvasCard
+                case "CAMP" -> {
+                    //cargando misiones ---CORREGIR
+                    menuCard = "loadingGameCard";
+                    //menuCard = "gameCanvasCard";
+                    mapEntitys = Assets.loadMissionsByCampaign(menuID);
+                }
+                //CAMPA soy menuCamp
+                default -> {
+                    //cargando campanias->misiones
+                    menuCard = "missionsMenuCard";
+                    mapEntitys = Assets.campaigns;
+                }
             }
-        }
-        
-        for (GameEntity gameEntity : mapEntitys.values()) {
-            if (gameEntity.getState() == 0) {
-                actions.put(gameEntity.getName() + "-Bloq", null);
-            } else {
-                actions.put(gameEntity.getName(), e -> {
-                    switcher.showCard(menuCard, gameEntity.getID());
-                });
+
+            for (GameEntity gameEntity : mapEntitys.values()) {
+                if (gameEntity.getState() == 0) {
+                    actions.put(gameEntity.getName() + "-Bloq", null);
+                } else {
+                    actions.put(gameEntity.getName(), e -> {
+                        switcher.showCard(menuCard, gameEntity.getID());
+                    });
+                }
             }
         }
         return actions;
