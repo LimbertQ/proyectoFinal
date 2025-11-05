@@ -443,10 +443,14 @@ public class MenuComponentFactory {
             int cost = 5000;
             actions.put("monedas: "+Assets.money, null);
             for(int i=5; i<=20; i*=2){
-                cost+=3000;
                 final int ii = i;
                 final int costLife = cost;
-                actions.put(i+"LIFE X "+cost+" Bs", e -> {Assets.updatePlayerStatus(ii, costLife);});
+                if(Assets.money >= cost)
+                    actions.put(i+"LIFE X "+cost+" Bs", e -> {Assets.updatePlayerStatus(ii, -costLife); switcher.showCard("buttonSelectorCard", "");});
+                else{
+                    actions.put(i+"LIFE X "+cost+" Bs -Bloq", null);
+                }
+                cost+=3000;
             }
         }else{
             Map<String, ? extends GameEntity> mapEntitys;

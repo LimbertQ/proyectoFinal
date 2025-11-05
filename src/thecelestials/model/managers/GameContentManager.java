@@ -75,7 +75,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         gameEventManager.addGameNotificationListener(gameSoundManager);
         gameEventManager.addGameNotificationListener(gameMessageManager);
         gameEventManager.addGameNotificationListener(gameHudManager);
-        
+
         gameEventManager.addGameScoreListener(gameHudManager);
         gameEventManager.addGameScoreListener(gameMessageManager);
         images = Assets.images;
@@ -84,7 +84,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     public void clear() {
         missionMap = null;
-        
+
         cruiser = null;
 
         gameHudManager.clear();
@@ -112,33 +112,32 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
         this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null));
-        
+
         movingObjects.add(player);
 
         gameHudManager.playGame(player);
         gamePowerUpManager.playGame(player);
         gameSoundManager.playGame();
         gameEventManager.notifyGameEvent("DESCRIPTION");
-        if(MissionStats.stars.containsKey("big1")){
+        if (MissionStats.stars.containsKey("big1")) {
             meteor = true;
         }
-        for(Map.Entry<String, BufferedImage> entry: MissionStats.stars.entrySet()){
-            if(entry.getKey().equals("pulsar")){
+        for (Map.Entry<String, BufferedImage> entry : MissionStats.stars.entrySet()) {
+            if (entry.getKey().equals("pulsar")) {
                 GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), entry.getValue(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
                 gravitationalsFields.add(pulsar);
-            }else if(entry.getKey().equals("vortice")){
+            } else if (entry.getKey().equals("vortice")) {
                 GravitationalField vortex = new Vortex(new Vector2D(100, 100), entry.getValue(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
                 gravitationalsFields.add(vortex);
             }
         }
-        
-        if(MissionStats.cruiser != null){
+
+        if (MissionStats.cruiser != null) {
             Ship cruisero;
-            if(MissionStats.cruiser.getTeam() == 1)
-                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
-            
-            else{
-                cruisero = new NPCShip(new Vector2D(1366/2 , 768/2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            if (MissionStats.cruiser.getTeam() == 1) {
+                cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            } else {
+                cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             }
             movingObjects.add(cruisero);
             cruiser = cruisero;
@@ -148,14 +147,14 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         type = -1;
     }
 
-    public void resume(){
+    public void resume() {
         gameSoundManager.resume();
     }
-    
-    public void pause(){
+
+    public void pause() {
         gameSoundManager.pause();
     }
-    
+
     private void startWave() {
 
         for (int i = 0; i < 1; i++) {
@@ -204,15 +203,20 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                 }
                 spawnShip(nroRandom, 0, 100, 0, MissionStats.axis);
             }
-        }else if(type < 0){
+        } else if (type < 0) {
             type = 0;
         }
     }
-    
-    public byte gameOver(){
+
+    public byte gameOver() {
         return type;
     }
-    
+
+    public void saveProgress() {
+        Assets.lives = player.getLives();
+        Assets.updatePlayerStatus(0, gameHudManager.getScore());
+    }
+
     private void cinematic(float dt) {
         //type = 3 muere, type = 4 gana --cinematic
         if (type == 0) {
@@ -225,7 +229,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                     type = 4;
                     assault = 0;
                 }
-            } else if(enemys.isEmpty()){
+            } else if (enemys.isEmpty()) {
                 //mensaje victoria
                 gameEventManager.notifyGameEvent("VICTORY");
                 type = 4;
@@ -267,11 +271,12 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             gf.update(dt, movingObjects);
         }
         gameMessageManager.update(dt);
-        
+
         gamePowerUpManager.update(dt);
-        
-        if(type < 0)
+
+        if (type < 0) {
             spawnObjects(dt);
+        }
         if (type > -1) {
             cinematic(dt);
         }

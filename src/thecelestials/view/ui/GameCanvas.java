@@ -63,6 +63,7 @@ public class GameCanvas extends Canvas implements Runnable {
             }
             isPaused = true;
             gcm.pause();
+            gcm.saveProgress();
             if (gcm.gameOver() == 2) {
                 Assets.unlocks();
             }

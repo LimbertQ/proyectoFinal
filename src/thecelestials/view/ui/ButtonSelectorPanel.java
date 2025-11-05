@@ -160,6 +160,7 @@ public class ButtonSelectorPanel extends JPanel {
         for (Component comp : comps) {
             contentCenter.add(comp);
         }
+        contentCenter.repaint();
         index = 0;
         nextShip(0);
     }

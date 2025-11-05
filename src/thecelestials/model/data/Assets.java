@@ -30,7 +30,7 @@ public class Assets {
     public static boolean unlock = false;
     
     public static int lives = 3;
-    public static int money = 0;
+    public static int money = 5000;
     
     public static BufferedImage player, effect, fondo;
     public static BufferedImage[] shieldEffects = new BufferedImage[3];
@@ -53,6 +53,9 @@ public class Assets {
             db.openConnection();
             fontBig = loadFont("/fonts/futureFont.ttf", 42);
             fontMed = loadFont("/fonts/futureFont.ttf", 20);
+            int[] progress = db.readProgress();
+            lives = progress[0];
+            money = progress[1];
             campaigns = loadCampaigns();
             fondo = loadImage("/images/maps/exoplaneta.jpeg");
             loadShipAvaible();
@@ -116,13 +119,17 @@ public class Assets {
     }
     
     public static void updatePlayerStatus(int life, int coins){
-        lives += lives;
+        lives += life;
         if(lives < 3){
             lives = 3;
         }
-        money += coins;
-        //UPDATE DATABASE
         
+        money += coins;
+        if(money < 0){
+            money = 0;
+        }
+        //UPDATE DATABASE
+        db.updateProgress(lives, money);
     }
 
     public static ShipStats getCurrentShip() {

@@ -114,6 +114,8 @@ public class MenuSelectorPanel extends JPanel {
             currentImage.setIcon(new ImageIcon(queue.get(index).getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
             nameImage.setText(queue.get(index).getName());
             information.setText(queue.get(index).getDescription());
+            //information.repaint();
+            contentCenter.repaint();
         }
     }
 

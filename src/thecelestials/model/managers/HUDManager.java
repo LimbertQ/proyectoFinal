@@ -39,6 +39,10 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
     public void playGame(PlayerShip p) {
         player = p;
     }
+    
+    public int getScore(){
+        return score;
+    }
 
     private void loadNumbersImages() {
         for (int i = 0; i < numbers.length; i++) {

@@ -58,6 +58,34 @@ public class DataBaseManager {
         }
     }
     
+    public int[] readProgress(){
+        String sql = "SELECT * FROM GameProgress gp;";
+        int[] progress = new int[2];
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                progress[0] = rs.getInt("lives");
+                progress[1] = rs.getInt("coins");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al leer progreso del jugador: " + e.getMessage());
+        }
+        return progress;
+    }
+    
+    public void updateProgress(int lives, int coins){
+        String sql = "UPDATE GameProgress SET lives = ?, coins = ? WHERE gameProgressID = 'GMP01';";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, lives);
+            pstmt.setInt(2, coins);
+            pstmt.executeUpdate();
+            
+            //System.out.println("Estado de misión '" + missionId + "' actualizado a '" + newState + "'.");
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar progreso del jugador" + e.getMessage());
+        }
+    }
+    
     public List<ShipStats> readAvailableShips() {
         List<ShipStats> navesData = new ArrayList<>();
         //ShipStats ship = null;
