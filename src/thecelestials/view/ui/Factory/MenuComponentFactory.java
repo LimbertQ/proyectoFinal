@@ -57,7 +57,7 @@ public class MenuComponentFactory {
             winDialog.dispose();
             switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));
         }, winDialog, switcher, "CONTINUAR");
-
+        //SALIR DEL JUEGO
         closeDialog = createJDialog(frame, "¿Desea salir del juego");
         putButtonsDialog(e -> {
             winDialog.dispose();
@@ -184,7 +184,7 @@ public class MenuComponentFactory {
                 //----------------
                 panel.add(textArea());
                 //------------
-                panel.add(createClickableLabel("ATRAS", 0, e -> switcher.showCard("optionsMenuCard", "1")));
+                //panel.add(createClickableLabel("ATRAS", 0, e -> switcher.showCard("optionsMenuCard", "1")));
                 //panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "buttonSelectorCard" -> {

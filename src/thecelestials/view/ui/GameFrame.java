@@ -80,6 +80,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         if(Assets.unlock){
             Assets.unlock = false;
             campaignPanel.updateContentForMenu("unlock");
+            //mediaPlayerPanel.updateVideo("", menuID);
         }
         switch (cardName) {
             case "loadingGameCard" -> {

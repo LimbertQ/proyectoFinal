@@ -114,7 +114,6 @@ public class Assets {
             images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
             EntityStats bullet = ship.getEntityStats();
             setImageLaser(bullet);
-            //System.out.println("ship dispo");
         }
     }
     
@@ -160,15 +159,24 @@ public class Assets {
             images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
             EntityStats bullet = ship.getEntityStats();
             setImageLaser(bullet);
-            //System.out.println("ship dispo");
         }
     }
     
     public static void getInformation(){
-        
-        
-        String[][] infoGame = {{"credits", "LIMBERT ES UNA BUENA PERSONA", "/images/others/dev.png", "credits"},
-                                   {"tutorial", "EL TECLADO ES Y DEBES HACER, TAMBIEN", "/images/others/tutorial.png", "tutorial"}};
+        String[][] infoGame = {{"credits", """
+                                           DESARROLLADOR: LIMBERT QUISPE QUISPE
+                                           HISTORIA Y NARRACION: LIMBERT QUISPE QUISPE
+                                           EFECTOS ESPECIALES: LIMBERT QUISPE QUISPE""","/images/others/dev.png", "credits"},
+                                   {"tutorial", """
+                                                CONTROLES:
+                                                
+                                                MOVIMIENTO: W AVANZAR, A Y D ROTAR 
+                                                ATAQUE: P DISPARAR, O ESPECIAL
+                                                
+                                                POTENCIADORES:
+                                                
+                                                REPELE METEORO, DOBLE ESCORE, DOBLE CAÑON,
+                                                VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "tutorial"}};
         for(int i=0;i<infoGame.length;i++){
             AssetDefinition info = new AssetDefinition("DES0"+(i+1), infoGame[i][0], infoGame[i][1], infoGame[0][2]);
             List<AssetDefinition> infoList = new ArrayList<>();
@@ -181,7 +189,6 @@ public class Assets {
     public static void setear(){
         loaded = false;
         count = 0;
-        //MAX_COUNT = 11;
         
     }
 

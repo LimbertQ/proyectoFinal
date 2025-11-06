@@ -88,9 +88,10 @@ public class MenuSelectorPanel extends JPanel {
         contents.add(right);
         selector.add(contents);
 
-        nameImage = MenuComponentFactory.createClickableLabel("name", 1, e->{
-            if(MenuPanelType.equals("cinematic")){
+        nameImage = MenuComponentFactory.createClickableLabel("name", 1, e -> {
+            if (MenuPanelType.equals("cinematic")) {
                 switcher.showCard("mediaPlayerCard", queue.get(index).getID());
+            } else {
             }
         });
         nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -152,7 +153,14 @@ public class MenuSelectorPanel extends JPanel {
         contentCenter.revalidate();
         contentCenter.repaint();
 
-        JLabel backButton = (JLabel) comps[3];
+        JLabel backButton = MenuComponentFactory.createClickableLabel("ATRAS", 0, e ->{
+            if(MenuPanelType.equals("tutorial") || MenuPanelType.equals("credits")){
+                switcher.showCard("optionsMenuCard", menuType);
+            }else{
+                switcher.showCard("extraMenuCard", menuType);
+            }
+        });
+        //JLabel backButton = (JLabel) comps[3];
         //derecho
         //JLabel exit = MenuComponentFactory.createClickableLabel("ATRAS", 0, null);
         add(createSelectorPanel(backButton), BorderLayout.EAST);
@@ -163,20 +171,20 @@ public class MenuSelectorPanel extends JPanel {
     }
 
     public void updateContentForMenu(String type) {
-        if(type.equals("tutorial") || type.equals("credits") || type.equals("civilizations")){
+        if (type.equals("tutorial") || type.equals("credits") || type.equals("civilizations")) {
             queue = Assets.informations.get(type);
-        }else{
-            if(type.equals("galery")){
+        } else {
+            if (type.equals("galery")) {
                 queue = Assets.shipsAvaible;
-            }else if(type.equals("cinematic")){
+            } else if (type.equals("cinematic")) {
                 List<AssetDefinition> temp = new ArrayList<>();
                 for (Map.Entry<String, Campaign> entry : Assets.campaigns.entrySet()) {
                     temp.add(entry.getValue());
                 }
                 queue = temp;
-                MenuPanelType = type;
             }
         }
+        MenuPanelType = type;
         index = 0;
         nextShip(0);
     }
