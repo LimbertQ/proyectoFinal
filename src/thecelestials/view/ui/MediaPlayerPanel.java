@@ -44,10 +44,15 @@ public class MediaPlayerPanel extends JPanel{
     }
     
     public void updateVideo(String menuCard, String campaignID){
-        abrirArchivo(menuCard, campaignID);
+        if(menuCard.equals("missionsMenuCard")){
+            abrirArchivo(menuCard, campaignID, campaignID);
+        }else{
+            abrirArchivo(menuCard, campaignID, "cinematic");
+        }
+        
     }
 
-    private void abrirArchivo(String menuCard, String campaignID) {
+    private void abrirArchivo(String menuCard, String campaignID, String goal) {
         Platform.runLater(() -> {
             // Limpiar el reproductor viejo antes de crear uno nuevo
             if (mediaPlayer != null) {
@@ -55,6 +60,7 @@ public class MediaPlayerPanel extends JPanel{
             }
             System.out.println(campaignID+" te odio");
             String mediaURL = getClass().getResource(Assets.campaigns.get(campaignID).getVideoPath()).toExternalForm();
+            
             Media media = new Media(mediaURL);
             mediaPlayer = new MediaPlayer(media);
             mediaView.setMediaPlayer(mediaPlayer);
@@ -63,7 +69,7 @@ public class MediaPlayerPanel extends JPanel{
                 mediaPlayer.stop();
                 mediaPlayer.dispose(); // Agrega dispose() aquí
                 
-                switcher.showCard(menuCard, "cinematic");
+                switcher.showCard(menuCard, goal);
             });
 
             mediaPlayer.setOnReady(() -> {
@@ -73,7 +79,7 @@ public class MediaPlayerPanel extends JPanel{
             mediaPlayer.setOnEndOfMedia(() -> {
                 mediaPlayer.stop();
                 mediaPlayer.dispose(); // Agrega dispose() aquí
-                switcher.showCard(menuCard, "cinematic");
+                switcher.showCard(menuCard, goal);
             });
         });
     }

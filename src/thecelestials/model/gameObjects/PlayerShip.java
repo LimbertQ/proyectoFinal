@@ -32,13 +32,13 @@ public class PlayerShip extends Ship {
     private boolean shieldOn, doubleGunOn;
     private long fireRate = 0;
     private long fireRateConstants = 0;
-    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, Animation shield) {
+    public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, Animation shield, int life) {
         super(position, shipStats, velocity, maxVel, creator, Constants.FIRERATE);
         x = position.getX();
         y = position.getY();
         heading = new Vector2D(0, 1);
         acceleration = new Vector2D();
-        lives = 3;
+        lives = life;
         copyHealt = shipStats.getHealth();
         shieldOn = false;
         doubleGunOn = false;
@@ -135,6 +135,7 @@ public class PlayerShip extends Ship {
                 super.destroy(da);
             }
         }
+        updateBarWidth();
     }
 
     public void resetValues() {

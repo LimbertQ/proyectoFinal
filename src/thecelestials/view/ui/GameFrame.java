@@ -14,13 +14,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.MissionStats;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
  *
  * @author Limbert Quispe
  */
-public class GameFrame extends JFrame implements ScreenSwitcher{
+public class GameFrame extends JFrame implements ScreenSwitcher {
+
     private final CardLayout cardLayout;
     private final LoadingPanel loadingPanel;
     private final JPanel mainPanel;
@@ -43,8 +45,8 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
     private final String mainMenuCard = "mainMenuCard";
     private final String loadingCard = "loadingCard";
     private final String mediaPlayerCard = "mediaPlayerCard";
-    
-    public GameFrame(){
+
+    public GameFrame() {
         setTitle("Los Celestiales");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -69,28 +71,42 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         add(mainPanel, BorderLayout.CENTER);
         cardLayout.show(mainPanel, loadingCard);
         setVisible(true);
-        
-        
+
     }
-    
-    
 
     @Override
     public void showCard(String cardName, String menuID) {
-        if(Assets.unlock){
-            Assets.unlock = false;
+        //MISIONES || LOADING
+        if (Assets.unlock && cardName.equals("loadingGameCard")) {
             campaignPanel.updateContentForMenu("unlock");
-            //mediaPlayerPanel.updateVideo("", menuID);
+            cardName = missionsMenuCard;
+            menuID = MissionStats.campaignID;
+            menuID = menuID.substring(0, menuID.length()-1)+(Integer.parseInt(menuID.substring(menuID.length()-1, menuID.length()))+1);
+            System.err.println(menuID+" : desbloqueado");
         }
         switch (cardName) {
             case "loadingGameCard" -> {
                 loadingPanel.nextPanel(gameCanvasCard, menuID);
                 cardName = loadingCard;
             }
-            case mediaPlayerCard -> mediaPlayerPanel.updateVideo("selectorMenuCard", menuID);
-            case selectorMenuCard -> selectorMenuPanel.updateContentForMenu(menuID);
-            case buttonSelectorCard -> buttonSelectorPanel.updateContentForMenu(menuID);
-            case missionsMenuCard -> missionsPanel.updateContentForMenu(menuID);
+
+            case mediaPlayerCard -> {
+                mediaPlayerPanel.updateVideo("selectorMenuCard", menuID);
+            }
+            case selectorMenuCard ->
+                selectorMenuPanel.updateContentForMenu(menuID);
+            case buttonSelectorCard ->
+                buttonSelectorPanel.updateContentForMenu(menuID);
+            case missionsMenuCard -> {
+                if (Assets.unlock) {
+                    Assets.unlock = false;
+                    mediaPlayerPanel.updateVideo(missionsMenuCard, menuID);
+                    cardName = mediaPlayerCard;
+                } else {
+                    System.out.println("entro?"+menuID);
+                    missionsPanel.updateContentForMenu(menuID);
+                }
+            }
             case gameCanvasCard -> {
                 //Assets.loadGame(menuID);
                 gameCanvas.playGame();
@@ -101,9 +117,9 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         }
         cardLayout.show(mainPanel, cardName);
     }
-    
+
     @Override
-    public void initializeMenus(){
+    public void initializeMenus() {
         menuPanel = new MenuPanel(this, mainMenuCard);
         optionsMenuPanel = new MenuPanel(this, optionsMenuCard);
         extraMenuPanel = new MenuPanel(this, extraMenuCard);
@@ -112,7 +128,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         buttonSelectorPanel = new ButtonSelectorPanel(this, buttonSelectorCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
         mediaPlayerPanel = new MediaPlayerPanel(this, mediaPlayerCard);
-        
+
         mainPanel.add(menuPanel, mainMenuCard);
         mainPanel.add(optionsMenuPanel, optionsMenuCard);
         mainPanel.add(extraMenuPanel, extraMenuCard);
@@ -121,15 +137,15 @@ public class GameFrame extends JFrame implements ScreenSwitcher{
         mainPanel.add(buttonSelectorPanel, buttonSelectorCard);
         mainPanel.add(missionsPanel, missionsMenuCard);
         mainPanel.add(mediaPlayerPanel, mediaPlayerCard);
-        
+
         gameCanvas = new GameCanvas();
         mainPanel.add(gameCanvas, gameCanvasCard);
         MenuComponentFactory.createDialogs(this);
         gameCanvas.start();
     }
-    
+
     @Override
-    public void resume(){
+    public void resume() {
         gameCanvas.resume();
     }
 }

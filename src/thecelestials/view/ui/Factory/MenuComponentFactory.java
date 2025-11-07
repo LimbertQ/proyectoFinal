@@ -457,7 +457,7 @@ public class MenuComponentFactory {
             String ID = menuID.substring(0, 4);
             String menuCard;
             switch (ID) {
-                //CAMP01 soy mision->gameCanvasCard
+                //CAMP01 soy el menu de mision->gameCanvasCard
                 case "CAMP" -> {
                     //cargando misiones ---CORREGIR
                     menuCard = "loadingGameCard";

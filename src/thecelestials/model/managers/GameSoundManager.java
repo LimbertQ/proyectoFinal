@@ -28,6 +28,7 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
     private final Map<String, Clip> audioCache;
     private final Map<String, MediaPlayer> mediaCache;
     private final List<Clip> pauseClip = new ArrayList<>();
+    private final List<MediaPlayer> pauseMediaPlayer = new ArrayList<>();
     private final Random random = new Random();
 
     public GameSoundManager() {
@@ -40,12 +41,15 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
             clip.stop();
             clip.setFramePosition(0);
         }
+        
+        pauseMediaPlayer.clear();
     }
 
     public void playGame() {
         MediaPlayer player = mediaCache.get("warzone");
         player.setCycleCount(MediaPlayer.INDEFINITE);
         player.play();
+        
     }
 
     private void playSound(String soundKey) {
@@ -80,6 +84,7 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
     }
 
     public void pause() {
+        
         for (Map.Entry<String, Clip> entry : audioCache.entrySet()) {
             Clip sound = entry.getValue();
             if (sound != null && sound.isRunning()) {
@@ -87,10 +92,12 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
                 sound.stop();
             }
         }
-
+        
+        
         for (MediaPlayer mediaPlayer : mediaCache.values()) {
             if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
                 mediaPlayer.pause();
+                pauseMediaPlayer.add(mediaPlayer);
             }
         }
         
@@ -107,12 +114,10 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
             clip.start();
         }
         pauseClip.clear();
-
-        for (MediaPlayer mediaPlayer : mediaCache.values()) {
-            if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
-                mediaPlayer.play();
-            }
+        for(MediaPlayer mediaPlayer : pauseMediaPlayer){
+            mediaPlayer.play();
         }
+        pauseMediaPlayer.clear();
         
         for (MediaPlayer mediaPlayer : MissionStats.missionVoicePath.values()) {
             if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {

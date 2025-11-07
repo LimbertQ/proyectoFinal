@@ -27,7 +27,8 @@ public abstract class Ship extends MovingObject {
     private long special = 0;
     private final int team;
     private final Color color;
-
+    private final int finalHealt;
+    private int currentBarWidth = 0;
     public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, long shipFireRate) {
         super(position, shipStats, velocity, maxVel);
         this.bullet = shipStats.getEntityStats();
@@ -43,6 +44,8 @@ public abstract class Ship extends MovingObject {
                 color = Color.RED;
             }
         }
+        this.finalHealt = shipStats.getHealth();
+        currentBarWidth = width;
     }
 
     protected void updateValuesShip(float dt) {
@@ -110,6 +113,16 @@ public abstract class Ship extends MovingObject {
             g2d.drawImage(Assets.effect, left, null);
         }
     }
+    
+    @Override
+    public void destroy(int da){
+        super.destroy(da);
+        updateBarWidth();
+    }
+    
+    protected void updateBarWidth(){
+        currentBarWidth = (int) (((double) healt / finalHealt) * width);
+    }
 
     protected void drawRectangle(Graphics2D g2d) {
         // 1. **GUARDAR** el estado original de Graphics2D. ¡Crucial!
@@ -140,10 +153,14 @@ public abstract class Ship extends MovingObject {
         int rectWidth = width;
         int rectHeight = 10;
 
-        g2d.fillRect(rectX, rectY, rectWidth, rectHeight);
-
+        g2d.drawRect(rectX, rectY, rectWidth, rectHeight);
+        g2d.fillRect(rectX, rectY, currentBarWidth, rectHeight);
+        
         // 4. **RESTAURAR** el estado original de Graphics2D.
         // Esto asegura que los dibujos posteriores (como la nave misma) no hereden esta rotación y traslación.
         g2d.setTransform(originalTransform);
+        //g2d.fillRect(rectX, rectY, (healt / finalHealt) * rectWidth, rectHeight);
+        //g2d.setTransform(originalTransform);
+        
     }
 }

@@ -111,7 +111,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
-        this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null));
+        this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null), Assets.lives);
 
         movingObjects.add(player);
 
