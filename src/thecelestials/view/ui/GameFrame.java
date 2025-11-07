@@ -78,11 +78,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
     public void showCard(String cardName, String menuID) {
         //MISIONES || LOADING
         if (Assets.unlock && cardName.equals("loadingGameCard")) {
-            campaignPanel.updateContentForMenu("unlock");
             cardName = missionsMenuCard;
-            menuID = MissionStats.campaignID;
-            menuID = menuID.substring(0, menuID.length()-1)+(Integer.parseInt(menuID.substring(menuID.length()-1, menuID.length()))+1);
-            System.err.println(menuID+" : desbloqueado");
         }
         switch (cardName) {
             case "loadingGameCard" -> {
@@ -99,11 +95,17 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
                 buttonSelectorPanel.updateContentForMenu(menuID);
             case missionsMenuCard -> {
                 if (Assets.unlock) {
+                    //ACTUALIZAMOS CAMPANIA
                     Assets.unlock = false;
+                    campaignPanel.updateContentForMenu("unlock");
+                    //ACTUALIZAMOS 
+                    menuID = MissionStats.campaignID;
+                    menuID = menuID.substring(0, menuID.length() - 1) + (Integer.parseInt(menuID.substring(menuID.length() - 1, menuID.length())) + 1);
+
                     mediaPlayerPanel.updateVideo(missionsMenuCard, menuID);
                     cardName = mediaPlayerCard;
                 } else {
-                    System.out.println("entro?"+menuID);
+                    System.out.println("entro?" + menuID);
                     missionsPanel.updateContentForMenu(menuID);
                 }
             }
