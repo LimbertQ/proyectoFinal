@@ -20,6 +20,10 @@ public class Campaign extends GameEntity {
         this.videoPath = videoPath;
         this.missions = missions;
     }
+    
+    public Mission getMissionByID(String missionID){
+        return missions.get(missionID);
+    }
 
     public String getVideoPath() {
         return videoPath;

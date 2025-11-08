@@ -98,7 +98,8 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
                     //ACTUALIZAMOS CAMPANIA
                     Assets.unlock = false;
                     campaignPanel.updateContentForMenu("unlock");
-                    //ACTUALIZAMOS 
+                    //LA CAMPAÑA Y LA MISION ESTAN PREVIAMENTE DESBLOQUEADO ACTUALIZAMOS
+                    //BUSCAMOS LA CAMPAÑA RECIENTEMENTE DESBLOQUEADO actual+1
                     menuID = MissionStats.campaignID;
                     menuID = menuID.substring(0, menuID.length() - 1) + (Integer.parseInt(menuID.substring(menuID.length() - 1, menuID.length())) + 1);
 

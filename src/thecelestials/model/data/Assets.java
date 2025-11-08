@@ -57,6 +57,13 @@ public class Assets {
             lives = progress[0];
             money = progress[1];
             campaigns = loadCampaigns();
+            if(campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0){
+                unlock = true;
+                //MissionStats.missionID = "MSN01";
+                db.updateMissionState("MSN01");
+                MissionStats.campaignID = "CAMP00";
+                campaigns.get("CAMP01").getMissionByID("MSN01").setState();
+            }
             fondo = loadImage("/images/maps/exoplaneta.jpeg");
             loadShipAvaible();
             loadCivilizations();

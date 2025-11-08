@@ -59,10 +59,27 @@ public class MenuComponentFactory {
         }, winDialog, switcher, "CONTINUAR");
         //SALIR DEL JUEGO
         closeDialog = createJDialog(frame, "¿Desea salir del juego");
-        putButtonsDialog(e -> {
-            winDialog.dispose();
-            switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));
-        }, winDialog, switcher, "CONTINUAR");
+        putButtonsExitDialog(closeDialog);
+
+    }
+    
+    private static void putButtonsExitDialog(JDialog dialog) {
+        JLabel button1 = createClickableLabel("ACEPTAR", 1, e -> {
+            Assets.closeDbConnection();
+            System.exit(0); // Ahora sí, termina el proceso de la aplicación
+        });
+        JLabel button2 = createClickableLabel("CANCELAR", 0, e -> {
+            dialog.dispose();
+        });
+
+        JPanel buttonPanel = new JPanel(); // Añadir un poco de espacio horizontal
+        buttonPanel.setOpaque(false); // Hacerlo transparente para ver el fondo del diálogo
+
+        buttonPanel.add(button1);
+        buttonPanel.add(button2);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.pack(); // Empaqueta el diálogo para ajustar el tamaño al contenido
 
     }
 
@@ -131,7 +148,7 @@ public class MenuComponentFactory {
                 actions.put("SELECCION DE MISION", e -> switcher.showCard("campaignMenuCard", ""));
                 actions.put("OPCIONES", e -> switcher.showCard("optionsMenuCard", ""));
                 actions.put("EXTRAS", e -> switcher.showCard("extraMenuCard", ""));
-                actions.put("SALIR", e -> switcher.showCard("campaignMenuCard", ""));
+                actions.put("SALIR", e -> closeDialog.setVisible(true));
                 panel.add(putButtons(25, true, actions));
                 //------------
                 //panel.add(new JPanel());
@@ -439,20 +456,24 @@ public class MenuComponentFactory {
 
     public static Map<String, ActionListener> createActionsContent(ScreenSwitcher switcher, String menuID) {
         Map<String, ActionListener> actions = new LinkedHashMap<>();
+        
         if (menuID.equals("buyPanel")) {
             int cost = 5000;
-            actions.put("monedas: "+Assets.money, null);
-            for(int i=5; i<=20; i*=2){
+            actions.put("monedas: " + Assets.money, null);
+            for (int i = 5; i <= 20; i *= 2) {
                 final int ii = i;
                 final int costLife = cost;
-                if(Assets.money >= cost)
-                    actions.put(i+"LIFE X "+cost+" Bs", e -> {Assets.updatePlayerStatus(ii, -costLife); switcher.showCard("buttonSelectorCard", "");});
-                else{
-                    actions.put(i+"LIFE X "+cost+" Bs -Bloq", null);
+                if (Assets.money >= cost) {
+                    actions.put(i + "LIFE X " + cost + " Bs", e -> {
+                        Assets.updatePlayerStatus(ii, -costLife);
+                        switcher.showCard("buttonSelectorCard", "");
+                    });
+                } else {
+                    actions.put(i + "LIFE X " + cost + " Bs -Bloq", null);
                 }
-                cost+=3000;
+                cost += 3000;
             }
-        }else{
+        } else {
             Map<String, ? extends GameEntity> mapEntitys;
             String ID = menuID.substring(0, 4);
             String menuCard;

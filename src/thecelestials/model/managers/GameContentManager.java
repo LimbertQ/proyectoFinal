@@ -178,6 +178,13 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             createGameObject(ship);
         }
     }
+    
+    private void spawnReinforcement(int limit, List<ShipStats> shipsList) {
+        for (int i = 0; i < limit; i++) {
+            Ship ship = new NPCShip(new Vector2D(20, (i+1)*20), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            createGameObject(ship);
+        }
+    }
 
     private void spawnObjects(float dt) {
         if (waves <= MissionStats.assaults) {
@@ -217,6 +224,15 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         Assets.updatePlayerStatus(0, gameHudManager.getScore());
     }
 
+    private void blockShips(){
+        for(Ship ship : enemys){
+            ship.switchLocked(true);
+        }
+        for(Ship ship : allies){
+            ship.switchLocked(true);
+        }
+    }
+    
     private void cinematic(float dt) {
         //type = 3 muere, type = 4 gana --cinematic
         if (type == 0) {
@@ -224,6 +240,8 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                 //reforces
                 if (assault == 0) {
                     //axis and reforces
+                    spawnReinforcement(8, MissionStats.allies);
+                    blockShips();
                 } else if (assault > 3000) {
                     //destroyAxis
                     type = 4;
