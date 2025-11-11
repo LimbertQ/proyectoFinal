@@ -109,7 +109,7 @@ public class NPCShip extends Ship {
         }
     }
 
-    private void patrol(Vector2D targetPos, Vector2D center, float dt) {
+    protected void patrol(Vector2D targetPos, Vector2D center, float dt) {
         Vector2D targetDirection = targetDirection(targetPos, center);
         toTarget(targetDirection);
 
@@ -142,11 +142,12 @@ public class NPCShip extends Ship {
                     goal.setX(Math.random() * Constants.WIDTH);
                     goal.setY(Math.random() * Constants.HEIGHT);
                 }
-
+                //-------
                 double distance = goal.subtract(getCenter()).getMagnitude();
                 if (distance > 10) {
                     patrol(goal, getCenter(), dt);
                 }
+                //-------
             }
         } else {
             updateValuesShip(dt);
