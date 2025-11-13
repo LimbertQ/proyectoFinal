@@ -7,6 +7,7 @@ package thecelestials.model.managers;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PlayerShip;
@@ -24,7 +25,8 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
     private byte finalScore = 1;
     private PlayerShip player;
     private final BufferedImage[] numbers;
-
+    private byte assaults = 0;
+    private byte waves = 0;
     public HUDManager() {
         numbers = new BufferedImage[11];
         loadNumbersImages();
@@ -34,10 +36,13 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
         player = null;
         score = 0;
         finalScore = 1;
+        assaults = 0;
+        waves = 0;
     }
 
     public void playGame(PlayerShip p) {
         player = p;
+        waves = MissionStats.assaults;
     }
     
     public int getScore(){
@@ -63,6 +68,7 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
             drawScore(g);
             drawLives(g);
         }
+        drawAssaults(g);
     }
 
     private void drawScore(Graphics g) {
@@ -71,10 +77,17 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
 
     private void drawLives(Graphics g) {
         if (!player.isDead()) {
-            //g.drawImage(Assets.player, 25, 25, null);
+            g.drawImage(Assets.player, 25, 25, null);
             g.drawImage(numbers[10], 65, 30, null); // X
             drawNumbers(85, 30, player.getLives(), g);
         }
+    }
+    
+    private void drawAssaults(Graphics g){
+        g.drawImage(Assets.player, 600, 25, null);
+        drawNumbers(650, 30, assaults, g);
+        g.drawImage(numbers[10], 675, 30, null);
+        drawNumbers(700, 30, waves, g);
     }
 
     @Override

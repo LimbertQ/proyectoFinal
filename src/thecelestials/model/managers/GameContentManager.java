@@ -23,6 +23,7 @@ import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.NPCShip;
 import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.gameObjects.Pulsar;
+import thecelestials.model.gameObjects.ReinforcementShip;
 import thecelestials.model.gameObjects.Ship;
 import thecelestials.model.gameObjects.Vortex;
 import thecelestials.model.math.Constants;
@@ -136,11 +137,12 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             Ship cruisero;
             if (MissionStats.cruiser.getTeam() == 1) {
                 cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+                cruiser = cruisero;
+                allies.add(cruisero);
             } else {
                 cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             }
             movingObjects.add(cruisero);
-            cruiser = cruisero;
             //Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
         }
         assault = 0;
@@ -181,7 +183,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     
     private void spawnReinforcement(int limit, List<ShipStats> shipsList) {
         for (int i = 0; i < limit; i++) {
-            Ship ship = new NPCShip(new Vector2D(20, (i+1)*20), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            Ship ship = new ReinforcementShip(new Vector2D(100, (i+1)*20), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             createGameObject(ship);
         }
     }
@@ -240,20 +242,23 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
                 //reforces
                 if (assault == 0) {
                     //axis and reforces
-                    spawnReinforcement(8, MissionStats.allies);
                     blockShips();
+                    spawnReinforcement(8, MissionStats.allies);
                 } else if (assault > 3000) {
                     //destroyAxis
+                    for(Ship ship : enemys){
+                        ship.destroy(10000);
+                    }
                     type = 4;
-                    assault = 0;
+                    assault = -1000;
                 }
             } else if (enemys.isEmpty()) {
                 //mensaje victoria
-                gameEventManager.notifyGameEvent("VICTORY");
                 type = 4;
-                assault = 0;
+                assault = -1000;
             }
-        } else if (assault == 0) {
+        } else if (assault < 0) {
+            assault = 0;
             if (type == 3) {
                 //mensaje gameOver ------ assault = 0
                 gameEventManager.notifyGameEvent("GAME OVER");
@@ -322,7 +327,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
             //mensaje -> GAME OVER
             if (type > 3 || type < 1) {
                 type = 3;
-                assault = 0;
+                assault = -10;
             }
         }
         for (MovingObject obj : objectsToNotify) {
@@ -399,7 +404,7 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
     @Override
     public void cloneShip(Vector2D position, int team) {
-        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size() - 1)), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
         createGameObject(ship);
     }
 }

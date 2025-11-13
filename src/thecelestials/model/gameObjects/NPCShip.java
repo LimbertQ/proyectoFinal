@@ -30,7 +30,7 @@ public class NPCShip extends Ship {
 
     public NPCShip(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, TargetProvider provider) {
         super(position, shipStats, velocity, maxVel, creator, Constants.UFO_FIRE_RATE);
-        goal = new Vector2D();
+        goal = new Vector2D(Constants.WIDTH, getPosition().getY());
         centerBattle = new Vector2D(Constants.WIDTH / 2.0, Constants.HEIGHT / 2.0);
         this.provider = provider;
     }
@@ -109,19 +109,22 @@ public class NPCShip extends Ship {
         }
     }
 
-    protected void patrol(Vector2D targetPos, Vector2D center, float dt) {
-        Vector2D targetDirection = targetDirection(targetPos, center);
-        toTarget(targetDirection);
+    protected void patrol(Vector2D center, float dt) {
+        double distance = goal.subtract(getCenter()).getMagnitude();
+        if (distance > 10) {
+            Vector2D targetDirection = targetDirection(goal, center);
+            toTarget(targetDirection);
 
-        velocity = targetDirection.scale(maxVel * 0.05f);
-        position = position.add(velocity.scale(dt));
-        accelerating = true;
-        if (position.getY() < 0) {
-            position.setY(0);
-        }
+            velocity = targetDirection.scale(maxVel * 0.05f);
+            position = position.add(velocity.scale(dt));
+            accelerating = true;
+            if (position.getY() < 0) {
+                position.setY(0);
+            }
 
-        if (position.getX() < 0) {
-            position.setX(0);
+            if (position.getX() < 0) {
+                position.setX(0);
+            }
         }
     }
 
@@ -143,10 +146,7 @@ public class NPCShip extends Ship {
                     goal.setY(Math.random() * Constants.HEIGHT);
                 }
                 //-------
-                double distance = goal.subtract(getCenter()).getMagnitude();
-                if (distance > 10) {
-                    patrol(goal, getCenter(), dt);
-                }
+                patrol(getCenter(), dt);
                 //-------
             }
         } else {

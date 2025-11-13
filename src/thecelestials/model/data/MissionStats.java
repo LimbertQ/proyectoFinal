@@ -34,7 +34,7 @@ public class MissionStats {
         playerShip = player;
     }
 
-    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission, Map<String, BufferedImage> star, String campID) {
+    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission, Map<String, BufferedImage> star, byte reinfor, String campID) {
         missionID = ID;
         missionName = name;
         missionDescription = description;
@@ -53,6 +53,7 @@ public class MissionStats {
         }
         stars = star;
         campaignID = campID;
+        reinforcement = reinfor;
     }
 
     private static void clear() {

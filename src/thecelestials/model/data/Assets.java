@@ -74,16 +74,13 @@ public class Assets {
             powerBullet = db.readLaserByID("LSR06");
             setImageLaser(powerBullet);
 
-            //db.closeConnection();
         }
-        player = loadImage("/images/ships/fighter01.png");
+        player = loadImage("/images/others/life.png");
         effect = loadImage("/images/effects/fire08.png");
         for(int i=0;i<3;i++){
             shieldEffects[i] = loadImage("/images/effects/shield"+i+".png");
         }
         images.put("effect", loadImage("/images/effects/fire08.png"));
-        //System.out.println(count+"es el contador");
-        System.out.println(count+"total de webadas");
         count = MAX_COUNT;
         loaded = true;
     }
@@ -103,9 +100,11 @@ public class Assets {
             int length = campaignID.length();
             int digit = Integer.parseInt(String.valueOf(campaignID.charAt(length - 1))) + 1;
             campaignID = campaignID.substring(0, length - 1) + digit;
-            campaigns.get(campaignID).unlocks(MissionStats.missionID);
-            campaigns.get(campaignID).setState();
-            unlock = true;
+            if(campaigns.get(campaignID).getState() == 0){
+                campaigns.get(campaignID).unlocks(MissionStats.missionID);
+                campaigns.get(campaignID).setState();
+                unlock = true;
+            }
         }
     }
 
@@ -218,7 +217,7 @@ public class Assets {
         loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
 
         
-        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, mission.getCampaignID());
+        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, (byte)mission.getReinforcement(), mission.getCampaignID());
         loadSpriteShips(MissionStats.allies);
         loadSpriteShips(MissionStats.axis);
         loaded = true;
