@@ -21,7 +21,7 @@ import thecelestials.model.math.Vector2D;
  *
  * @author pc
  */
-public class GamePowerUpManager {
+public class GamePowerUpManager extends GameManager implements IGameLoopEntity, IStartableWithPlayer{
     private PlayerShip player;
     private final List<PowerUp> activePowerUps = new ArrayList<>();
     //private final List<PowerUp> consumedPowerUps = new ArrayList<>();
@@ -118,6 +118,7 @@ public class GamePowerUpManager {
         //System.out.println("pow"+type.type);
     }
     
+    @Override
     public void clear(){
         player = null;
         activePowerUps.clear();
@@ -131,6 +132,7 @@ public class GamePowerUpManager {
         aleatorio = PowerUpTypes.values().length;
     }
     
+    @Override
     public void playGame(PlayerShip player){
         this.player = player;
         if(!MissionStats.stars.containsKey("big1")){
@@ -138,6 +140,7 @@ public class GamePowerUpManager {
         }
     }
     
+    @Override
     public void update(float dt){
         powerUpSpawner += dt;
         Iterator<PowerUp> iterator = activePowerUps.iterator();
@@ -155,6 +158,7 @@ public class GamePowerUpManager {
         if (powerUpSpawner > Constants.POWER_UP_SPAWN_TIME) { spawnPowerUp(); powerUpSpawner = 0; }
     }
     
+    @Override
     public void draw(Graphics g){
         for(PowerUp pu : activePowerUps)pu.draw(g);
     }

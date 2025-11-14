@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package thecelestials.model.managers;
+package thecelestials.view.ui.managers;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -13,13 +13,20 @@ import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.gameObjects.PowerUp;
 import thecelestials.model.gameObjects.Ship;
+import thecelestials.model.managers.GameManager;
+import thecelestials.model.managers.GameNotificationListener;
+import thecelestials.model.managers.GameObjectDestroyedListener;
+import thecelestials.model.managers.IGameControl;
+import thecelestials.model.managers.IGameLoopEntity;
+import thecelestials.model.managers.IStartableWithPlayer;
+import thecelestials.model.managers.ScoreChangeListener;
 import thecelestials.model.math.Constants;
 
 /**
  *
  * @author pc
  */
-public class HUDManager implements GameObjectDestroyedListener, GameNotificationListener, ScoreChangeListener {
+public class HUDManager extends GameManager implements IGameControl, IGameLoopEntity, IStartableWithPlayer, GameObjectDestroyedListener, GameNotificationListener, ScoreChangeListener {
 
     private int score = 0;
     private byte finalScore = 1;
@@ -32,6 +39,7 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
         loadNumbersImages();
     }
 
+    @Override
     public void clear() {
         player = null;
         score = 0;
@@ -39,7 +47,8 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
         assaults = 0;
         waves = 0;
     }
-
+    
+    @Override
     public void playGame(PlayerShip p) {
         player = p;
         waves = MissionStats.assaults;
@@ -63,6 +72,11 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
         }
     }
 
+    @Override
+    public void update(float dt) {
+    }
+    
+    @Override
     public void draw(Graphics g) {
         if (player != null) {
             drawScore(g);
@@ -101,7 +115,9 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
 
     @Override
     public void onGameNotify(String type) {
-        
+        if(type.equals("ASSAULT") || type.equals("WAVES")){
+            assaults++;
+        }
     }
 
     @Override
@@ -115,4 +131,18 @@ public class HUDManager implements GameObjectDestroyedListener, GameNotification
     public void onScoreChanged(byte finalScore) {
         this.finalScore = finalScore;
     }
+
+    @Override
+    public void pause() {
+        Assets.lives = player.getLives();
+        Assets.updatePlayerStatus(0, score);
+    }
+
+    @Override
+    public void resume() {
+        
+    }
+
+    
 }
+

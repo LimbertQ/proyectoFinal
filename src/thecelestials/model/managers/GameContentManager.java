@@ -31,12 +31,14 @@ import thecelestials.model.math.Vector2D;
 import thecelestials.view.ui.animations.Animation;
 import thecelestials.view.ui.managers.GameEffectManager;
 import thecelestials.view.ui.managers.GameMessageManager;
+import thecelestials.view.ui.managers.GameSoundManager;
+import thecelestials.view.ui.managers.HUDManager;
 
 /**
  *
  * @author pc
  */
-public class GameContentManager implements GameObjectCreator, TargetProvider {
+public class GameContentManager extends GameManager implements IGameControl, GameObjectCreator, TargetProvider {
 
     private final List<MovingObject> movingObjects = new ArrayList<>();
     private final List<MovingObject> listToAdd = new ArrayList<>();
@@ -45,13 +47,10 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private Ship cruiser;
     private PlayerShip player = null;
     private final List<GravitationalField> gravitationalsFields = new ArrayList<>();
-    private final HUDManager gameHudManager;
     private final GameEventManager gameEventManager;
     private final GameSoundManager gameSoundManager;
-    private final GameMessageManager gameMessageManager;
     private final CollisionManager gameCollisionManager;
-    private final GameEffectManager gameEffectManager;
-    private final GamePowerUpManager gamePowerUpManager;
+    private final List<GameManager> allManagers = new ArrayList<>();
     private final Random random = new Random();
     private final Map<String, BufferedImage> images;
 
@@ -62,43 +61,50 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     private BufferedImage missionMap;
 
     public GameContentManager() {
-        gameHudManager = new HUDManager();
-        gameEventManager = new GameEventManager();
-        gameEventManager.addGameObjectDestroyedListener(gameHudManager);
-        gameSoundManager = new GameSoundManager();
-        gameEventManager.addGameObjectDestroyedListener(gameSoundManager);
-        gameCollisionManager = new CollisionManager();
-        gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4), new Vector2D(Constants.WIDTH / 2, Constants.HEIGHT / 2));
-        gameEventManager.addGameObjectDestroyedListener(gameMessageManager);
-        gameEffectManager = new GameEffectManager();
-        gameEventManager.addGameObjectDestroyedListener(gameEffectManager);
-
-        gameEventManager.addGameNotificationListener(gameSoundManager);
-        gameEventManager.addGameNotificationListener(gameMessageManager);
-        gameEventManager.addGameNotificationListener(gameHudManager);
-
-        gameEventManager.addGameScoreListener(gameHudManager);
-        gameEventManager.addGameScoreListener(gameMessageManager);
         images = Assets.images;
-        gamePowerUpManager = new GamePowerUpManager(images, gameEventManager);
+        gameEventManager = new GameEventManager();
+        
+        HUDManager gameHudManager = new HUDManager();
+        allManagers.add(gameHudManager);
+        
+        GameMessageManager gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4), new Vector2D(Constants.WIDTH / 2, Constants.HEIGHT / 2));
+        allManagers.add(gameMessageManager);
+        
+        gameSoundManager = new GameSoundManager();
+        allManagers.add(gameSoundManager);
+        
+        GamePowerUpManager gamePowerUpManager = new GamePowerUpManager(images, gameEventManager);
+        allManagers.add(gamePowerUpManager);
+        
+        gameCollisionManager = new CollisionManager();
+        
+        GameEffectManager gameEffectManager = new GameEffectManager();
+        allManagers.add(gameEffectManager);
+        for(GameManager manager: allManagers){
+            if(manager instanceof GameObjectDestroyedListener managerEntity){
+                gameEventManager.addGameObjectDestroyedListener(managerEntity);
+            }
+            if(manager instanceof GameNotificationListener managerEntity){
+                gameEventManager.addGameNotificationListener(managerEntity);
+            }
+            if(manager instanceof ScoreChangeListener managerEntity){
+                gameEventManager.addGameScoreListener(managerEntity);
+            }
+        }
     }
 
+    @Override
     public void clear() {
         missionMap = null;
 
         cruiser = null;
 
-        gameHudManager.clear();
-        //---------
-        gameEffectManager.clear();
-        //---------
-        gameMessageManager.clear();
-        //---------
-        gameSoundManager.clear();
-
+        for(GameManager manager: allManagers){
+            manager.clear();
+        }
+        
         //---------
         gravitationalsFields.clear();
-        gamePowerUpManager.clear();
         movingObjects.clear();
         listToAdd.clear();
         enemys.clear();
@@ -115,10 +121,14 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null), Assets.lives);
 
         movingObjects.add(player);
-
-        gameHudManager.playGame(player);
-        gamePowerUpManager.playGame(player);
+        //-----------
+        for(GameManager manager: allManagers){
+            if(manager instanceof IStartableWithPlayer startableWithPlayer){
+                startableWithPlayer.playGame(player);
+            }
+        }
         gameSoundManager.playGame();
+        //-----------
         gameEventManager.notifyGameEvent("DESCRIPTION");
         if (MissionStats.stars.containsKey("big1")) {
             meteor = true;
@@ -149,12 +159,23 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         type = -1;
     }
 
+    @Override
     public void resume() {
-        gameSoundManager.resume();
+        for(GameManager manager: allManagers){
+            if(manager instanceof IGameControl gameControl){
+                gameControl.resume();
+            }
+        }
     }
 
+    
+    @Override
     public void pause() {
-        gameSoundManager.pause();
+        for(GameManager manager: allManagers){
+            if(manager instanceof IGameControl gameControl){
+                gameControl.pause();
+            }
+        }
     }
 
     private void startWave() {
@@ -220,11 +241,11 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     public byte gameOver() {
         return type;
     }
-
+    /*
     public void saveProgress() {
-        Assets.lives = player.getLives();
-        Assets.updatePlayerStatus(0, gameHudManager.getScore());
-    }
+        //Assets.lives = player.getLives();
+        //Assets.updatePlayerStatus(0, gameHudManager.getScore());
+    }*/
 
     private void blockShips(){
         for(Ship ship : enemys){
@@ -280,9 +301,12 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
     }
 
     public void update(float dt) {
-
-        gameEffectManager.update(dt);
-
+        for(GameManager manager: allManagers){
+            if(manager instanceof IGameLoopEntity gameLoopEntity){
+                gameLoopEntity.update(dt);
+            }
+        }
+        
         for (MovingObject mo : movingObjects) {
             mo.update(dt);
         }
@@ -293,9 +317,6 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
         for (GravitationalField gf : gravitationalsFields) {
             gf.update(dt, movingObjects);
         }
-        gameMessageManager.update(dt);
-
-        gamePowerUpManager.update(dt);
 
         if (type < 0) {
             spawnObjects(dt);
@@ -345,17 +366,18 @@ public class GameContentManager implements GameObjectCreator, TargetProvider {
 
         g.drawImage(missionMap, 0, 0, 1366, 768, null);
 
-        Graphics2D g2d = (Graphics2D) g;
+        //Graphics2D g2d = (Graphics2D) g;
         for (GravitationalField gf : gravitationalsFields) {
             gf.draw(g);
         }
         for (MovingObject mo : movingObjects) {
             mo.draw(g);
         }
-        gameEffectManager.draw(g);
-        gameHudManager.draw(g);
-        gameMessageManager.draw(g2d);
-        gamePowerUpManager.draw(g);
+        for(GameManager manager: allManagers){
+            if(manager instanceof IGameLoopEntity gameLoopEntity){
+                gameLoopEntity.draw(g);
+            }
+        }
     }
 
     @Override

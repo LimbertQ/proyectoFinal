@@ -5,6 +5,7 @@
 package thecelestials.view.ui.managers;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,10 @@ import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.NPCShip;
 import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.gameObjects.PowerUp;
+import thecelestials.model.managers.GameManager;
 import thecelestials.model.managers.GameNotificationListener;
 import thecelestials.model.managers.GameObjectDestroyedListener;
+import thecelestials.model.managers.IGameLoopEntity;
 import thecelestials.model.managers.ScoreChangeListener;
 import thecelestials.model.math.Constants;
 import thecelestials.model.math.Vector2D;
@@ -26,7 +29,7 @@ import thecelestials.view.ui.animations.Message;
  *
  * @author pc
  */
-public class GameMessageManager implements GameObjectDestroyedListener, GameNotificationListener, ScoreChangeListener {
+public class GameMessageManager extends GameManager implements IGameLoopEntity, GameObjectDestroyedListener, GameNotificationListener, ScoreChangeListener {
 
     private final List<Message> activeMessages;
     private final Vector2D left;
@@ -39,6 +42,7 @@ public class GameMessageManager implements GameObjectDestroyedListener, GameNoti
         this.center = center;
     }
     
+    @Override
     public void clear(){
         waves = 0;
         activeMessages.clear();
@@ -96,15 +100,18 @@ public class GameMessageManager implements GameObjectDestroyedListener, GameNoti
         }    
     }
 
-    public void update(float deltaTime) {
+    @Override
+    public void update(float dt) {
         activeMessages.removeIf(Message::isDead);
     }
 
-    public void draw(Graphics2D g) {
+    @Override
+    public void draw(Graphics g) {
+        Graphics2D g2d = (Graphics2D)g;
         for (Message msg : activeMessages) {
-            msg.draw(g);
+            msg.draw(g2d);
         }
-        activeMessages.removeIf(Message::isDead);
+        //activeMessages.removeIf(Message::isDead);
     }
 
     @Override

@@ -12,7 +12,9 @@ import java.util.List;
 import thecelestials.model.data.Assets;
 import thecelestials.model.gameObjects.Laser;
 import thecelestials.model.gameObjects.MovingObject;
+import thecelestials.model.managers.GameManager;
 import thecelestials.model.managers.GameObjectDestroyedListener;
+import thecelestials.model.managers.IGameLoopEntity;
 import thecelestials.model.math.Vector2D;
 import thecelestials.view.ui.animations.Animation;
 
@@ -20,7 +22,7 @@ import thecelestials.view.ui.animations.Animation;
  *
  * @author pc
  */
-public class GameEffectManager implements GameObjectDestroyedListener {
+public class GameEffectManager extends GameManager implements IGameLoopEntity, GameObjectDestroyedListener {
 
     private final BufferedImage[] explosions;
     private final List<Animation> animations = new ArrayList<>();
@@ -31,6 +33,7 @@ public class GameEffectManager implements GameObjectDestroyedListener {
         loadExplosionFrames();
     }
     
+    @Override
     public void clear(){
         animations.clear();
         animToAdd.clear();
@@ -42,6 +45,7 @@ public class GameEffectManager implements GameObjectDestroyedListener {
         }
     }
 
+    @Override
     public void update(float dt) {
         for (Animation anim : animations) {
             anim.update(dt);
@@ -62,6 +66,7 @@ public class GameEffectManager implements GameObjectDestroyedListener {
         }
     }
 
+    @Override
     public void draw(Graphics g) {
         for (Animation anim : animations) {
             anim.draw(g);
@@ -80,5 +85,4 @@ public class GameEffectManager implements GameObjectDestroyedListener {
             animToAdd.add(new Animation(explosions, 50, adjusted));
         }
     }
-
 }

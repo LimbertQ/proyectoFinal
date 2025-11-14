@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package thecelestials.model.managers;
+package thecelestials.view.ui.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +16,17 @@ import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.Meteor;
 import thecelestials.model.gameObjects.MovingObject;
 import thecelestials.model.gameObjects.PowerUp;
-import thecelestials.model.gameObjects.PowerUpTypes;
 import thecelestials.model.gameObjects.Ship;
+import thecelestials.model.managers.GameManager;
+import thecelestials.model.managers.GameNotificationListener;
+import thecelestials.model.managers.GameObjectDestroyedListener;
+import thecelestials.model.managers.IGameControl;
 
 /**
  *
  * @author pc
  */
-public class GameSoundManager implements GameObjectDestroyedListener, GameNotificationListener {
+public class GameSoundManager extends GameManager implements IGameControl, GameObjectDestroyedListener, GameNotificationListener {
 
     private final Map<String, Clip> audioCache;
     private final Map<String, MediaPlayer> mediaCache;
@@ -36,6 +39,7 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
         mediaCache = Assets.audioMediaCache;
     }
 
+    @Override
     public void clear() {
         for (Clip clip : audioCache.values()) {
             clip.stop();
@@ -83,6 +87,7 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
         }
     }
 
+    @Override
     public void pause() {
         
         for (Map.Entry<String, Clip> entry : audioCache.entrySet()) {
@@ -108,6 +113,7 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
         }
     }
 
+    @Override
     public void resume() {
         for (Clip clip : pauseClip) {
             clip.setFramePosition(clip.getFramePosition());
@@ -160,3 +166,4 @@ public class GameSoundManager implements GameObjectDestroyedListener, GameNotifi
         }
     }
 }
+
