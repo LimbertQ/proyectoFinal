@@ -26,6 +26,7 @@ public class MenuPanel extends JPanel {
     private JPanel contentWest;
     private JPanel contentCenter; // Contendrá los componentes específicos del menú (botones, sliders, etc.)
     private final String MenuPanelType;
+
     public MenuPanel(ScreenSwitcher switcher, String menuType) {
         this.switcher = switcher;
         this.MenuPanelType = menuType;
@@ -41,7 +42,7 @@ public class MenuPanel extends JPanel {
 
     private void loadMenuContent(String menuType) {
         // 1. Limpiar el contentPanel EXISTENTE
-
+        
         // 2. Obtener los componentes del factory en un panel TEMPORAL
         JPanel newContentFromFactory = MenuComponentFactory.createContentPanelForType(menuType, switcher, 0);
 
@@ -59,14 +60,14 @@ public class MenuPanel extends JPanel {
         contentWest.repaint();
 
         if (!menuType.equals("mainMenuCard")) {
-        //poner el panel central
-        contentCenter = (JPanel) comps[2];
-        add(contentCenter, BorderLayout.CENTER);
-        //poner el boton atras o el shipSelectorPanel
-        add(comps[3], BorderLayout.EAST);
+            //poner el panel central
+            contentCenter = (JPanel) comps[2];
+            add(contentCenter, BorderLayout.CENTER);
+            //poner el boton atras o el shipSelectorPanel
+            add(comps[3], BorderLayout.EAST);
 
-        contentCenter.revalidate();
-        contentCenter.repaint();
+            contentCenter.revalidate();
+            contentCenter.repaint();
         }
         // 6. Opcional: limpiar el panel temporal si ya no lo necesitas
         newContentFromFactory.removeAll();
