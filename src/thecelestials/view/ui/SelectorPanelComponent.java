@@ -41,11 +41,12 @@ public class SelectorPanelComponent extends JPanel {
 
     public void addLabelListener(String button, ActionListener listener) {
         JLabel labelButton;
-        if(button.equals("previous")){
-            labelButton = left;
-        }else{
-            labelButton = right;
-        }
+        labelButton = switch (button) {
+            case "previous" -> left;
+            case "next" -> right;
+            case "imageName" -> itemImageName;
+            default -> back;
+        };
         labelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

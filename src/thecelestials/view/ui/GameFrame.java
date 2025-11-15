@@ -32,7 +32,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
     private MenuPanel campaignPanel;
     private MenuPanel missionsPanel;
     //private MenuSelectorPanel selectorMenuPanel;
-    private InfoSelectorPanel selectorMenuPanel;
+    private InfoDisplayPanel selectorMenuPanel;
     private ButtonSelectorPanel buttonSelectorPanel;
     private MediaPlayerPanel mediaPlayerPanel;
     private GameCanvas gameCanvas;
@@ -130,7 +130,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         extraMenuPanel = new MenuPanel(this, extraMenuCard);
         campaignPanel = new MenuPanel(this, campaignsMenuCard);
         //selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
-        selectorMenuPanel = new InfoSelectorPanel(this, selectorMenuCard);
+        selectorMenuPanel = new InfoDisplayPanel(this, selectorMenuCard);
         
         buttonSelectorPanel = new ButtonSelectorPanel(this, buttonSelectorCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
