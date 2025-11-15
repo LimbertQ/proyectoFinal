@@ -6,6 +6,7 @@ package thecelestials.view.ui.Factory;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ import thecelestials.model.data.Assets;
 import thecelestials.model.data.GameEntity;
 import thecelestials.model.data.MissionStats;
 import thecelestials.view.ui.GameFrame;
+import thecelestials.view.ui.SelectorPanelComponent;
 import thecelestials.view.ui.ShipSelectorPanel;
 
 /**
@@ -197,12 +199,12 @@ public class MenuComponentFactory {
             }
             case "selectorMenuCard" -> {
                 title = titleMenu("SELECTOR CARD");
-                panel.add(createMenuLabel(2));
+                panel.add(contentWidthLabel());
                 //----------------
                 panel.add(textArea());
                 //------------
                 //panel.add(createClickableLabel("ATRAS", 0, e -> switcher.showCard("optionsMenuCard", "1")));
-                //panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
+                panel.add(createSelectorPanel());
             }
             case "buttonSelectorCard" -> {
                 title = titleMenu("COMPRAS");
@@ -237,6 +239,15 @@ public class MenuComponentFactory {
         panelTitle.add(title);
         return panel;
     }
+    
+    private static JPanel contentWidthLabel(){
+        JPanel mainMenu = new JPanel();
+        mainMenu.setBorder(BorderFactory.createEmptyBorder(286, 0, 0, 0));
+        mainMenu.setOpaque(false);
+        mainMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
+        mainMenu.add(new JLabel());
+        return mainMenu;
+    }
 
     private static JPanel textArea() {
         JPanel contentPanel = new JPanel();
@@ -255,6 +266,7 @@ public class MenuComponentFactory {
         //texto.setText("alison de mrd");
         texto.setForeground(Color.WHITE);
         texto.setOpaque(true);
+        texto.setText("mrd");
         contentPanel.add(texto);
         //contentPanel.add(texto, BorderLayout.CENTER);
         return contentPanel;
@@ -348,6 +360,19 @@ public class MenuComponentFactory {
         boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         return boton;
     }
+    
+    public static JLabel createArrowLabel(String text){
+        JLabel boton = new JLabel(text);
+        Color color = new Color(41, 41, 41, 128);
+        boton.setFont(Assets.fontMed);
+        boton.setBackground(color);
+        boton.setForeground(Color.WHITE);
+        boton.setOpaque(true);
+        boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        boton.setVerticalAlignment(SwingConstants.CENTER);
+        boton.setHorizontalAlignment(SwingConstants.CENTER);
+        return boton;
+    }
 
     public static JLabel createArrowButton(String text, ActionListener clickAction) {
         JLabel boton = new JLabel(text);
@@ -388,6 +413,48 @@ public class MenuComponentFactory {
             }
         });
         return boton;
+    }
+    
+    public static JPanel createSelectorPanel(){
+        JLabel currentImage = new JLabel();
+        JLabel back = sampleLabel("ATRAS", 1, 1);
+        JLabel left = createArrowLabel("<<");
+        JLabel right = createArrowLabel(">>");
+        JLabel nameImage = sampleLabel("", 1, 0);
+        SelectorPanelComponent selectorPanelComponent = new SelectorPanelComponent(currentImage, back, left, right, nameImage);
+        selectorPanelComponent.setLayout(new BoxLayout(selectorPanelComponent, BoxLayout.Y_AXIS));
+        //setBackground(Color.red);
+        selectorPanelComponent.setOpaque(false); // Hazlo transparente si quieres ver el fondo del panel padre
+        JLabel selectorTitle = sampleLabel("SELECTOR", -1, 1);
+        selectorTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectorTitle.setOpaque(false);
+        selectorPanelComponent.add(selectorTitle);
+        //------------
+        JPanel contents = new JPanel();
+        //contents.setLayout(new BorderLayout());
+        contents.setLayout(new BoxLayout(contents, BoxLayout.X_AXIS));
+        //currentImage = new JLabel();
+        contents.setOpaque(false);
+        contents.add(left);
+        contents.add(Box.createHorizontalStrut(20));
+        contents.add(currentImage);
+        contents.add(Box.createHorizontalStrut(20));
+        contents.add(right);
+        selectorPanelComponent.add(contents);
+        
+        nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameImage.setOpaque(false);
+        selectorPanelComponent.add(nameImage);
+        selectorPanelComponent.add(Box.createVerticalStrut(67));
+
+        JPanel southPanel = new JPanel();
+        southPanel.setOpaque(false);
+
+        southPanel.add(back);
+        //southPanel.add(Box.createHorizontalStrut(Integer.MAX_VALUE));
+
+        selectorPanelComponent.add(southPanel);
+        return selectorPanelComponent;
     }
 
     // Método de utilidad para crear botones con un estilo común

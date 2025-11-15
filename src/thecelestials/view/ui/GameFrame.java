@@ -31,7 +31,8 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
     private MenuPanel extraMenuPanel;
     private MenuPanel campaignPanel;
     private MenuPanel missionsPanel;
-    private MenuSelectorPanel selectorMenuPanel;
+    //private MenuSelectorPanel selectorMenuPanel;
+    private InfoSelectorPanel selectorMenuPanel;
     private ButtonSelectorPanel buttonSelectorPanel;
     private MediaPlayerPanel mediaPlayerPanel;
     private GameCanvas gameCanvas;
@@ -90,6 +91,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
                 mediaPlayerPanel.updateVideo("selectorMenuCard", menuID);
             }
             case selectorMenuCard ->
+                //selectorMenuPanel.updateContentForMenu(menuID);
                 selectorMenuPanel.updateContentForMenu(menuID);
             case buttonSelectorCard ->
                 buttonSelectorPanel.updateContentForMenu(menuID);
@@ -127,7 +129,9 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         optionsMenuPanel = new MenuPanel(this, optionsMenuCard);
         extraMenuPanel = new MenuPanel(this, extraMenuCard);
         campaignPanel = new MenuPanel(this, campaignsMenuCard);
-        selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
+        //selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
+        selectorMenuPanel = new InfoSelectorPanel(this, selectorMenuCard);
+        
         buttonSelectorPanel = new ButtonSelectorPanel(this, buttonSelectorCard);
         missionsPanel = new MenuPanel(this, missionsMenuCard);
         mediaPlayerPanel = new MediaPlayerPanel(this, mediaPlayerCard);
@@ -136,7 +140,9 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         mainPanel.add(optionsMenuPanel, optionsMenuCard);
         mainPanel.add(extraMenuPanel, extraMenuCard);
         mainPanel.add(campaignPanel, campaignsMenuCard);
+        //mainPanel.add(selectorMenuPanel, selectorMenuCard);
         mainPanel.add(selectorMenuPanel, selectorMenuCard);
+        
         mainPanel.add(buttonSelectorPanel, buttonSelectorCard);
         mainPanel.add(missionsPanel, missionsMenuCard);
         mainPanel.add(mediaPlayerPanel, mediaPlayerCard);

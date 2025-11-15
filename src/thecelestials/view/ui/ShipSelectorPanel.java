@@ -33,23 +33,13 @@ public class ShipSelectorPanel extends JPanel{
         title.setOpaque(false);
         add(title);
         
-        //ImageIcon imagen = new ImageIcon(Assets.shipsAvaible.getFirst().getProfile());
-        //icon.setImage(Assets.shipsAvaible.getFirst().getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH));
-        //currentShip.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
-        
-        //JLabel image = new JLabel();
         image.setIcon(new ImageIcon(Assets.getCurrentShip().getProfile().getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
         
         
         JLabel left = MenuComponentFactory.createArrowButton("<<", e ->{nextShip(-1);});
-        JLabel right = MenuComponentFactory.createArrowButton("<<", e ->{nextShip(1);});
+        JLabel right = MenuComponentFactory.createArrowButton(">>", e ->{nextShip(1);});
         JPanel contents = new JPanel();
-        //contents.setLayout(new BorderLayout());
         contents.setLayout(new BoxLayout(contents, BoxLayout.X_AXIS));
-        // Alineación vertical de los componentes dentro del BoxLayout.X_AXIS:
-        //left.setAlignmentY(Component.CENTER_ALIGNMENT);
-        //currentShip.setAlignmentY(Component.CENTER_ALIGNMENT);
-        //right.setAlignmentY(Component.CENTER_ALIGNMENT);
         contents.setOpaque(false);
         contents.add(left);
         contents.add(Box.createHorizontalStrut(20));

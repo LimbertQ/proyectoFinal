@@ -20,10 +20,14 @@ import thecelestials.view.ui.Factory.MenuComponentFactory;
  */
 public abstract class BaseMenuPanel extends BasePanel {
 
+    protected JPanel northPanel;
     protected JPanel centerPanel;
+    protected JPanel westPanel;
+    protected JPanel eastPanel;
 
     public BaseMenuPanel(ScreenSwitcher switcher, String menuType) {
         super(switcher);
+        setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(80, 40, 80, 40)); // Borde para separación y posición
 
         loadContent(menuType);
@@ -33,20 +37,26 @@ public abstract class BaseMenuPanel extends BasePanel {
         JPanel newContentFromFactory = MenuComponentFactory.createContentPanelForType(menuType, switcher, 0);
         Component[] comps = newContentFromFactory.getComponents();
         //poner el titulo primero en la parte de arriba
-        add(comps[0], BorderLayout.NORTH);
+        northPanel = (JPanel) comps[0];
+        add(northPanel, BorderLayout.NORTH);
 
-        add(comps[1], BorderLayout.WEST);
+        westPanel = (JPanel) comps[1];
+        add(westPanel, BorderLayout.WEST);
         if (!menuType.equals("mainMenuCard")) {
             centerPanel = (JPanel) comps[2];
             add(centerPanel, BorderLayout.CENTER);
             //poner el boton atras o el shipSelectorPanel
-            add(comps[3], BorderLayout.EAST);
+            eastPanel = (JPanel) comps[3];
+            add(eastPanel, BorderLayout.EAST);
         }
     }
 
     public abstract void updateContentForMenu(String type);
 
     protected <T extends Component> T findComponentByType(Class<T> type, Container parent) {
+        if (type.isInstance(parent)) {
+            return type.cast(parent); // Si el contenedor es el SelectorPanelComponent, devolverlo.
+        }
         // 1. Itera sobre TODOS los componentes hijos directos
         for (Component comp : parent.getComponents()) {
 
