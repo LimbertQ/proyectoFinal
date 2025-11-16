@@ -82,7 +82,7 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         switch (type) {
             case "galery", "buttonSelectorCard" ->
                 dataNavigator = Assets.shipsAvaible;
-            case "credits", "tutorial" ->
+            case "credits", "tutorial", "civilizations" ->
                 dataNavigator = Assets.informations.get(type);
             case "cinematic" -> {
                 List<AssetDefinition> temp = new ArrayList<>();

@@ -4,7 +4,10 @@
  */
 package thecelestials.view.ui;
 
+import java.awt.Component;
+import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
+import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
  *
@@ -18,6 +21,15 @@ public class SimpleMenuPanel extends BaseMenuPanel{
 
     @Override
     public void updateContentForMenu(String type) {
+        if (type.equals("unlock")) {
+            centerPanel.removeAll();
+            JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, "MENU"));
+
+            Component[] comps = newContentFromFactory.getComponents();
+            for (Component comp : comps) {
+                centerPanel.add(comp);
+            }
+        }
     }
     
 }

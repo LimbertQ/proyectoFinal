@@ -29,7 +29,6 @@ import thecelestials.model.data.GameEntity;
 import thecelestials.model.data.MissionStats;
 import thecelestials.view.ui.GameFrame;
 import thecelestials.view.ui.SelectorPanelComponent;
-import thecelestials.view.ui.ShipSelectorPanel;
 
 /**
  *
@@ -213,27 +212,6 @@ public class MenuComponentFactory {
                 panel.add(textArea());
                 //------------
                 panel.add(createSelectorPanel());
-                //panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
-            }
-            case "missionsMenuCard" -> {
-                title = titleMenu("misiones");
-                panel.add(createMenuLabel(2));
-
-                JPanel missions = new JPanel();
-                missions.setBorder(BorderFactory.createEmptyBorder(250, 50, 50, 50));
-                missions.setOpaque(false);
-                missions.setLayout(new BoxLayout(missions, BoxLayout.Y_AXIS));
-                //missions.add(Box.createVerticalGlue());
-                panel.add(missions);
-
-                JLabel back = createClickableLabel("ATRAS", 0, e -> switcher.showCard("campaignMenuCard", "1"));
-                //back.setSize(50,10);
-                //------AQUI
-                ShipSelectorPanel selector = new ShipSelectorPanel(back);
-                //SelectorPanel selector = new SelectorPanel(back);
-                panel.add(selector);
-                //------------------------------
-
             }
         }
         panelTitle.add(title);

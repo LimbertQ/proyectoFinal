@@ -26,10 +26,10 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
     private final CardLayout cardLayout;
     private final LoadingPanel loadingPanel;
     private final JPanel mainPanel;
-    private MenuPanel menuPanel;
-    private MenuPanel optionsMenuPanel;
-    private MenuPanel extraMenuPanel;
-    private MenuPanel campaignPanel;
+    private SimpleMenuPanel menuPanel;
+    private SimpleMenuPanel optionsMenuPanel;
+    private SimpleMenuPanel extraMenuPanel;
+    private SimpleMenuPanel campaignPanel;
     //private MenuPanel missionsPanel;
     //private MenuSelectorPanel selectorMenuPanel;
     private InfoDisplayPanel selectorMenuPanel;
@@ -128,10 +128,10 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
 
     @Override
     public void initializeMenus() {
-        menuPanel = new MenuPanel(this, mainMenuCard);
-        optionsMenuPanel = new MenuPanel(this, optionsMenuCard);
-        extraMenuPanel = new MenuPanel(this, extraMenuCard);
-        campaignPanel = new MenuPanel(this, campaignsMenuCard);
+        menuPanel = new SimpleMenuPanel(this, mainMenuCard);
+        optionsMenuPanel = new SimpleMenuPanel(this, optionsMenuCard);
+        extraMenuPanel = new SimpleMenuPanel(this, extraMenuCard);
+        campaignPanel = new SimpleMenuPanel(this, campaignsMenuCard);
         //selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
         selectorMenuPanel = new InfoDisplayPanel(this, selectorMenuCard);
         
