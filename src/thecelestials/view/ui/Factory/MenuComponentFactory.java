@@ -208,11 +208,11 @@ public class MenuComponentFactory {
             }
             case "buttonSelectorCard" -> {
                 title = titleMenu("COMPRAS");
-                panel.add(createMenuLabel(2));
+                panel.add(contentWidthLabel());
                 //----------------
                 panel.add(textArea());
                 //------------
-                panel.add(createClickableLabel("ATRAS", 0, e -> switcher.showCard("optionsMenuCard", "1")));
+                panel.add(createSelectorPanel());
                 //panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "missionsMenuCard" -> {

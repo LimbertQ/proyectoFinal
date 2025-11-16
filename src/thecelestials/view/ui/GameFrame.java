@@ -30,7 +30,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
     private MenuPanel optionsMenuPanel;
     private MenuPanel extraMenuPanel;
     private MenuPanel campaignPanel;
-    private MenuPanel missionsPanel;
+    //private MenuPanel missionsPanel;
     //private MenuSelectorPanel selectorMenuPanel;
     private InfoDisplayPanel selectorMenuPanel;
     private ButtonSelectorPanel buttonSelectorPanel;
@@ -93,8 +93,9 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
             case selectorMenuCard ->
                 //selectorMenuPanel.updateContentForMenu(menuID);
                 selectorMenuPanel.updateContentForMenu(menuID);
-            case buttonSelectorCard ->
-                buttonSelectorPanel.updateContentForMenu(menuID);
+            case buttonSelectorCard -> {
+                buttonSelectorPanel.updateContentForMenu(cardName);
+            }
             case missionsMenuCard -> {
                 if (Assets.unlock) {
                     //ACTUALIZAMOS CAMPANIA
@@ -109,7 +110,9 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
                     cardName = mediaPlayerCard;
                 } else {
                     System.out.println("entro?" + menuID);
-                    missionsPanel.updateContentForMenu(menuID);
+                    //missionsPanel.updateContentForMenu(menuID);
+                    cardName = buttonSelectorCard;
+                    buttonSelectorPanel.updateContentForMenu(menuID);
                 }
             }
             case gameCanvasCard -> {
@@ -133,7 +136,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         selectorMenuPanel = new InfoDisplayPanel(this, selectorMenuCard);
         
         buttonSelectorPanel = new ButtonSelectorPanel(this, buttonSelectorCard);
-        missionsPanel = new MenuPanel(this, missionsMenuCard);
+        //missionsPanel = new MenuPanel(this, missionsMenuCard);
         mediaPlayerPanel = new MediaPlayerPanel(this, mediaPlayerCard);
 
         mainPanel.add(menuPanel, mainMenuCard);
@@ -144,7 +147,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         mainPanel.add(selectorMenuPanel, selectorMenuCard);
         
         mainPanel.add(buttonSelectorPanel, buttonSelectorCard);
-        mainPanel.add(missionsPanel, missionsMenuCard);
+        //mainPanel.add(missionsPanel, missionsMenuCard);
         mainPanel.add(mediaPlayerPanel, mediaPlayerCard);
 
         gameCanvas = new GameCanvas();

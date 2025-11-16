@@ -38,6 +38,11 @@ public class SelectorPanelComponent extends JPanel {
         itemImageLabel.setIcon(new ImageIcon(image.getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
         itemImageName.setText(text);
     }
+    
+    public void setItemNameLabelText(String text) {
+        // Asumiendo que 'itemNameLabel' es el JLabel que muestra el nombre del ítem/vidas/dinero
+        this.itemImageName.setText(text);
+    }
 
     public void addLabelListener(String button, ActionListener listener) {
         JLabel labelButton;

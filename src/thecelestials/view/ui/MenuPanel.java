@@ -89,6 +89,7 @@ public class MenuPanel extends JPanel {
             JPanel ti = (JPanel) this.getComponent(0);
             JLabel title = (JLabel) ti.getComponent(0);
             title.setText(Assets.campaigns.get(type).getName());
+            System.err.println(type+"aqui hay bato encerrado");
             contentCenter.removeAll();
             JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, type));
 
