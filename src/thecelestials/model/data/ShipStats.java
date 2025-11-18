@@ -11,15 +11,13 @@ package thecelestials.model.data;
  */
 public class ShipStats extends EntityStats{
     private EntityStats bullet;
-    private final int state;
     private final String shipClass;
     private final String laserID;
     private final String civilizationID;
     private final int team;
-    public ShipStats(String id, String shipClass, String name, String description, String profileImagePath, String spritePath, int health, int damage, int state, String laserID, String civID, int team) {
-        super(id, name, description, profileImagePath, spritePath, health, damage);
+    public ShipStats(String id, String shipClass, String name, String description, String profileImagePath, int state, String spritePath, int health, int damage, String laserID, String civID, int team) {
+        super(id, name, description, profileImagePath, state, spritePath, health, damage);
         
-        this.state = state;
         this.shipClass = shipClass;
         this.laserID = laserID;
         this.civilizationID = civID;
@@ -34,11 +32,7 @@ public class ShipStats extends EntityStats{
         return team;
     }
     
-    public int getState(){
-        return state;
-    }
-    
-    public void setEntityState(EntityStats entity){
+    public void setEntityStats(EntityStats entity){
         this.bullet = entity;
     }
     //CIVILIZACION

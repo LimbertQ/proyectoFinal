@@ -29,6 +29,8 @@ public class ButtonSelectorPanel extends BaseSelectorPanel {
         if (this.menuName.equals("buttonSelectorCard")) {
             getSelector().setItemNameLabelText("vidas: " + Assets.lives);
             missionID = "buyPanel";
+        }else{
+            super.onMenuDataInicializate(Assets.campaigns.get(missionID).getName());
         }
         
         JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, missionID));

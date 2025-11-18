@@ -24,8 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import thecelestials.controller.ScreenSwitcher;
+import thecelestials.model.data.AssetDefinition;
 import thecelestials.model.data.Assets;
-import thecelestials.model.data.GameEntity;
 import thecelestials.model.data.MissionStats;
 import thecelestials.view.ui.GameFrame;
 import thecelestials.view.ui.SelectorPanelComponent;
@@ -519,7 +519,7 @@ public class MenuComponentFactory {
                 cost += 3000;
             }
         } else {
-            Map<String, ? extends GameEntity> mapEntitys;
+            Map<String, ? extends AssetDefinition> mapEntitys;
             String ID = menuID.substring(0, 4);
             String menuCard;
             switch (ID) {
@@ -538,7 +538,7 @@ public class MenuComponentFactory {
                 }
             }
 
-            for (GameEntity gameEntity : mapEntitys.values()) {
+            for (AssetDefinition gameEntity : mapEntitys.values()) {
                 if (gameEntity.getState() == 0) {
                     actions.put(gameEntity.getName() + "-Bloq", null);
                 } else {

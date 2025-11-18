@@ -94,8 +94,8 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getInt("shipState"), rs.getString("laserID"), rs.getString("civilizationID"), 1);
-                ship.setEntityState(readLaserByID(ship.getEntityStatsID()));
+                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getInt("shipState"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getString("laserID"), rs.getString("civilizationID"), 1);
+                ship.setEntityStats(readLaserByID(ship.getEntityStatsID()));
                 navesData.add(ship);
             }
         } catch (SQLException e) {
@@ -110,7 +110,7 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                entity = new EntityStats(rs.getString("laserID"), rs.getString("laserName"), null, rs.getString("laserAssetPath"), rs.getString("laserAssetPath"), 1, (int)rs.getInt("laserDamage"));
+                entity = new EntityStats(rs.getString("laserID"), rs.getString("laserName"), null, rs.getString("laserAssetPath"), 1, rs.getString("laserAssetPath"), 1, (int)rs.getInt("laserDamage"));
                 
             }
         } catch (SQLException e) {
@@ -166,7 +166,7 @@ public class DataBaseManager {
 
             while (rs.next()) {
                 AssetDefinition civilization = new AssetDefinition(rs.getString("civilizationID"),
-                        rs.getString("civilizationName"), rs.getString("civilizationDescription"), rs.getString("civilizationPath"));
+                        rs.getString("civilizationName"), rs.getString("civilizationDescription"), rs.getString("civilizationPath"), 1);
                 
                 //team = 1;
                 list.add(civilization);
@@ -285,6 +285,7 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+                System.out.println(rs.getInt("campaignState")+" :state");
                 Campaign campaign = new Campaign(rs.getString("campaignID"), rs.getString("campaignName"), rs.getString("campaignDescription"), rs.getString("videoPath"), rs.getString("mapPath"), rs.getInt("campaignState"), readMissionsByCampaign(rs.getString("campaignID")));
                 list.put(campaign.getID(), campaign);
             }
@@ -388,9 +389,9 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getInt("shipState"), rs.getString("laserID"), rs.getString("civilizationID"), rs.getInt("team"));
+                ShipStats ship = new ShipStats(rs.getString("shipID"), rs.getString("shipClass"), rs.getString("shipName"), rs.getString("shipDescription"), rs.getString("profileShipPath"), rs.getInt("shipState"), rs.getString("shipAssetPath"), rs.getInt("shipHealth"), rs.getInt("shipDamage"), rs.getString("laserID"), rs.getString("civilizationID"), rs.getInt("team"));
                 
-                ship.setEntityState(readLaserByID(ship.getEntityStatsID()));
+                ship.setEntityStats(readLaserByID(ship.getEntityStatsID()));
                 if(ship.getShipClass().equals("crucero")){
                     cruisers.add(ship);
                 }else if(ship.getTeam() == 1){

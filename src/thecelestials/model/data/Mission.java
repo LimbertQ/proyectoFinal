@@ -8,7 +8,7 @@ package thecelestials.model.data;
  *
  * @author pc
  */
-public class Mission extends GameEntity{
+public class Mission extends AssetDefinition{
     //private final String missionID;
     //private final String missionName;
     //private final String missionMapPath;

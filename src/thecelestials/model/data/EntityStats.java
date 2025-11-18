@@ -16,8 +16,8 @@ public class EntityStats extends AssetDefinition{
     private final int damage;
     private final String spriteKey;
     private final String spritePath;
-    public EntityStats(String id, String name, String description, String profileImagePath, String spritePath, int health, int damage) {
-        super(id, name, description, profileImagePath);
+    public EntityStats(String id, String name, String description, String profileImagePath, int state, String spritePath, int health, int damage) {
+        super(id, name, description, profileImagePath, state);
         this.health = health;
         this.damage = damage;
         this.spriteKey = "sprite"+name;

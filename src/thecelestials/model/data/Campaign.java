@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author pc
  */
-public class Campaign extends GameEntity {
+public class Campaign extends AssetDefinition{
 
     private final String videoPath;
     private final Map<String, Mission> missions;

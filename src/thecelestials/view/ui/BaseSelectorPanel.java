@@ -44,9 +44,6 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         });
     }
 
-    protected void onMenuDataInicializate(String missionID) {
-    }
-
     protected abstract void updateCenterContent(AssetDefinition currentAsset);
 
     private void navigateBack() {
@@ -59,40 +56,22 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
 
     protected abstract void onBackButtonClicked();
 
+    protected void onMenuDataInicializate(String type) {
+        //INSERTA EL TITULO DE LA VENTANA
+        menuTitle.setText(type);
+        //INSERTA LA IMAGEN DE LA VENTANA
+        imageWestPanel.setIcon(new ImageIcon(Assets.images.get(type).getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+    }
+
     @Override
     public final void updateContentForMenu(String type) {
         menuName = type;
-        if (Assets.campaigns.containsKey(type)) {
-            //INSERTA EL TITULO DE LA VENTANA
-            menuTitle.setText(Assets.campaigns.get(type).getName());
-            //INSERTA LA IMAGEN DE LA VENTANA
-            imageWestPanel.setIcon(new ImageIcon(Assets.campaigns.get(type).getProfile().getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
-            
-            System.err.println(type + "esta entrando");
-        }else{
-            //INSERTA EL TITULO DE LA VENTANA
-            menuTitle.setText(type);
-            //INSERTA LA IMAGEN DE LA VENTANA
-            imageWestPanel.setIcon(new ImageIcon(Assets.fondo.getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
-        }
         //INSERTA LA IMAGEN Y NOMBRE DEL SELECTOR
         //---------------------------------------;
-        //dataNavigator = Assets.informations.get(type);
-        System.err.println(type);
-        switch (type) {
-            case "galery", "buttonSelectorCard" ->
-                dataNavigator = Assets.shipsAvaible;
-            case "credits", "tutorial", "civilizations" ->
-                dataNavigator = Assets.informations.get(type);
-            case "cinematic" -> {
-                List<AssetDefinition> temp = new ArrayList<>();
-                for (Map.Entry<String, Campaign> entry : Assets.campaigns.entrySet()) {
-                    temp.add(entry.getValue());
-                }
-                dataNavigator = temp;
-            }
-            default ->
-                dataNavigator = Assets.shipsAvaible;
+        if (Assets.informations.containsKey(type)) {
+            dataNavigator = Assets.informations.get(type);
+        }else{
+            dataNavigator = Assets.shipsAvaible;
         }
         //---------------------------------------;
         currentIndex = 0;

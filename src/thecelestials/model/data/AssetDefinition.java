@@ -10,16 +10,18 @@ import java.awt.image.BufferedImage;
  *
  * @author pc
  */
-public class AssetDefinition {
+public class AssetDefinition{
     private final String id;
     private final String name;
     private final String profileImagePath;
     private final String description; // Esta es la clave para la reutilización
-    public AssetDefinition(String id, String name, String description, String profileImagePath){
+    private int state;
+    public AssetDefinition(String id, String name, String description, String profileImagePath, int state){
         this.id = id;
         this.name = name;
         this.description = description;
         this.profileImagePath = profileImagePath;
+        this.state = state;
     }
     
     public String getID(){
@@ -40,5 +42,13 @@ public class AssetDefinition {
     
     public String getProfileImagePath(){
         return profileImagePath;
+    }
+    
+    public int getState(){
+        return state;
+    }
+    
+    public void setState(){
+        state = 1;
     }
 }

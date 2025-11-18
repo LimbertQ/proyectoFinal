@@ -58,6 +58,7 @@ public class Assets {
             money = progress[1];
             campaigns = loadCampaigns();
             if(campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0){
+                System.out.println(campaigns.get("CAMP01").getState()+":---culpable");
                 unlock = true;
                 //MissionStats.missionID = "MSN01";
                 db.updateMissionState("MSN01");
@@ -184,7 +185,7 @@ public class Assets {
                                                 REPELE METEORO, DOBLE ESCORE, DOBLE CAÑON,
                                                 VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "tutorial"}};
         for(int i=0;i<infoGame.length;i++){
-            AssetDefinition info = new AssetDefinition("DES0"+(i+1), infoGame[i][0], infoGame[i][1], infoGame[0][2]);
+            AssetDefinition info = new AssetDefinition("DES0"+(i+1), infoGame[i][0], infoGame[i][1], infoGame[0][2], 1);
             List<AssetDefinition> infoList = new ArrayList<>();
             infoList.add(info);
             images.put(infoGame[i][3], loadImage(infoGame[i][2]));
@@ -238,7 +239,6 @@ public class Assets {
     }
     
     private static void loadCivilizations() {
-        //civilizations = db.readAvailableCivilization();
         List<AssetDefinition> civilizations = db.readAvailableCivilization();
         for(AssetDefinition civilization: civilizations){
             images.put(civilization.getName(), loadImage(civilization.getProfileImagePath()));
