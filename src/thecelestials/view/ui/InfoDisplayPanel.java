@@ -37,6 +37,7 @@ public class InfoDisplayPanel extends BaseSelectorPanel {
         if (menuName.equals("cinematic")) {
             currentAssetID = currentAsset.getID();
         }
+        centerPanel.repaint();
     }
 
     @Override

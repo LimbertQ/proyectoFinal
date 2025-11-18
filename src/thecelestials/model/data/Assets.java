@@ -82,6 +82,8 @@ public class Assets {
             shieldEffects[i] = loadImage("/images/effects/shield"+i+".png");
         }
         images.put("effect", loadImage("/images/effects/fire08.png"));
+        images.put("multimedia", loadImage("/images/others/multimedia.png"));
+        
         count = MAX_COUNT;
         loaded = true;
     }

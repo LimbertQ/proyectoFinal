@@ -60,7 +60,11 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         //INSERTA EL TITULO DE LA VENTANA
         menuTitle.setText(type);
         //INSERTA LA IMAGEN DE LA VENTANA
-        imageWestPanel.setIcon(new ImageIcon(Assets.images.get(type).getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+        if (Assets.images.containsKey(type)) {
+            imageWestPanel.setIcon(new ImageIcon(Assets.images.get(type).getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+        }else{
+            imageWestPanel.setIcon(new ImageIcon(Assets.images.get("multimedia").getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+        }
     }
 
     @Override
@@ -70,7 +74,7 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         //---------------------------------------;
         if (Assets.informations.containsKey(type)) {
             dataNavigator = Assets.informations.get(type);
-        }else{
+        } else {
             dataNavigator = Assets.shipsAvaible;
         }
         //---------------------------------------;

@@ -28,7 +28,8 @@ public class ButtonSelectorPanel extends BaseSelectorPanel {
         //String destino = "buyPanel";
         if (this.menuName.equals("buttonSelectorCard")) {
             getSelector().setItemNameLabelText("vidas: " + Assets.lives);
-            missionID = "buyPanel";
+            missionID = "compras";
+            super.onMenuDataInicializate(missionID);
         }else{
             super.onMenuDataInicializate(Assets.campaigns.get(missionID).getName());
         }
