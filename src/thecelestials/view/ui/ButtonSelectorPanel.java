@@ -25,16 +25,17 @@ public class ButtonSelectorPanel extends BaseSelectorPanel {
     protected void onMenuDataInicializate(String missionID) {
 
         centerPanel.removeAll();
-        //String destino = "buyPanel";
+        String aux = missionID;
         if (this.menuName.equals("buttonSelectorCard")) {
             getSelector().setItemNameLabelText("vidas: " + Assets.lives);
             missionID = "compras";
             super.onMenuDataInicializate(missionID);
+            aux = "buyPanel";
         }else{
             super.onMenuDataInicializate(Assets.campaigns.get(missionID).getName());
         }
         
-        JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, missionID));
+        JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, aux));
 
         Component[] comps = newContentFromFactory.getComponents();
 
