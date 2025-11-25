@@ -125,6 +125,10 @@ public abstract class Ship extends MovingObject {
     }
 
     protected void drawRectangle(Graphics2D g2d) {
+        if(special > Constants.UFO_CLONE_RATE){
+            g2d.setColor(color);
+            g2d.drawOval((int)position.getX(), (int)position.getY(), width, height);
+        }
         // 1. **GUARDAR** el estado original de Graphics2D. ¡Crucial!
         AffineTransform originalTransform = g2d.getTransform();
         

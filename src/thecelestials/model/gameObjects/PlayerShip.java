@@ -107,7 +107,6 @@ public class PlayerShip extends Ship {
         if (isInvulnerable) {
             if (spawnTime == 0) {
                 resetValues();
-                //System.out.println("vidas mrd"+lives);
             }
             spawnTime += dt;
             flickerTime += dt;
