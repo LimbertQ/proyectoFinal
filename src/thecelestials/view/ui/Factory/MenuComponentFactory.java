@@ -162,8 +162,8 @@ public class MenuComponentFactory {
                 panel.add(createMenuLabel(1));
                 //----------------
                 actions = new LinkedHashMap<>();
-                actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", "credits"));
-                actions.put("INSTRUCCIONES", e -> switcher.showCard("selectorMenuCard", "tutorial"));
+                actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", "creditos"));
+                actions.put("INSTRUCCIONES", e -> switcher.showCard("selectorMenuCard", "instrucciones"));
                 actions.put("COMPRAS", e -> switcher.showCard("buttonSelectorCard", ""));
                 panel.add(putButtons(34, false, actions));
                 //------------
@@ -175,9 +175,9 @@ public class MenuComponentFactory {
                 panel.add(createMenuLabel(2));
                 //----------------
                 actions = new LinkedHashMap<>();
-                actions.put("GALERIA", e -> switcher.showCard("selectorMenuCard", "galery"));
-                actions.put("CINEMATICA", e -> switcher.showCard("selectorMenuCard", "cinematic"));
-                actions.put("CIVILIZACIONES", e -> switcher.showCard("selectorMenuCard", "civilizations"));
+                actions.put("GALERIA", e -> switcher.showCard("selectorMenuCard", "galeria"));
+                actions.put("CINEMATICA", e -> switcher.showCard("selectorMenuCard", "cinematica"));
+                actions.put("CIVILIZACIONES", e -> switcher.showCard("selectorMenuCard", "civilizaciones"));
                 panel.add(putButtons(34, false, actions));
                 //------------
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));

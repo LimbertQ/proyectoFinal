@@ -26,7 +26,7 @@ public class InfoDisplayPanel extends BaseSelectorPanel {
     }
 
     private void onImageNameClicked() {
-        if (menuName.equals("cinematic")) {
+        if (menuName.equals("cinematica")) {
             this.switcher.showCard("mediaPlayerCard", currentAssetID);
         }
     }
@@ -34,7 +34,7 @@ public class InfoDisplayPanel extends BaseSelectorPanel {
     @Override
     protected void updateCenterContent(AssetDefinition currentAsset) {
         infoTextArea.setText(currentAsset.getDescription());
-        if (menuName.equals("cinematic")) {
+        if (menuName.equals("cinematica")) {
             currentAssetID = currentAsset.getID();
         }
         centerPanel.repaint();
@@ -43,7 +43,7 @@ public class InfoDisplayPanel extends BaseSelectorPanel {
     @Override
     protected void onBackButtonClicked() {
         String destinationCard = switch (menuName) {
-            case "tutorial", "credits" ->
+            case "instrucciones", "creditos" ->
                 "optionsMenuCard";
             default ->
                 "extraMenuCard"; // Caso de seguridad

@@ -72,7 +72,8 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         menuName = type;
         //INSERTA LA IMAGEN Y NOMBRE DEL SELECTOR
         //---------------------------------------;
-        if(type.equals("cinematic")){
+        if(type.equals("cinematica")){
+            //System.out.println("her we go");
             List<Campaign> copy = new ArrayList<>();
             for(Campaign aa : Assets.campaigns.values()){
                 copy.add(aa);

@@ -175,7 +175,7 @@ public class Assets {
         String[][] infoGame = {{"credits", """
                                            DESARROLLADOR: LIMBERT QUISPE QUISPE
                                            HISTORIA Y NARRACION: LIMBERT QUISPE QUISPE
-                                           EFECTOS ESPECIALES: LIMBERT QUISPE QUISPE""","/images/others/dev.png", "credits"},
+                                           EFECTOS ESPECIALES: LIMBERT QUISPE QUISPE""","/images/others/dev.png", "creditos"},
                                    {"tutorial", """
                                                 CONTROLES:
                                                 
@@ -185,14 +185,20 @@ public class Assets {
                                                 POTENCIADORES:
                                                 
                                                 REPELE METEORO, DOBLE ESCORE, DOBLE CAÑON,
-                                                VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "tutorial"}};
+                                                VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "instrucciones"}};
         for(int i=0;i<infoGame.length;i++){
             AssetDefinition info = new AssetDefinition("DES0"+(i+1), infoGame[i][0], infoGame[i][1], infoGame[0][2], 1);
             List<AssetDefinition> infoList = new ArrayList<>();
             infoList.add(info);
-            images.put(infoGame[i][3], loadImage(infoGame[i][2]));
+            //images.put(infoGame[i][0], loadImage(infoGame[i][2]));
+            images.put(infoGame[i][0], loadImage(infoGame[i][2]));
             informations.put(infoGame[i][3], infoList);
         }
+        images.put("instrucciones", loadImage("/images/others/instrucciones.png"));
+        images.put("galeria", loadImage("/images/others/galeria.png"));
+        images.put("creditos", loadImage("/images/others/creditos.png"));
+        
+        images.put("cinematica", loadImage("/images/others/cinematica.png"));
     }
     
     public static void setear(){
@@ -245,7 +251,8 @@ public class Assets {
         for(AssetDefinition civilization: civilizations){
             images.put(civilization.getName(), loadImage(civilization.getProfileImagePath()));
         }
-        informations.put("civilizations", civilizations);
+        informations.put("civilizaciones", civilizations);
+        images.put("civilizaciones", loadImage("/images/others/civilizaciones.png"));
     }
 
     private static void readAllSounds() {

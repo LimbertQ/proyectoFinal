@@ -47,7 +47,7 @@ public class MediaPlayerPanel extends JPanel{
         if(menuCard.equals("missionsMenuCard")){
             abrirArchivo(menuCard, campaignID, campaignID);
         }else{
-            abrirArchivo(menuCard, campaignID, "cinematic");
+            abrirArchivo(menuCard, campaignID, "cinematica");
         }
         
     }
