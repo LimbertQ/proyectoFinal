@@ -41,6 +41,7 @@ public class EntityStats extends AssetDefinition{
     }
     
     public BufferedImage getSprite(){
-        return Assets.images.get(spriteKey);
+        //return Assets.images.get(spriteKey);
+        return Assets.getImage(spriteKey);
     }
 }

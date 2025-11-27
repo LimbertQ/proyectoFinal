@@ -18,17 +18,17 @@ import thecelestials.model.math.Vector2D;
 public class PowerUp extends GameObject {
 
     private final PowerUpTypes type;
-    private final BufferedImage orb;
+    private final BufferedImage image;
     private final PlayerShip player;
 
     private double angle = 0;
     private long duration;
     private boolean isConsumed = false;
 
-    public PowerUp(Vector2D position, BufferedImage texture, BufferedImage orb, PowerUpTypes type, PlayerShip player) {
+    public PowerUp(Vector2D position, BufferedImage texture, BufferedImage image, PowerUpTypes type, PlayerShip player) {
         super(position, texture);
         this.type = type;
-        this.orb = orb;
+        this.image = image;
         this.player = player;
     }
     
@@ -78,7 +78,7 @@ public class PowerUp extends GameObject {
     public boolean isConsumed() {
         return isConsumed;
     }
-
+    
     @Override
     public void update(float dt) {
         if (!player.isInvulnerable()) {
@@ -94,18 +94,19 @@ public class PowerUp extends GameObject {
     }
 
     @Override
-    public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+    public void draw(Graphics2D g2d) {
 
-        g.drawImage(orb, (int) position.getX(), (int) position.getY(), null);
+        //dibujamos el orbe
+        g2d.drawImage(texture, (int) position.getX(), (int) position.getY(), null);
 
+        //nos enfocamos en rotar la imagen
         AffineTransform at = AffineTransform.getTranslateInstance(
-                position.getX() + orb.getWidth() / 2 - width / 2,
-                position.getY() + orb.getHeight() / 2 - height / 2);
+                position.getX() + width / 2 - image.getWidth() / 2,
+                position.getY() + height / 2 - image.getHeight() / 2);
 
-        at.rotate(angle, width / 2, height / 2);
+        at.rotate(angle, image.getWidth() / 2, image.getHeight() / 2);
 
-        g2d.drawImage(texture, at, null);
+        g2d.drawImage(image, at, null);
     }
 
 }

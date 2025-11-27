@@ -5,6 +5,7 @@
 package thecelestials.model.managers;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -114,7 +115,7 @@ public class GamePowerUpManager extends GameManager implements IGameLoopEntity, 
         Vector2D pos = new Vector2D(x, y);
         PowerUpTypes type = PowerUpTypes.values()[(int) (Math.random() * aleatorio)];
         
-        activePowerUps.add(new PowerUp(pos, imagesCache.get(type.textureKey), imagesCache.get("orb"), type, player));
+        activePowerUps.add(new PowerUp(pos, imagesCache.get("orb"), imagesCache.get(type.textureKey), type, player));
         //System.out.println("pow"+type.type);
     }
     
@@ -159,7 +160,7 @@ public class GamePowerUpManager extends GameManager implements IGameLoopEntity, 
     }
     
     @Override
-    public void draw(Graphics g){
+    public void draw(Graphics2D g){
         for(PowerUp pu : activePowerUps)pu.draw(g);
     }
 }

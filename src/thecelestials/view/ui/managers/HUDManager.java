@@ -4,7 +4,7 @@
  */
 package thecelestials.view.ui.managers;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
@@ -64,7 +64,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         }
     }
 
-    private void drawNumbers(int x, int y, int number, Graphics g) {
+    private void drawNumbers(int x, int y, int number, Graphics2D g) {
         String str = String.valueOf(number);
         for (char c : str.toCharArray()) {
             g.drawImage(numbers[Character.getNumericValue(c)], x, y, null);
@@ -77,7 +77,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     }
     
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         if (player != null) {
             drawScore(g);
             drawLives(g);
@@ -85,11 +85,11 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         drawAssaults(g);
     }
 
-    private void drawScore(Graphics g) {
+    private void drawScore(Graphics2D g) {
         drawNumbers(1200, 25, score, g);
     }
 
-    private void drawLives(Graphics g) {
+    private void drawLives(Graphics2D g) {
         if (!player.isDead()) {
             g.drawImage(Assets.player, 25, 25, null);
             g.drawImage(numbers[10], 65, 30, null); // X
@@ -97,7 +97,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         }
     }
     
-    private void drawAssaults(Graphics g){
+    private void drawAssaults(Graphics2D g){
         g.drawImage(Assets.player, 600, 25, null);
         drawNumbers(650, 30, assaults, g);
         g.drawImage(numbers[10], 675, 30, null);

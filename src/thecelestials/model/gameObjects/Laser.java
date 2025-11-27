@@ -34,8 +34,7 @@ public class Laser extends MovingObject {
     }
 
     @Override
-    public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+    public void draw(Graphics2D g2d) {
 
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX() - width / 2, position.getY());
 

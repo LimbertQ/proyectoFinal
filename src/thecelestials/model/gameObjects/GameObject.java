@@ -8,7 +8,7 @@ package thecelestials.model.gameObjects;
  *
  * @author pc
  */
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import thecelestials.model.math.Vector2D;
 
@@ -29,7 +29,7 @@ public abstract class GameObject {
 
     public abstract void update(float dt);
 
-    public abstract void draw(Graphics g);
+    public abstract void draw(Graphics2D g2d);
 
     public Vector2D getPosition() {
         return position;

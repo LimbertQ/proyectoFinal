@@ -104,7 +104,7 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         }
 
         currentIndex += i;
-        if (currentIndex >= 0 && currentIndex < dataNavigator.size()) {
+        if (currentIndex >= 0 && currentIndex < dataNavigator.size() && dataNavigator.get(currentIndex).getState() == 1) {
             AssetDefinition currentAsset = dataNavigator.get(currentIndex);
 
             selector.setSelectorItemIcon(currentAsset.getProfile(), currentAsset.getName());

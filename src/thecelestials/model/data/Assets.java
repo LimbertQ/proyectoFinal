@@ -28,14 +28,15 @@ public class Assets {
     public static int currentShip = 0;
     public static boolean loaded = false;
     public static boolean unlock = false;
-    
+
     public static int lives = 3;
     public static int money = 5000;
-    
+
     public static BufferedImage player, effect, fondo;
     public static BufferedImage[] shieldEffects = new BufferedImage[3];
     //public static BufferedImage[] explosions = new BufferedImage[9];
     public static Map<String, BufferedImage> images = new HashMap<>();
+    //public static Map<String, BufferedImage> imagesTemp = new HashMap<>();
     public static Map<String, BufferedImage> missionMaps = new HashMap<>();
     public static Map<String, Clip> audioCache = new HashMap<>();
     public static Map<String, MediaPlayer> audioMediaCache = new HashMap<>();
@@ -57,8 +58,8 @@ public class Assets {
             lives = progress[0];
             money = progress[1];
             campaigns = loadCampaigns();
-            if(campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0){
-                System.out.println(campaigns.get("CAMP01").getState()+":---culpable");
+            if (campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0) {
+                System.out.println(campaigns.get("CAMP01").getState() + ":---culpable");
                 unlock = true;
                 //MissionStats.missionID = "MSN01";
                 db.updateMissionState("MSN01");
@@ -78,12 +79,12 @@ public class Assets {
         }
         player = loadImage("/images/others/life.png");
         effect = loadImage("/images/effects/fire08.png");
-        for(int i=0;i<3;i++){
-            shieldEffects[i] = loadImage("/images/effects/shield"+i+".png");
+        for (int i = 0; i < 3; i++) {
+            shieldEffects[i] = loadImage("/images/effects/shield" + i + ".png");
         }
         images.put("effect", loadImage("/images/effects/fire08.png"));
         images.put("multimedia", loadImage("/images/others/multimedia.png"));
-        
+
         count = MAX_COUNT;
         loaded = true;
     }
@@ -96,6 +97,16 @@ public class Assets {
         }
     }
 
+    public static BufferedImage getImage(String keyImage) {
+        BufferedImage res;
+        if (images.containsKey(keyImage)) {
+            res = images.get(keyImage);
+        } else {
+            res = missionMaps.get(keyImage);
+        }
+        return res;
+    }
+
     public static void unlocks() {
         boolean flag = campaigns.get(MissionStats.campaignID).unlocks(MissionStats.missionID);
         if (!flag) {
@@ -103,7 +114,7 @@ public class Assets {
             int length = campaignID.length();
             int digit = Integer.parseInt(String.valueOf(campaignID.charAt(length - 1))) + 1;
             campaignID = campaignID.substring(0, length - 1) + digit;
-            if(campaigns.get(campaignID).getState() == 0){
+            if (campaigns.get(campaignID).getState() == 0) {
                 campaigns.get(campaignID).unlocks(MissionStats.missionID);
                 campaigns.get(campaignID).setState();
                 unlock = true;
@@ -125,15 +136,15 @@ public class Assets {
             setImageLaser(bullet);
         }
     }
-    
-    public static void updatePlayerStatus(int life, int coins){
+
+    public static void updatePlayerStatus(int life, int coins) {
         lives += life;
-        if(lives < 3){
+        if (lives < 3) {
             lives = 3;
         }
-        
+
         money += coins;
-        if(money < 0){
+        if (money < 0) {
             money = 0;
         }
         //UPDATE DATABASE
@@ -158,25 +169,30 @@ public class Assets {
         Map<String, Mission> missions = db.readMissionsByCampaign(campaignID);
         for (Mission mission : missions.values()) {
             missionMaps.put(mission.getName(), loadImage(mission.getProfileImagePath()));
+            System.err.println("aqui ay vidanio");
         }
         return missions;
     }
 
     private static void loadSpriteShips(List<ShipStats> ships) {
         for (ShipStats ship : ships) {
-            images.put(ship.getName(), loadImage(ship.getProfileImagePath()));
-            images.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
+            if (!images.containsKey(ship.getName())) {
+                missionMaps.put(ship.getName(), loadImage(ship.getProfileImagePath()));
+                missionMaps.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
+            }else{
+                count+=2;
+            }
             EntityStats bullet = ship.getEntityStats();
             setImageLaser(bullet);
         }
     }
-    
-    public static void getInformation(){
+
+    public static void getInformation() {
         String[][] infoGame = {{"credits", """
                                            DESARROLLADOR: LIMBERT QUISPE QUISPE
                                            HISTORIA Y NARRACION: LIMBERT QUISPE QUISPE
-                                           EFECTOS ESPECIALES: LIMBERT QUISPE QUISPE""","/images/others/dev.png", "creditos"},
-                                   {"tutorial", """
+                                           EFECTOS ESPECIALES: LIMBERT QUISPE QUISPE""", "/images/others/dev.png", "creditos"},
+        {"tutorial", """
                                                 CONTROLES:
                                                 
                                                 MOVIMIENTO: W AVANZAR, A Y D ROTAR 
@@ -186,8 +202,8 @@ public class Assets {
                                                 
                                                 REPELE METEORO, DOBLE ESCORE, DOBLE CAÑON,
                                                 VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "instrucciones"}};
-        for(int i=0;i<infoGame.length;i++){
-            AssetDefinition info = new AssetDefinition("DES0"+(i+1), infoGame[i][0], infoGame[i][1], infoGame[0][2], 1);
+        for (int i = 0; i < infoGame.length; i++) {
+            AssetDefinition info = new AssetDefinition("DES0" + (i + 1), infoGame[i][0], infoGame[i][1], infoGame[0][2], 1);
             List<AssetDefinition> infoList = new ArrayList<>();
             infoList.add(info);
             //images.put(infoGame[i][0], loadImage(infoGame[i][2]));
@@ -197,14 +213,14 @@ public class Assets {
         images.put("instrucciones", loadImage("/images/others/instrucciones.png"));
         images.put("galeria", loadImage("/images/others/galeria.png"));
         images.put("creditos", loadImage("/images/others/creditos.png"));
-        
+
         images.put("cinematica", loadImage("/images/others/cinematica.png"));
     }
-    
-    public static void setear(){
+
+    public static void setear() {
         loaded = false;
         count = 0;
-        
+
     }
 
     public static void loadGame(String missionID) {
@@ -212,11 +228,11 @@ public class Assets {
         MAX_COUNT = 10;
         Mission mission = db.readMissionsByID(missionID);
         List<ShipStats>[] shipsList = db.readShipsByMission(missionID);
-        MAX_COUNT = shipsList[0].size()*3+shipsList[1].size()*3+shipsList[2].size()*3+2;
+        MAX_COUNT = shipsList[0].size() * 3 + shipsList[1].size() * 3 + shipsList[2].size() * 3 + 2;
         Map<String, BufferedImage> stars = readStarsImages(missionID);
         //MAX_COUNT = shipsList.length;
         loadSpriteShips(shipsList[2]);
-        
+
         byte challenge = 0;
         if (mission.getChallenge().equals("WAVES")) {
             challenge++;
@@ -225,8 +241,7 @@ public class Assets {
         loadMediaSound("voiceStartPath", mission.getVoiceStartPath(), audioMission);
         loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
 
-        
-        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, (byte)mission.getReinforcement(), mission.getCampaignID());
+        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, (byte) mission.getReinforcement(), mission.getCampaignID());
         loadSpriteShips(MissionStats.allies);
         loadSpriteShips(MissionStats.axis);
         loaded = true;
@@ -245,10 +260,10 @@ public class Assets {
             media.dispose();
         }
     }
-    
+
     private static void loadCivilizations() {
         List<AssetDefinition> civilizations = db.readAvailableCivilization();
-        for(AssetDefinition civilization: civilizations){
+        for (AssetDefinition civilization : civilizations) {
             images.put(civilization.getName(), loadImage(civilization.getProfileImagePath()));
         }
         informations.put("civilizaciones", civilizations);
@@ -285,7 +300,7 @@ public class Assets {
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("imagePath"));
             images.put(image.get("imageName"), imagen);
-            
+
         }
     }
 
@@ -296,7 +311,7 @@ public class Assets {
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("starAssetPath"));
             starsMission.put(image.get("starName"), imagen);
-            
+
         }
         return starsMission;
     }

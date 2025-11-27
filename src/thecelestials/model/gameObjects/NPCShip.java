@@ -7,7 +7,6 @@ package thecelestials.model.gameObjects;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import thecelestials.model.data.ShipStats;
 import thecelestials.model.managers.GameObjectCreator;
 import thecelestials.model.managers.TargetProvider;
@@ -180,9 +179,7 @@ public class NPCShip extends Ship {
     }
 
     @Override
-    public void draw(Graphics g) {
-
-        Graphics2D g2d = (Graphics2D) g;
+    public void draw(Graphics2D g2d) {
 
         drawSpeed(g2d);
         drawRectangle(g2d);
@@ -190,5 +187,4 @@ public class NPCShip extends Ship {
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);
     }
-
 }

@@ -5,7 +5,6 @@
 package thecelestials.model.gameObjects;
 
 import java.awt.image.BufferedImage;
-import javax.swing.text.html.parser.Entity;
 import thecelestials.model.data.EntityStats;
 import thecelestials.model.math.Vector2D;
 

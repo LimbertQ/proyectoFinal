@@ -4,7 +4,7 @@
  */
 package thecelestials.model.managers;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -12,5 +12,5 @@ import java.awt.Graphics;
  */
 public interface IGameLoopEntity {
     public void update(float dt);
-    public void draw(Graphics g);
+    public void draw(Graphics2D g2d);
 }

@@ -205,11 +205,10 @@ public class PlayerShip extends Ship {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g2d) {
         if (visible == false) {
             return;
         }
-        Graphics2D g2d = (Graphics2D) g;
 
         drawSpeed(g2d);
         drawRectangle(g2d);

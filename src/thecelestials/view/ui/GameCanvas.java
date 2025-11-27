@@ -88,9 +88,6 @@ public class GameCanvas extends Canvas implements Runnable {
 
         gcm.draw(g);
 
-        g.setColor(Color.WHITE);
-        g.drawString("" + averageFps, 10, 20);
-
         g.dispose();
         bs.show();
     }

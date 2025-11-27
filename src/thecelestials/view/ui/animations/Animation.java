@@ -5,6 +5,7 @@
 package thecelestials.view.ui.animations;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import thecelestials.model.gameObjects.GameObject;
 import thecelestials.model.math.Vector2D;
@@ -52,7 +53,7 @@ public class Animation extends GameObject{
     }
 
     @Override
-    public void draw(Graphics g) {
-        g.drawImage(getCurrentFrame(), (int)position.getX(), (int)position.getY(), null);
+    public void draw(Graphics2D g2d) {
+        g2d.drawImage(getCurrentFrame(), (int)position.getX(), (int)position.getY(), null);
     }
 }

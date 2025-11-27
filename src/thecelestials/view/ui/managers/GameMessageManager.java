@@ -106,12 +106,10 @@ public class GameMessageManager extends GameManager implements IGameLoopEntity, 
     }
 
     @Override
-    public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
+    public void draw(Graphics2D g2d) {
         for (Message msg : activeMessages) {
             msg.draw(g2d);
         }
-        //activeMessages.removeIf(Message::isDead);
     }
 
     @Override

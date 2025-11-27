@@ -363,19 +363,19 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     }
 
     public void draw(Graphics g) {
-
+        Graphics2D g2d = (Graphics2D)g;
         g.drawImage(missionMap, 0, 0, 1366, 768, null);
 
         //Graphics2D g2d = (Graphics2D) g;
         for (GravitationalField gf : gravitationalsFields) {
-            gf.draw(g);
+            gf.draw(g2d);
         }
         for (MovingObject mo : movingObjects) {
-            mo.draw(g);
+            mo.draw(g2d);
         }
         for(GameManager manager: allManagers){
             if(manager instanceof IGameLoopEntity gameLoopEntity){
-                gameLoopEntity.draw(g);
+                gameLoopEntity.draw(g2d);
             }
         }
     }

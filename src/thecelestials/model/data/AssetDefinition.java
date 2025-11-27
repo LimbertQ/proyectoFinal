@@ -37,7 +37,8 @@ public class AssetDefinition{
     }
     
     public BufferedImage getProfile(){
-        return Assets.images.get(name);
+        //return Assets.images.get(name);
+        return Assets.getImage(name);
     }
     
     public String getProfileImagePath(){
