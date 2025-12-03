@@ -34,6 +34,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     private final BufferedImage[] numbers;
     private byte assaults = 0;
     private byte waves = 0;
+
     public HUDManager() {
         numbers = new BufferedImage[11];
         loadNumbersImages();
@@ -47,14 +48,17 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         assaults = 0;
         waves = 0;
     }
-    
+
     @Override
     public void playGame(PlayerShip p) {
         player = p;
         waves = MissionStats.assaults;
+        if (MissionStats.challenge == 1) {
+            waves /= 3;
+        }
     }
-    
-    public int getScore(){
+
+    public int getScore() {
         return score;
     }
 
@@ -75,7 +79,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     @Override
     public void update(float dt) {
     }
-    
+
     @Override
     public void draw(Graphics2D g) {
         if (player != null) {
@@ -96,8 +100,8 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
             drawNumbers(85, 30, player.getLives(), g);
         }
     }
-    
-    private void drawAssaults(Graphics2D g){
+
+    private void drawAssaults(Graphics2D g) {
         g.drawImage(Assets.player, 600, 25, null);
         drawNumbers(650, 30, assaults, g);
         g.drawImage(numbers[10], 675, 30, null);
@@ -107,22 +111,24 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     @Override
     public void onGameObjectDestroyed(MovingObject destroyedObject) {
         if (destroyedObject instanceof Meteor) {
-            score += Constants.METEOR_SCORE*finalScore;
+            score += Constants.METEOR_SCORE * finalScore;
         } else if (destroyedObject instanceof Ship ship && ship.getTeam() == 0) {
-            score += Constants.UFO_SCORE*finalScore;
+            score += Constants.UFO_SCORE * finalScore;
         }
     }
 
     @Override
     public void onGameNotify(String type) {
-        if(type.equals("ASSAULT") || type.equals("WAVES")){
-            assaults++;
+        if (type.equals("WAVES") || (type.equals("ASSAULT") && MissionStats.challenge != 1)) {
+            if(assaults<waves){
+                assaults++;
+            }
         }
     }
 
     @Override
     public void notifyPowerUp(PowerUp type) {
-        if(type.getType().textureKey.equals("star")){
+        if (type.getType().textureKey.equals("star")) {
             score += 1000;
         }
     }
@@ -140,9 +146,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
 
     @Override
     public void resume() {
-        
+
     }
 
-    
 }
-

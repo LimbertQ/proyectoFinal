@@ -27,6 +27,7 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
     private final SelectorPanelComponent selector;
     private int currentIndex = 0;
     private List<? extends AssetDefinition> dataNavigator;
+    private boolean flag = false;
 
     public BaseSelectorPanel(ScreenSwitcher switcher, String menuType) {
         super(switcher, menuType);
@@ -62,7 +63,7 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         //INSERTA LA IMAGEN DE LA VENTANA
         if (Assets.images.containsKey(type)) {
             imageWestPanel.setIcon(new ImageIcon(Assets.images.get(type).getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
-        }else{
+        } else {
             imageWestPanel.setIcon(new ImageIcon(Assets.images.get("multimedia").getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
         }
     }
@@ -70,22 +71,25 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
     @Override
     public final void updateContentForMenu(String type) {
         menuName = type;
+        flag = false;
+        Assets.currentShip = 0;
         //INSERTA LA IMAGEN Y NOMBRE DEL SELECTOR
         //---------------------------------------;
-        if(type.equals("cinematica")){
+        if (type.equals("cinematica")) {
             //System.out.println("her we go");
             List<Campaign> copy = new ArrayList<>();
-            for(Campaign aa : Assets.campaigns.values()){
+            for (Campaign aa : Assets.campaigns.values()) {
                 copy.add(aa);
             }
             dataNavigator = copy;
-        }else{
-        
-        if (Assets.informations.containsKey(type)) {
-            dataNavigator = Assets.informations.get(type);
         } else {
-            dataNavigator = Assets.shipsAvaible;
-        }
+
+            if (Assets.informations.containsKey(type)) {
+                dataNavigator = Assets.informations.get(type);
+            } else {
+                dataNavigator = Assets.shipsAvaible;
+                flag = true;
+            }
         }
         //---------------------------------------;
         currentIndex = 0;
@@ -109,6 +113,9 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
 
             selector.setSelectorItemIcon(currentAsset.getProfile(), currentAsset.getName());
             updateCenterContent(currentAsset);
+            if(flag){
+                Assets.currentShip = currentIndex;
+            }
         } else {
             currentIndex -= i;
         }

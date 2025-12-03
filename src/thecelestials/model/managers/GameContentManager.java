@@ -289,7 +289,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             }
         }
 
-        if (assault > 10000) {
+        if (assault > 15000) {
             //termina el juego
             type -= 2;
         }

@@ -117,8 +117,11 @@ public class Assets {
             if (campaigns.get(campaignID).getState() == 0) {
                 campaigns.get(campaignID).unlocks(MissionStats.missionID);
                 campaigns.get(campaignID).setState();
+                loadShipAvaible();
                 unlock = true;
             }
+        }else{
+            loadShipAvaible();
         }
     }
 
