@@ -234,7 +234,10 @@ public class Assets {
         MAX_COUNT = shipsList[0].size() * 3 + shipsList[1].size() * 3 + shipsList[2].size() * 3 + 2;
         Map<String, BufferedImage> stars = readStarsImages(missionID);
         //MAX_COUNT = shipsList.length;
+        loadSpriteShips(shipsList[0]);
+        loadSpriteShips(shipsList[1]);
         loadSpriteShips(shipsList[2]);
+        
 
         byte challenge = 0;
         if (mission.getChallenge().equals("WAVES")) {
@@ -245,8 +248,6 @@ public class Assets {
         loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
 
         MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, (byte) mission.getReinforcement(), mission.getCampaignID());
-        loadSpriteShips(MissionStats.allies);
-        loadSpriteShips(MissionStats.axis);
         loaded = true;
     }
 

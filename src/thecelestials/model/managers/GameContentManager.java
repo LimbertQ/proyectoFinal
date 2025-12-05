@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -42,8 +43,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     private final List<MovingObject> movingObjects = new ArrayList<>();
     private final List<MovingObject> listToAdd = new ArrayList<>();
-    private final List<Ship> enemys = new ArrayList<>();
-    private final List<Ship> allies = new ArrayList<>();
+    private final Map<Integer, List<Ship>> allShips = new HashMap<>();
     private Ship cruiser;
     private PlayerShip player = null;
     private final List<GravitationalField> gravitationalsFields = new ArrayList<>();
@@ -62,32 +62,36 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     public GameContentManager() {
         images = Assets.images;
-        gameEventManager = new GameEventManager();
         
+        allShips.put(1, new ArrayList<>());
+        allShips.put(0, new ArrayList<>());
+        
+        gameEventManager = new GameEventManager();
+
         HUDManager gameHudManager = new HUDManager();
         allManagers.add(gameHudManager);
-        
+
         GameMessageManager gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4), new Vector2D(Constants.WIDTH / 2, Constants.HEIGHT / 2));
         allManagers.add(gameMessageManager);
-        
+
         gameSoundManager = new GameSoundManager();
         allManagers.add(gameSoundManager);
-        
+
         GamePowerUpManager gamePowerUpManager = new GamePowerUpManager(images, gameEventManager);
         allManagers.add(gamePowerUpManager);
-        
+
         gameCollisionManager = new CollisionManager();
-        
+
         GameEffectManager gameEffectManager = new GameEffectManager();
         allManagers.add(gameEffectManager);
-        for(GameManager manager: allManagers){
-            if(manager instanceof GameObjectDestroyedListener managerEntity){
+        for (GameManager manager : allManagers) {
+            if (manager instanceof GameObjectDestroyedListener managerEntity) {
                 gameEventManager.addGameObjectDestroyedListener(managerEntity);
             }
-            if(manager instanceof GameNotificationListener managerEntity){
+            if (manager instanceof GameNotificationListener managerEntity) {
                 gameEventManager.addGameNotificationListener(managerEntity);
             }
-            if(manager instanceof ScoreChangeListener managerEntity){
+            if (manager instanceof ScoreChangeListener managerEntity) {
                 gameEventManager.addGameScoreListener(managerEntity);
             }
         }
@@ -99,16 +103,16 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
         cruiser = null;
 
-        for(GameManager manager: allManagers){
+        for (GameManager manager : allManagers) {
             manager.clear();
         }
-        
+
         //---------
         gravitationalsFields.clear();
         movingObjects.clear();
         listToAdd.clear();
-        enemys.clear();
-        allies.clear();
+        allShips.get(1).clear();
+        allShips.get(0).clear();
         player = null;
         meteor = false;
         assault = 0;
@@ -119,11 +123,11 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
         this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null), Assets.lives);
-
+        allShips.get(1).add(player);
         movingObjects.add(player);
         //-----------
-        for(GameManager manager: allManagers){
-            if(manager instanceof IStartableWithPlayer startableWithPlayer){
+        for (GameManager manager : allManagers) {
+            if (manager instanceof IStartableWithPlayer startableWithPlayer) {
                 startableWithPlayer.playGame(player);
             }
         }
@@ -143,17 +147,14 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             }
         }
 
-        if (MissionStats.cruiser != null) {
-            Ship cruisero;
-            if (MissionStats.cruiser.getTeam() == 1) {
-                cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
-                cruiser = cruisero;
-                allies.add(cruisero);
-            } else {
-                cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.cruiser, new Vector2D(), Constants.UFO_MAX_VEL, this, this);
-            }
+        if (!MissionStats.allShips[2].isEmpty()) {
+            Ship cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.allShips[2].getFirst(), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             movingObjects.add(cruisero);
-            //Ship ship = new NPCShip(new Vector2D(random.nextInt(Constants.WIDTH - 100 + 1), y), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, images.get("effect"), team, this);
+            if (cruisero.getTeam() == 1) {
+                cruiser = cruisero;
+            }
+            allShips.get(cruisero.getTeam()).add(cruiser);
+            
         }
         assault = 0;
         type = -1;
@@ -161,18 +162,17 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     @Override
     public void resume() {
-        for(GameManager manager: allManagers){
-            if(manager instanceof IGameControl gameControl){
+        for (GameManager manager : allManagers) {
+            if (manager instanceof IGameControl gameControl) {
                 gameControl.resume();
             }
         }
     }
 
-    
     @Override
     public void pause() {
-        for(GameManager manager: allManagers){
-            if(manager instanceof IGameControl gameControl){
+        for (GameManager manager : allManagers) {
+            if (manager instanceof IGameControl gameControl) {
                 gameControl.pause();
             }
         }
@@ -201,10 +201,10 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             createGameObject(ship);
         }
     }
-    
+
     private void spawnReinforcement(int limit, List<ShipStats> shipsList) {
         for (int i = 0; i < limit; i++) {
-            Ship ship = new ReinforcementShip(new Vector2D(100, (i+1)*20), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            Ship ship = new ReinforcementShip(new Vector2D(100, (i + 1) * 20), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             createGameObject(ship);
         }
     }
@@ -216,8 +216,8 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 startWave();
             }
 
-            if (MissionStats.alliesExist && allies.isEmpty()) {
-                spawnShip(1, 0, Constants.HEIGHT - 100, 1, MissionStats.allies);
+            if (MissionStats.alliesExist && allShips.get(1).isEmpty()) {
+                spawnShip(1, 0, Constants.HEIGHT - 100, 1, MissionStats.allShips[1]);
             }
             assault += dt;
             if (assault > 20000) {
@@ -231,7 +231,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                     nroRandom = random.nextInt(3) + 2;
                     gameEventManager.notifyGameEvent("ASSAULT");
                 }
-                spawnShip(nroRandom, 0, 100, 0, MissionStats.axis);
+                spawnShip(nroRandom, 0, 100, 0, MissionStats.allShips[0]);
             }
         } else if (type < 0) {
             type = 0;
@@ -241,21 +241,17 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     public byte gameOver() {
         return type;
     }
-    /*
-    public void saveProgress() {
-        //Assets.lives = player.getLives();
-        //Assets.updatePlayerStatus(0, gameHudManager.getScore());
-    }*/
 
-    private void blockShips(){
-        for(Ship ship : enemys){
+    private void blockShips() {
+        for (Ship ship : allShips.get(0)) {
             ship.switchLocked(true);
         }
-        for(Ship ship : allies){
-            ship.switchLocked(true);
+        for (Ship ship : allShips.get(1)) {
+            if(ship instanceof NPCShip)
+                ship.switchLocked(true);
         }
     }
-    
+
     private void cinematic(float dt) {
         //type = 3 muere, type = 4 gana --cinematic
         if (type == 0) {
@@ -264,16 +260,16 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 if (assault == 0) {
                     //axis and reforces
                     blockShips();
-                    spawnReinforcement(8, MissionStats.allies);
+                    spawnReinforcement(8, MissionStats.allShips[1]);
                 } else if (assault > 3000) {
                     //destroyAxis
-                    for(Ship ship : enemys){
+                    for (Ship ship : allShips.get(0)) {
                         ship.destroy(10000);
                     }
                     type = 4;
                     assault = -1000;
                 }
-            } else if (enemys.isEmpty()) {
+            } else if (allShips.get(0).isEmpty()) {
                 //mensaje victoria
                 type = 4;
                 assault = -1000;
@@ -301,12 +297,12 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     }
 
     public void update(float dt) {
-        for(GameManager manager: allManagers){
-            if(manager instanceof IGameLoopEntity gameLoopEntity){
+        for (GameManager manager : allManagers) {
+            if (manager instanceof IGameLoopEntity gameLoopEntity) {
                 gameLoopEntity.update(dt);
             }
         }
-        
+
         for (MovingObject mo : movingObjects) {
             mo.update(dt);
         }
@@ -341,8 +337,6 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             }
         }
         if (player.isDestroy() && !player.isDead()) {
-            //player.resetValues();
-            //System.out.println("morir");
             objectsToNotify.add(player);
         } else if (player.isDead() || (cruiser != null && cruiser.isDead())) {
             //mensaje -> GAME OVER
@@ -357,13 +351,13 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
         // Tercero, elimina los objetos muertos de cada lista
         movingObjects.removeIf(MovingObject::isDead);
-        allies.removeIf(Ship::isDead);
-        enemys.removeIf(Ship::isDead);
+        allShips.get(0).removeIf(Ship::isDead);
+        allShips.get(1).removeIf(Ship::isDead);
         listToAdd.clear();
     }
 
     public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
+        Graphics2D g2d = (Graphics2D) g;
         g.drawImage(missionMap, 0, 0, 1366, 768, null);
 
         //Graphics2D g2d = (Graphics2D) g;
@@ -373,8 +367,8 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         for (MovingObject mo : movingObjects) {
             mo.draw(g2d);
         }
-        for(GameManager manager: allManagers){
-            if(manager instanceof IGameLoopEntity gameLoopEntity){
+        for (GameManager manager : allManagers) {
+            if (manager instanceof IGameLoopEntity gameLoopEntity) {
                 gameLoopEntity.draw(g2d);
             }
         }
@@ -385,11 +379,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         if (obj instanceof Laser) {
             gameEventManager.notifyGameEvent("laser");
         } else if (obj instanceof Ship ship) {
-            if (ship.getTeam() == 1) {
-                allies.add(ship);
-            } else {
-                enemys.add(ship);
-            }
+            allShips.get(ship.getTeam()).add(ship);
         }
         listToAdd.add(obj);
     }
@@ -405,28 +395,23 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     @Override
     public Ship getTarget(int team) {
-
-        Ship ship = null;
-        if (team == 1 && !enemys.isEmpty()) {
-            ship = enemys.get(random.nextInt(enemys.size()));
-        } else if (team == 0) {
-
-            int value = random.nextInt(allies.size() + 1);
-            if (value < allies.size()) {
-                ship = allies.get(value);
-            } else {
-                if (!player.isInvulnerable()) {
-                    ship = player;
-                }
-            }
-
+        if(team > 0){
+            team = 0;
+        }else{
+            team = 1;
         }
+        int length = allShips.get(team).size();
+        Ship ship = null;
+        if(length > 0){
+            ship = allShips.get(team).get(random.nextInt(length));
+        }
+                
         return ship;
     }
 
     @Override
     public void cloneShip(Vector2D position, int team) {
-        Ship ship = new NPCShip(position, Assets.shipsAvaible.get(random.nextInt(Assets.shipsAvaible.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+        Ship ship = new NPCShip(position, MissionStats.allShips[team].get(random.nextInt(MissionStats.allShips[team].size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
         createGameObject(ship);
     }
 }

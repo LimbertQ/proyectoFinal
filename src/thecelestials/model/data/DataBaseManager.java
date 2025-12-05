@@ -383,8 +383,8 @@ public class DataBaseManager {
         List<ShipStats> axis = new ArrayList<>();
         List<ShipStats> cruisers = new ArrayList<>();
         List<ShipStats>[] shipList = new List[3];
-        shipList[0] = allies;
-        shipList[1] = axis;
+        shipList[0] = axis;
+        shipList[1] = allies;
         shipList[2] = cruisers;
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 

@@ -20,9 +20,7 @@ public class MissionStats {
     public static String missionName;
     public static String missionDescription;
     public static ShipStats playerShip;
-    public static List<ShipStats> allies;
-    public static List<ShipStats> axis;
-    public static ShipStats cruiser;
+    public static List<ShipStats>[] allShips;
     public static Map<String, MediaPlayer> missionVoicePath;
     public static Map<String, BufferedImage> stars;
     public static boolean alliesExist;
@@ -38,12 +36,8 @@ public class MissionStats {
         missionID = ID;
         missionName = name;
         missionDescription = description;
-        allies = shipsArray[0];
-        axis = shipsArray[1];
-        cruiser = null;
-        if(!shipsArray[2].isEmpty())
-            cruiser = shipsArray[2].getFirst();
-        alliesExist = !allies.isEmpty();
+        allShips = shipsArray;
+        alliesExist = allShips[1].isEmpty();
         challenge = challeng;
         assaults = ass;
         clear();
