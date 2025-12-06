@@ -5,6 +5,7 @@
 package thecelestials.model.data;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.media.MediaPlayer;
@@ -23,29 +24,30 @@ public class MissionStats {
     public static List<ShipStats>[] allShips;
     public static Map<String, MediaPlayer> missionVoicePath;
     public static Map<String, BufferedImage> stars;
+    public static Map<String, String> allPaths;
+    public static List<AssetDefinition> starsAssets;
     public static boolean alliesExist;
     public static byte challenge;
     public static byte assaults;
     public static byte reinforcement;
-
     public static void setPlayerShip(ShipStats player) {
         playerShip = player;
     }
 
-    public static void setMissionStats(String ID, String name, String description, List<ShipStats>[] shipsArray, byte challeng, byte ass, Map<String, MediaPlayer> audioMission, Map<String, BufferedImage> star, byte reinfor, String campID) {
+    public static void setMissionStats(String ID, String name, String description, String mapPath, String challeng, byte assau, byte reinfor, List<ShipStats>[] shipsArray, Map<String, String> paths, String campID) {
         missionID = ID;
         missionName = name;
         missionDescription = description;
         allShips = shipsArray;
+        allPaths = paths;
         alliesExist = allShips[1].isEmpty();
-        challenge = challeng;
-        assaults = ass;
+        assaults = assau;
+        challenge = 0;
         clear();
-        missionVoicePath = audioMission;
-        if (challenge == 1) {
+        if (challeng.equals("WAVES")) {
+            challenge++;
             assaults *= 3;
         }
-        stars = star;
         campaignID = campID;
         reinforcement = reinfor;
     }
@@ -57,6 +59,9 @@ public class MissionStats {
                 mediaPlayer.stop();
                 mediaPlayer.dispose();
             }
+            missionVoicePath.clear();
+        }else{
+            missionVoicePath = new HashMap<>();
         }
     }
 }

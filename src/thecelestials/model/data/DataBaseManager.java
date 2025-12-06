@@ -262,6 +262,7 @@ public class DataBaseManager {
                 + "Star s INNER JOIN StarClass sc ON s.starClassID = sc.starClassID INNER JOIN"
                 + " MissionHasStarClass mhsc ON sc.starClassID = mhsc.starClassID WHERE mhsc.missionID = '"+missionID+"';";
 
+        
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -295,14 +296,14 @@ public class DataBaseManager {
         return list;
     }
     
-    public Map<String, Mission> readMissionsByCampaign(String campaignID){
-        Map<String, Mission> list = new LinkedHashMap<>();
+    public Map<String, AssetDefinition> readMissionsByCampaign(String campaignID){
+        Map<String, AssetDefinition> list = new LinkedHashMap<>();
         String sql = "SELECT * FROM Mission m WHERE m.campaignID = '"+campaignID+"';";
 
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Mission mission = new Mission(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionMapPath"), rs.getString("missionDescription"), rs.getString("voiceStartPath"), rs.getString("voiceEndPath"), rs.getString("challenge"), rs.getInt("assaults"), rs.getInt("reinforcement"), rs.getInt("missionState"), rs.getString("campaignID"));
+                AssetDefinition mission = new AssetDefinition(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionDescription"), rs.getString("missionMapPath"), rs.getInt("missionState"));
                 list.put(mission.getID(), mission);
             }
         } catch (SQLException e) {
@@ -311,19 +312,23 @@ public class DataBaseManager {
         return list;
     }
     
-    public Mission readMissionsByID(String missionID){
+    public void readMissionsByID(String missionID){
         String sql = "SELECT * FROM Mission m WHERE m.missionID = '"+missionID+"';";
-        Mission mission = null;
+        //Mission mission = null;
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                mission = new Mission(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionMapPath"), rs.getString("missionDescription"), rs.getString("voiceStartPath"), rs.getString("voiceEndPath"), rs.getString("challenge"), rs.getInt("assaults"), rs.getInt("reinforcement"), rs.getInt("missionState"), rs.getString("campaignID"));
+                //mission = new Mission(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionMapPath"), rs.getString("missionDescription"), rs.getString("voiceStartPath"), rs.getString("voiceEndPath"), rs.getString("challenge"), rs.getInt("assaults"), rs.getInt("reinforcement"), rs.getInt("missionState"), rs.getString("campaignID"));
                 //list.put(mission.getID(), mission);
+                Map<String, String> paths = new HashMap();
+                paths.put("voiceStartPath", rs.getString("voiceStartPath"));
+                paths.put("voiceEndPath", rs.getString("voiceEndPath"));
+                paths.put("missionMapPath", rs.getString("missionMapPath"));
+                MissionStats.setMissionStats(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionDescription"), rs.getString("missionMapPath"), rs.getString("challenge"), (byte)rs.getInt("assaults"), (byte)rs.getInt("reinforcement"), readShipsByMission(missionID), paths, rs.getString("campaignID"));
             }
         } catch (SQLException e) {
             System.err.println("Error al leer el juego: " + e.getMessage());
         }
-        return mission;
     }
     
     public void updateMissionState(String missionID){

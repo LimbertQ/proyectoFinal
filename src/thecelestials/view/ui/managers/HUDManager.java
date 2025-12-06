@@ -119,7 +119,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
 
     @Override
     public void onGameNotify(String type) {
-        if (type.equals("WAVES") || (type.equals("ASSAULT") && MissionStats.challenge != 1)) {
+        if (type.equals("WAVE") || (type.equals("ASSAULT") && MissionStats.challenge != 1)) {
             if(assaults<waves){
                 assaults++;
             }

@@ -13,15 +13,15 @@ import java.util.Map;
 public class Campaign extends AssetDefinition{
 
     private final String videoPath;
-    private final Map<String, Mission> missions;
+    private final Map<String, AssetDefinition> missions;
 
-    public Campaign(String campaignID, String campaignName, String mapPath, String videoPath, String campaignDescription, int campaignState, Map<String, Mission> missions) {
+    public Campaign(String campaignID, String campaignName, String mapPath, String videoPath, String campaignDescription, int campaignState, Map<String, AssetDefinition> missions) {
         super(campaignID, campaignName, mapPath, campaignDescription, campaignState);
         this.videoPath = videoPath;
         this.missions = missions;
     }
     
-    public Mission getMissionByID(String missionID){
+    public AssetDefinition getMissionByID(String missionID){
         return missions.get(missionID);
     }
 

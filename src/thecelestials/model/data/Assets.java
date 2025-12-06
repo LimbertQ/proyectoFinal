@@ -161,19 +161,14 @@ public class Assets {
     private static Map<String, Campaign> loadCampaigns() {
         Map<String, Campaign> list = db.readCampaigns();
         for (Campaign campaign : list.values()) {
-            //System.out.println(campaign.getProfileImagePath());
             images.put(campaign.getName(), loadImage(campaign.getProfileImagePath()));
         }
         return list;
     }
 
-    public static Map<String, Mission> loadMissionsByCampaign(String campaignID) {
+    public static Map<String, AssetDefinition> loadMissionsByCampaign(String campaignID) {
         missionMaps.clear();
-        Map<String, Mission> missions = db.readMissionsByCampaign(campaignID);
-        for (Mission mission : missions.values()) {
-            missionMaps.put(mission.getName(), loadImage(mission.getProfileImagePath()));
-            System.err.println("aqui ay vidanio");
-        }
+        Map<String, AssetDefinition> missions = db.readMissionsByCampaign(campaignID);
         return missions;
     }
 
@@ -229,29 +224,26 @@ public class Assets {
     public static void loadGame(String missionID) {
         //setear();
         MAX_COUNT = 10;
-        Mission mission = db.readMissionsByID(missionID);
-        List<ShipStats>[] shipsList = db.readShipsByMission(missionID);
-        MAX_COUNT = shipsList[0].size() * 3 + shipsList[1].size() * 3 + shipsList[2].size() * 3 + 2;
+        db.readMissionsByID(missionID);
+        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 + 2;
         Map<String, BufferedImage> stars = readStarsImages(missionID);
+        MissionStats.stars = stars;
+        missionMaps.put(MissionStats.missionName, loadImage(MissionStats.allPaths.get("missionMapPath")));
         //MAX_COUNT = shipsList.length;
-        loadSpriteShips(shipsList[0]);
-        loadSpriteShips(shipsList[1]);
-        loadSpriteShips(shipsList[2]);
-        
-
-        byte challenge = 0;
-        if (mission.getChallenge().equals("WAVES")) {
-            challenge++;
+        for(List<ShipStats> listShips: MissionStats.allShips){
+            loadSpriteShips(listShips);
         }
-        Map<String, MediaPlayer> audioMission = new HashMap<>();
-        loadMediaSound("voiceStartPath", mission.getVoiceStartPath(), audioMission);
-        loadMediaSound("voiceEndPath", mission.getVoiceEndPath(), audioMission);
-
-        MissionStats.setMissionStats(missionID, mission.getName(), mission.getDescription(), shipsList, challenge, (byte) mission.getAssaults(), audioMission, stars, (byte) mission.getReinforcement(), mission.getCampaignID());
+        
+        for(Map.Entry<String, String> entry: MissionStats.allPaths.entrySet()){
+            if(entry.getKey().substring(0, 5).equals("voice")){
+                loadMediaSound(entry.getKey(), entry.getValue(), MissionStats.missionVoicePath);
+            }
+        }
         loaded = true;
     }
 
     public static void clear() {
+        
         for (MediaPlayer media : MissionStats.missionVoicePath.values()) {
             media.pause();
             media.stop();
