@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
 import thecelestials.model.gameObjects.PlayerShip;
 import thecelestials.model.gameObjects.PowerUp;
@@ -136,7 +137,7 @@ public class GamePowerUpManager extends GameManager implements IGameLoopEntity, 
     @Override
     public void playGame(PlayerShip player){
         this.player = player;
-        if(!MissionStats.stars.containsKey("big1")){
+        if(!Assets.missionMaps.containsKey("big1")){
             aleatorio--;
         }
     }

@@ -4,7 +4,6 @@
  */
 package thecelestials.model.gameObjects;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -64,7 +63,7 @@ public class PlayerShip extends Ship {
 
     public void setFastFire(boolean flag) {
         if (flag) {
-            fireRateConstants /= 2;
+            fireRateConstants = Constants.FIRERATE_X2;
         } else {
             fireRateConstants = Constants.FIRERATE;
         }

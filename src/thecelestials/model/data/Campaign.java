@@ -24,6 +24,10 @@ public class Campaign extends AssetDefinition{
     public AssetDefinition getMissionByID(String missionID){
         return missions.get(missionID);
     }
+    
+    public boolean containsMission(String missionID){
+        return missions.containsKey(missionID);
+    }
 
     public String getVideoPath() {
         return videoPath;

@@ -256,27 +256,29 @@ public class DataBaseManager {
         return list;
     }
     
-    public List<Map<String, String>> readStarsByMission(String missionID){
-        List<Map<String, String>> list = new ArrayList<>();
+    public List<AssetDefinition> readStarsByMission(String missionID){
+        //List<Map<String, String>> list = new ArrayList<>();
         String sql = "SELECT s.starID, s.starName, s.starAssetPath, sc.starClassName FROM "
                 + "Star s INNER JOIN StarClass sc ON s.starClassID = sc.starClassID INNER JOIN"
                 + " MissionHasStarClass mhsc ON sc.starClassID = mhsc.starClassID WHERE mhsc.missionID = '"+missionID+"';";
 
-        
+        List<AssetDefinition> starList = new ArrayList<>();
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Map<String, String> naveMap = new HashMap<>();
-                naveMap.put("starName", rs.getString("starName"));
-                naveMap.put("starAssetPath", rs.getString("starAssetPath"));
+                //Map<String, String> naveMap = new HashMap<>();
+                //naveMap.put("starName", rs.getString("starName"));
+                //naveMap.put("starAssetPath", rs.getString("starAssetPath"));
                 
+                AssetDefinition star = new AssetDefinition(rs.getString("starID"), rs.getString("starName"), rs.getString("starClassName"), rs.getString("starAssetPath"), 1);
+                starList.add(star);
                 //team = 1;
-                list.add(naveMap);
+                //list.add(naveMap);
             }
         } catch (SQLException e) {
             System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
         }
-        return list;
+        return starList;
     }
     
     public Map<String, Campaign> readCampaigns(){
@@ -324,7 +326,7 @@ public class DataBaseManager {
                 paths.put("voiceStartPath", rs.getString("voiceStartPath"));
                 paths.put("voiceEndPath", rs.getString("voiceEndPath"));
                 paths.put("missionMapPath", rs.getString("missionMapPath"));
-                MissionStats.setMissionStats(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionDescription"), rs.getString("missionMapPath"), rs.getString("challenge"), (byte)rs.getInt("assaults"), (byte)rs.getInt("reinforcement"), readShipsByMission(missionID), paths, rs.getString("campaignID"));
+                MissionStats.setMissionStats(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionDescription"), rs.getString("missionMapPath"), rs.getString("challenge"), (byte)rs.getInt("assaults"), (byte)rs.getInt("reinforcement"), readShipsByMission(missionID), paths, readStarsByMission(missionID), rs.getString("campaignID"));
             }
         } catch (SQLException e) {
             System.err.println("Error al leer el juego: " + e.getMessage());

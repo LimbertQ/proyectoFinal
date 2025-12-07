@@ -225,9 +225,10 @@ public class Assets {
         //setear();
         MAX_COUNT = 10;
         db.readMissionsByID(missionID);
-        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 + 2;
-        Map<String, BufferedImage> stars = readStarsImages(missionID);
-        MissionStats.stars = stars;
+        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 +MissionStats.starsAssets.size()+ 2;
+        //Map<String, BufferedImage> stars = readStarsImages(missionID);
+        //MissionStats.stars = stars;
+        readStarsImages(MissionStats.starsAssets);
         missionMaps.put(MissionStats.missionName, loadImage(MissionStats.allPaths.get("missionMapPath")));
         //MAX_COUNT = shipsList.length;
         for(List<ShipStats> listShips: MissionStats.allShips){
@@ -300,16 +301,16 @@ public class Assets {
         }
     }
 
-    private static Map<String, BufferedImage> readStarsImages(String missionID) {
-        List<Map<String, String>> AllImages = db.readStarsByMission(missionID);
-        MAX_COUNT += AllImages.size();
-        Map<String, BufferedImage> starsMission = new HashMap<>();
-        for (Map<String, String> image : AllImages) {
-            BufferedImage imagen = loadImage(image.get("starAssetPath"));
-            starsMission.put(image.get("starName"), imagen);
+    private static void readStarsImages(List<AssetDefinition> stars) {
+        //List<Map<String, String>> AllImages = db.readStarsByMission(missionID);
+        //MAX_COUNT += AllImages.size();
+        //Map<String, BufferedImage> starsMission = new HashMap<>();
+        for (AssetDefinition starAsset: stars) {
+            //BufferedImage imagen = loadImage(image.get("starAssetPath"));
+            missionMaps.put(starAsset.getName(), loadImage(starAsset.getProfileImagePath()));
 
         }
-        return starsMission;
+        //return starsMission;
     }
 
     private static BufferedImage loadImage(String path) {

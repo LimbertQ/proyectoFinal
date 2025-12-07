@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import thecelestials.controller.logic.CollisionManager;
+import thecelestials.model.data.AssetDefinition;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
 import thecelestials.model.data.ShipStats;
@@ -134,15 +135,15 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         gameSoundManager.playGame();
         //-----------
         gameEventManager.notifyGameEvent("DESCRIPTION");
-        if (MissionStats.stars.containsKey("big1")) {
+        if (Assets.missionMaps.containsKey("big1")) {
             meteor = true;
         }
-        for (Map.Entry<String, BufferedImage> entry : MissionStats.stars.entrySet()) {
-            if (entry.getKey().equals("pulsar")) {
-                GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), entry.getValue(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+        for (AssetDefinition entry : MissionStats.starsAssets) {
+            if (entry.getName().equals("pulsar")) {
+                GravitationalField pulsar = new Pulsar(new Vector2D(500, 0), entry.getProfile(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
                 gravitationalsFields.add(pulsar);
-            } else if (entry.getKey().equals("vortice")) {
-                GravitationalField vortex = new Vortex(new Vector2D(100, 100), entry.getValue(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
+            } else if (entry.getName().equals("vortice")) {
+                GravitationalField vortex = new Vortex(new Vector2D(100, 100), entry.getProfile(), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2));
                 gravitationalsFields.add(vortex);
             }
         }
@@ -158,6 +159,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         }
         assault = 0;
         type = -1;
+        MissionStats.starsAssets.clear();
     }
 
     @Override
@@ -190,7 +192,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 y = random.nextDouble() * Constants.HEIGHT;
             }
 
-            BufferedImage texture = MissionStats.stars.get("big" + 2);
+            BufferedImage texture = Assets.missionMaps.get("big" + 2);
             createGameObject(new Meteor(new Vector2D(x, y), texture, new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * random.nextDouble() + 1, MeteorSize.BIG, this, player));
         }
     }
@@ -216,7 +218,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 startWave();
             }
 
-            if (MissionStats.alliesExist && allShips.get(1).isEmpty()) {
+            if (MissionStats.alliesExist && allShips.get(1).size() < 2) {
                 spawnShip(1, 0, Constants.HEIGHT - 100, 1, MissionStats.allShips[1]);
             }
             assault += dt;
@@ -389,7 +391,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         MeteorSize nextSize = meteor.getSize().getNextSize();
         for (int i = 0; i < 2; i++) {
             int nro = random.nextInt(2) + 1;
-            listToAdd.add(new Meteor(meteor.getPosition(), MissionStats.stars.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this, player));
+            listToAdd.add(new Meteor(meteor.getPosition(), Assets.missionMaps.get(nextSize.getSize() + nro), new Vector2D(0, 1).setDirection(Math.random() * Math.PI * 2), Constants.METEOR_INIT_VEL * Math.random() + 1, meteor.getSize().getNextSize(), this, player));
         }
     }
 
