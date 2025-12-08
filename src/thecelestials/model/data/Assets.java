@@ -42,7 +42,7 @@ public class Assets {
     public static Map<String, MediaPlayer> audioMediaCache = new HashMap<>();
     public static List<ShipStats> shipsAvaible = new ArrayList<>();
     public static Map<String, Campaign> campaigns = null;
-    public static Map<String, List> informations = new HashMap<>();
+    public static Map<String, List<AssetDefinition>> informations = new HashMap<>();
     public static EntityStats powerBullet;
 
     public static Font fontBig, fontMed;

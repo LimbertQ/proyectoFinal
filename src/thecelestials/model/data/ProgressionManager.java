@@ -4,16 +4,15 @@
  */
 package thecelestials.model.data;
 
-import static thecelestials.model.data.Assets.campaigns;
-
 /**
  *
  * @author pc
  */
 public class ProgressionManager {
+
     private static ProgressionManager instance;
 
-    public static ProgressionManager getInstance(){
+    public static ProgressionManager getInstance() {
         if (instance == null) {
             instance = new ProgressionManager();
         }
@@ -38,8 +37,8 @@ public class ProgressionManager {
             DataBaseManager.getInstance("").updateMissionState(missionID);
         }
     }
-    
-    private void unlocksShip(){
+
+    private void unlocksShip() {
         //DESBLOQUEAMOS NAVE
         String shipID = MissionStats.nextShipID;
         if (shipID != null) {
@@ -47,12 +46,24 @@ public class ProgressionManager {
             Assets.loadShipAvaible();
         }
     }
-    
-    public String nextMission(){
+
+    private void unlocksCivilization() {
+        boolean flag = false;
+        for (int i = 0; flag == false && i < Assets.informations.get("civilizaciones").size(); i++) {
+            AssetDefinition civ = Assets.informations.get("civilizaciones").get(i);
+            if (civ.getState() == 0) {
+                civ.setState();
+                DataBaseManager.getInstance("").updateCivilizationState(civ.getID());
+                flag = true;
+            }
+        }
+    }
+
+    public String nextMission() {
         return nextID(MissionStats.missionID);
     }
-    
-    public String nextCampaign(){
+
+    public String nextCampaign() {
         return nextID(MissionStats.campaignID);
     }
 
@@ -72,7 +83,8 @@ public class ProgressionManager {
                 //DESBLOQUEAMOS NAVE
                 unlocksShip();
                 //DESBLOQUEAMOS CIVILIZACIONES puede ser load
-                //Assets.informations.get("civilizaciones");
+                unlocksCivilization();
+                
                 Assets.unlock = true;
             } else {
                 //DESBLOQUEAMOS TODAS LAS NAVES

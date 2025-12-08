@@ -359,6 +359,19 @@ public class DataBaseManager {
         }
     }
     
+    public void updateCivilizationState(String civID){
+        String sql = "UPDATE Civilization SET civilizationState = 1 WHERE civilizationID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            //System.out.println(missionID);
+            pstmt.setString(1, civID);
+            pstmt.executeUpdate();
+            
+            //System.out.println("Estado de misión '" + missionId + "' actualizado a '" + newState + "'.");
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar mision" + e.getMessage());
+        }
+    }
+    
     public String readIDShipUnlock(){
         String sql = "SELECT s.shipID FROM Ship s WHERE s.shipClass != 'crucero' AND s.shipState = 0 ORDER BY s.civilizationID ASC LIMIT 1;";
         String shipID = null;
