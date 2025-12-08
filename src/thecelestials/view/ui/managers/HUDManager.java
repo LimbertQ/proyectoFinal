@@ -31,6 +31,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     private int score = 0;
     private byte finalScore = 1;
     private PlayerShip player;
+    private BufferedImage attack;
     private final BufferedImage[] numbers;
     private byte assaults = 0;
     private byte waves = 0;
@@ -43,6 +44,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     @Override
     public void clear() {
         player = null;
+        attack = null;
         score = 0;
         finalScore = 1;
         assaults = 0;
@@ -55,6 +57,9 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         waves = MissionStats.assaults;
         if (MissionStats.challenge == 1) {
             waves /= 3;
+            attack = Assets.images.get("waves");
+        }else{
+            attack = Assets.images.get("assault");
         }
     }
 
@@ -102,7 +107,7 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     }
 
     private void drawAssaults(Graphics2D g) {
-        g.drawImage(Assets.player, 600, 25, null);
+        g.drawImage(attack, 600, 25, null);
         drawNumbers(650, 30, assaults, g);
         g.drawImage(numbers[10], 675, 30, null);
         drawNumbers(700, 30, waves, g);
