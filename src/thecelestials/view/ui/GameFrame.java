@@ -79,7 +79,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
     @Override
     public void showCard(String cardName, String menuID) {
         //MISIONES || LOADING
-        if (Assets.unlock && cardName.equals("loadingGameCard")) {
+        if (ProgressionManager.getInstance().unlock() != 0 && cardName.equals("loadingGameCard")) {
             cardName = missionsMenuCard;
         }
         switch (cardName) {
@@ -98,18 +98,20 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
                 buttonSelectorPanel.updateContentForMenu(cardName);
             }
             case missionsMenuCard -> {
-                if (Assets.unlock) {
-                    //ACTUALIZAMOS CAMPANIA
-                    Assets.unlock = false;
+                if (ProgressionManager.getInstance().unlock() == -1) {
+                    ProgressionManager.getInstance().changeUnlock();
+                    menuID = MissionStats.campaignID;
+                }
+                if (ProgressionManager.getInstance().unlock() != 0) {
+                    //ACTUALIZAMOS TODAS LAS CAMPANIAS
                     campaignPanel.updateContentForMenu("unlock");
-                    //LA CAMPAÑA Y LA MISION ESTAN PREVIAMENTE DESBLOQUEADO ACTUALIZAMOS
-                    //BUSCAMOS LA CAMPAÑA RECIENTEMENTE DESBLOQUEADO actual+1
+                    //CAMBIAMOS EL ESTADO DE DESBLOQUEADO
+                    ProgressionManager.getInstance().changeUnlock();
+                    //REPRODUCIMOS EL VIDEO DE LA SIGUIENTE CAMPAÑA
                     menuID = ProgressionManager.getInstance().nextCampaign();
                     mediaPlayerPanel.updateVideo(missionsMenuCard, menuID);
                     cardName = mediaPlayerCard;
                 } else {
-                    System.out.println("entro?" + menuID);
-                    //missionsPanel.updateContentForMenu(menuID);
                     cardName = buttonSelectorCard;
                     buttonSelectorPanel.updateContentForMenu(menuID);
                 }
@@ -133,7 +135,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         campaignPanel = new SimpleMenuPanel(this, campaignsMenuCard);
         //selectorMenuPanel = new MenuSelectorPanel(this, selectorMenuCard);
         selectorMenuPanel = new InfoDisplayPanel(this, selectorMenuCard);
-        
+
         buttonSelectorPanel = new ButtonSelectorPanel(this, buttonSelectorCard);
         //missionsPanel = new MenuPanel(this, missionsMenuCard);
         mediaPlayerPanel = new MediaPlayerPanel(this, mediaPlayerCard);
@@ -144,7 +146,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         mainPanel.add(campaignPanel, campaignsMenuCard);
         //mainPanel.add(selectorMenuPanel, selectorMenuCard);
         mainPanel.add(selectorMenuPanel, selectorMenuCard);
-        
+
         mainPanel.add(buttonSelectorPanel, buttonSelectorCard);
         //mainPanel.add(missionsPanel, missionsMenuCard);
         mainPanel.add(mediaPlayerPanel, mediaPlayerCard);

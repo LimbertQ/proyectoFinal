@@ -151,10 +151,10 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         if (!MissionStats.allShips[2].isEmpty()) {
             Ship cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.allShips[2].getFirst(), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             movingObjects.add(cruisero);
+            allShips.get(cruisero.getTeam()).add(cruisero);
             if (cruisero.getTeam() == 1) {
                 cruiser = cruisero;
             }
-            allShips.get(cruisero.getTeam()).add(cruiser);
             
         }
         assault = 0;

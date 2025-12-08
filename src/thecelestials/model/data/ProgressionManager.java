@@ -9,7 +9,7 @@ package thecelestials.model.data;
  * @author pc
  */
 public class ProgressionManager {
-
+    private static byte unlock = 0;
     private static ProgressionManager instance;
 
     public static ProgressionManager getInstance() {
@@ -17,6 +17,13 @@ public class ProgressionManager {
             instance = new ProgressionManager();
         }
         return instance;
+    }
+    
+    public ProgressionManager(){
+        if(Assets.campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0){
+            unlocksMission("CAMP01", "MSN01");
+            unlock = 1;
+        }
     }
 
     private String nextID(String ID) {
@@ -29,11 +36,27 @@ public class ProgressionManager {
         }
         return ID;
     }
-
-    private void unlocksMission(String missionID) {
+    
+    public void changeUnlock(){
+        unlock = 0;
+    }
+    
+    public byte unlock(){
+        return unlock;
+    }
+    
+    private void unlocksCampaign(String campaignID) {
         //DESBLOQUEAMOS MISSION
-        if (Assets.campaigns.get(missionID).getState() == 0) {
-            Assets.campaigns.get(missionID).setState();
+        if (Assets.campaigns.get(campaignID).getState() == 0) {
+            Assets.campaigns.get(campaignID).setState();
+            DataBaseManager.getInstance("").updateCampaignState(campaignID);
+        }
+    }
+
+    private void unlocksMission(String campaignID, String missionID) {
+        //DESBLOQUEAMOS MISSION
+        if (Assets.campaigns.get(campaignID).getMissionByID(missionID).getState() == 0) {
+            Assets.campaigns.get(campaignID).getMissionByID(missionID).setState();
             DataBaseManager.getInstance("").updateMissionState(missionID);
         }
     }
@@ -70,27 +93,30 @@ public class ProgressionManager {
     public void unlocks() {
         String missionID = nextID(MissionStats.missionID);
         if (Assets.campaigns.get(MissionStats.campaignID).containsMission(missionID)) {
-            unlocksMission(missionID);
+            unlocksMission(MissionStats.campaignID, missionID);
             unlocksShip();
         } else {
-            String nextID = nextID(MissionStats.campaignID);
-            if (Assets.campaigns.get(nextID).getState() == 0 && Assets.campaigns.get(nextID).containsMission(missionID)) {
+            String nextCampaignID = nextID(MissionStats.campaignID);
+            if (Assets.campaigns.containsKey(nextCampaignID) && Assets.campaigns.get(nextCampaignID).getState() == 0 && Assets.campaigns.get(nextCampaignID).containsMission(missionID)) {
                 //DESBLOQUEAMOS CAMPAÑA
-                Assets.campaigns.get(nextID).setState();
-                DataBaseManager.getInstance("").updateCampaignState(nextID);
+                unlocksCampaign(nextCampaignID);
                 //DESBLOQUEAMOS MISSION
-                unlocksMission(missionID);
+                unlocksMission(nextCampaignID, missionID);
                 //DESBLOQUEAMOS NAVE
                 unlocksShip();
                 //DESBLOQUEAMOS CIVILIZACIONES puede ser load
                 unlocksCivilization();
                 
-                Assets.unlock = true;
-            } else {
+                unlock = 1;
+            } else if (!Assets.campaigns.containsKey(nextCampaignID) || Assets.campaigns.containsKey(nextCampaignID)){
                 //DESBLOQUEAMOS TODAS LAS NAVES
                 unlocksShip();
-                MissionStats.nextShipID = nextID(MissionStats.nextShipID);
+                MissionStats.nextShipID = "CRS01";
                 unlocksShip();
+                MissionStats.nextShipID = "CRS02";
+                unlocksShip();
+                unlock = -1;
+                unlocksCivilization();
             }
         }
         //campaigns.get(MissionStats.campaignID).unlocks(MissionStats.missionID)

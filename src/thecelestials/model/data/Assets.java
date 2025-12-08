@@ -27,7 +27,7 @@ public class Assets {
     public static int MAX_COUNT = 100;
     public static int currentShip = 0;
     public static boolean loaded = false;
-    public static boolean unlock = false;
+    //public static boolean unlock = false;
 
     public static int lives = 3;
     public static int money = 5000;
@@ -58,14 +58,7 @@ public class Assets {
             lives = progress[0];
             money = progress[1];
             campaigns = loadCampaigns();
-            if (campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0) {
-                System.out.println(campaigns.get("CAMP01").getState() + ":---culpable");
-                unlock = true;
-                //MissionStats.missionID = "MSN01";
-                db.updateMissionState("MSN01");
-                MissionStats.campaignID = "CAMP00";
-                campaigns.get("CAMP01").getMissionByID("MSN01").setState();
-            }
+            ProgressionManager.getInstance();
             fondo = loadImage("/images/maps/exoplaneta.jpeg");
             loadShipAvaible();
             loadCivilizations();
