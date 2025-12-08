@@ -18,6 +18,7 @@ public class MissionStats {
 
     public static String missionID;
     public static String campaignID;
+    public static String nextShipID;
     public static String missionName;
     public static String missionDescription;
     public static ShipStats playerShip;
@@ -34,7 +35,7 @@ public class MissionStats {
         playerShip = player;
     }
 
-    public static void setMissionStats(String ID, String name, String description, String mapPath, String challeng, byte assau, byte reinfor, List<ShipStats>[] shipsArray, Map<String, String> paths, List<AssetDefinition> assets, String campID) {
+    public static void setMissionStats(String ID, String name, String description, String mapPath, String challeng, byte assau, byte reinfor, List<ShipStats>[] shipsArray, Map<String, String> paths, List<AssetDefinition> assets, String shipID, String campID) {
         missionID = ID;
         missionName = name;
         missionDescription = description;
@@ -51,6 +52,7 @@ public class MissionStats {
         }
         campaignID = campID;
         reinforcement = reinfor;
+        nextShipID = shipID;
     }
 
     private static void clear() {

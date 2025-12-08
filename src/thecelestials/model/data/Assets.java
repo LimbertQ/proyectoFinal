@@ -108,21 +108,7 @@ public class Assets {
     }
 
     public static void unlocks() {
-        boolean flag = campaigns.get(MissionStats.campaignID).unlocks(MissionStats.missionID);
-        if (!flag) {
-            String campaignID = MissionStats.campaignID;
-            int length = campaignID.length();
-            int digit = Integer.parseInt(String.valueOf(campaignID.charAt(length - 1))) + 1;
-            campaignID = campaignID.substring(0, length - 1) + digit;
-            if (campaigns.get(campaignID).getState() == 0) {
-                campaigns.get(campaignID).unlocks(MissionStats.missionID);
-                campaigns.get(campaignID).setState();
-                loadShipAvaible();
-                unlock = true;
-            }
-        }else{
-            loadShipAvaible();
-        }
+        
     }
 
     private static void setImageLaser(EntityStats bullet) {
@@ -130,7 +116,7 @@ public class Assets {
         images.put(bullet.getSpriteKey(), loadImage(bullet.getSpritePath()));
     }
 
-    private static void loadShipAvaible() {
+    public static void loadShipAvaible() {
         shipsAvaible = db.readAvailableShips();
         for (ShipStats ship : shipsAvaible) {
             images.put(ship.getName(), loadImage(ship.getProfileImagePath()));
@@ -224,6 +210,7 @@ public class Assets {
     public static void loadGame(String missionID) {
         //setear();
         MAX_COUNT = 10;
+        missionMaps.clear();
         db.readMissionsByID(missionID);
         MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 +MissionStats.starsAssets.size()+ 2;
         //Map<String, BufferedImage> stars = readStarsImages(missionID);

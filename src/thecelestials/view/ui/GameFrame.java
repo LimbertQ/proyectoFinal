@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
+import thecelestials.model.data.ProgressionManager;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
@@ -103,9 +104,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
                     campaignPanel.updateContentForMenu("unlock");
                     //LA CAMPAÑA Y LA MISION ESTAN PREVIAMENTE DESBLOQUEADO ACTUALIZAMOS
                     //BUSCAMOS LA CAMPAÑA RECIENTEMENTE DESBLOQUEADO actual+1
-                    menuID = MissionStats.campaignID;
-                    menuID = menuID.substring(0, menuID.length() - 1) + (Integer.parseInt(menuID.substring(menuID.length() - 1, menuID.length())) + 1);
-
+                    menuID = ProgressionManager.getInstance().nextCampaign();
                     mediaPlayerPanel.updateVideo(missionsMenuCard, menuID);
                     cardName = mediaPlayerCard;
                 } else {

@@ -326,7 +326,7 @@ public class DataBaseManager {
                 paths.put("voiceStartPath", rs.getString("voiceStartPath"));
                 paths.put("voiceEndPath", rs.getString("voiceEndPath"));
                 paths.put("missionMapPath", rs.getString("missionMapPath"));
-                MissionStats.setMissionStats(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionDescription"), rs.getString("missionMapPath"), rs.getString("challenge"), (byte)rs.getInt("assaults"), (byte)rs.getInt("reinforcement"), readShipsByMission(missionID), paths, readStarsByMission(missionID), rs.getString("campaignID"));
+                MissionStats.setMissionStats(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionDescription"), rs.getString("missionMapPath"), rs.getString("challenge"), (byte)rs.getInt("assaults"), (byte)rs.getInt("reinforcement"), readShipsByMission(missionID), paths, readStarsByMission(missionID), readIDShipUnlock(), rs.getString("campaignID"));
             }
         } catch (SQLException e) {
             System.err.println("Error al leer el juego: " + e.getMessage());

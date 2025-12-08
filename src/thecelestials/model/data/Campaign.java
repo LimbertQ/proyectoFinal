@@ -32,45 +32,4 @@ public class Campaign extends AssetDefinition{
     public String getVideoPath() {
         return videoPath;
     }
-
-    public String nextMission(String missionID) {
-        //boolean flag = false;
-        int length = missionID.length();
-        int digit = Integer.parseInt(missionID.substring(length - 2, length)) + 1;
-        if (digit < 10) {
-            missionID = missionID.substring(0, length - 1) + digit;
-        } else {
-            missionID = missionID.substring(0, length - 2) + digit;
-        }
-        
-        return missionID;
-    }
-
-    public boolean unlocks(String missionID) {
-        boolean flag = false;
-        int length = missionID.length();
-        int digit = Integer.parseInt(missionID.substring(length - 2, length)) + 1;
-        if (digit < 10) {
-            missionID = missionID.substring(0, length - 1) + digit;
-        } else {
-            missionID = missionID.substring(0, length - 2) + digit;
-        }
-
-        if (missions.containsKey(missionID)) {
-            if (missions.get(missionID).getState() == 0) {
-                missions.get(missionID).setState();
-                DataBaseManager.getInstance("").updateMissionState(missionID);
-                String shipID = DataBaseManager.getInstance("").readIDShipUnlock();
-                if (shipID != null) {
-                    DataBaseManager.getInstance("").updateShipState(shipID);
-                }
-            }
-            flag = true;
-        }
-        if (getState() == 0) {
-            setState();
-            DataBaseManager.getInstance("").updateCampaignState(getID());
-        }
-        return flag;
-    }
 }

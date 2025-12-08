@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import thecelestials.controller.Keyboard;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.ProgressionManager;
 import thecelestials.model.managers.GameContentManager;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
 
@@ -65,7 +66,8 @@ public class GameCanvas extends Canvas implements Runnable {
             gcm.pause();
             //gcm.saveProgress();
             if (gcm.gameOver() == 2) {
-                Assets.unlocks();
+                //Assets.unlocks();
+                ProgressionManager.getInstance().unlocks();
             }
             showDialog(gcm.gameOver());
         } else {

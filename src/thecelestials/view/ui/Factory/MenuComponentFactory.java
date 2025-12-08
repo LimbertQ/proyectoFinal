@@ -27,6 +27,7 @@ import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.AssetDefinition;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
+import thecelestials.model.data.ProgressionManager;
 import thecelestials.view.ui.GameFrame;
 import thecelestials.view.ui.SelectorPanelComponent;
 
@@ -56,7 +57,7 @@ public class MenuComponentFactory {
         winDialog = createJDialog(frame, "Deseas continuar?");
         putButtonsDialog(e -> {
             winDialog.dispose();
-            switcher.showCard("loadingGameCard", Assets.campaigns.get(MissionStats.campaignID).nextMission(MissionStats.missionID));
+            switcher.showCard("loadingGameCard", ProgressionManager.getInstance().nextMission());
         }, winDialog, switcher, "CONTINUAR");
         //SALIR DEL JUEGO
         closeDialog = createJDialog(frame, "¿Desea salir del juego");
