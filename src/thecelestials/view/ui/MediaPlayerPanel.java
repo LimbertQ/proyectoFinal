@@ -15,6 +15,7 @@ import javafx.scene.media.MediaView;
 import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
+import thecelestials.model.data.ProgressionManager;
 
 /**
  *
@@ -44,12 +45,13 @@ public class MediaPlayerPanel extends JPanel{
     }
     
     public void updateVideo(String menuCard, String campaignID){
-        if(menuCard.equals("missionsMenuCard")){
-            abrirArchivo(menuCard, campaignID, campaignID);
+        //System.err.println(menuCard+":::::"+campaignID);
+        if(ProgressionManager.getInstance().nextMenu().equals("mediaPlayerCard")){
+            ProgressionManager.getInstance().reset();
+            abrirArchivo("missionsMenuCard", campaignID, campaignID);
         }else{
-            abrirArchivo(menuCard, campaignID, "cinematica");
+            abrirArchivo("selectorMenuCard", campaignID, "cinematica");
         }
-        
     }
 
     private void abrirArchivo(String menuCard, String campaignID, String goal) {

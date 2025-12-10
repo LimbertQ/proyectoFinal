@@ -57,7 +57,7 @@ public class MenuComponentFactory {
         winDialog = createJDialog(frame, "Deseas continuar?");
         putButtonsDialog(e -> {
             winDialog.dispose();
-            switcher.showCard("loadingGameCard", ProgressionManager.getInstance().nextMission());
+            switcher.showCard(ProgressionManager.getInstance().nextMenu(), ProgressionManager.getInstance().nextMenuID());
         }, winDialog, switcher, "CONTINUAR");
         //SALIR DEL JUEGO
         closeDialog = createJDialog(frame, "¿Desea salir del juego");
@@ -89,7 +89,7 @@ public class MenuComponentFactory {
         JLabel button1 = createClickableLabel(textButton1, 1, action);
         JLabel button2 = createClickableLabel("ABANDONAR", 0, e -> {
             dialog.dispose();
-            switcher.showCard("missionsMenuCard", MissionStats.campaignID);
+            switcher.showCard(ProgressionManager.getInstance().getMissionsForCampaign(), ProgressionManager.getInstance().currentCampaignID());
         });
 
         JPanel buttonPanel = new JPanel(); // Añadir un poco de espacio horizontal

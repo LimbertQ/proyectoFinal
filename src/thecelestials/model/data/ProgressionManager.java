@@ -9,7 +9,9 @@ package thecelestials.model.data;
  * @author pc
  */
 public class ProgressionManager {
-    private static byte unlock = 0;
+
+    private static String nextMenu;
+    private static String nextMenuID;
     private static ProgressionManager instance;
 
     public static ProgressionManager getInstance() {
@@ -18,11 +20,15 @@ public class ProgressionManager {
         }
         return instance;
     }
-    
-    public ProgressionManager(){
-        if(Assets.campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0){
-            unlocksMission("CAMP01", "MSN01");
-            unlock = 1;
+
+    public ProgressionManager() {
+        nextMenu = "";
+        nextMenuID = "";
+        if (Assets.campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0) {
+            unlocksMission(Assets.campaigns.get("CAMP01"), "MSN01");
+            //MissionStats.campaignID = "CAMP00";
+            nextMenu = "mediaPlayerCard";
+            nextMenuID = "CAMP01";
         }
     }
 
@@ -36,27 +42,19 @@ public class ProgressionManager {
         }
         return ID;
     }
-    
-    public void changeUnlock(){
-        unlock = 0;
-    }
-    
-    public byte unlock(){
-        return unlock;
-    }
-    
-    private void unlocksCampaign(String campaignID) {
-        //DESBLOQUEAMOS MISSION
-        if (Assets.campaigns.get(campaignID).getState() == 0) {
-            Assets.campaigns.get(campaignID).setState();
-            DataBaseManager.getInstance("").updateCampaignState(campaignID);
+
+    private void unlocksCampaign(Campaign campaign) {
+        //DESBLOQUEAMOS CAMPANIA
+        if (campaign.getState() == 0) {
+            campaign.setState();
+            DataBaseManager.getInstance("").updateCampaignState(campaign.getID());
         }
     }
 
-    private void unlocksMission(String campaignID, String missionID) {
+    private void unlocksMission(Campaign campaign, String missionID) {
         //DESBLOQUEAMOS MISSION
-        if (Assets.campaigns.get(campaignID).getMissionByID(missionID).getState() == 0) {
-            Assets.campaigns.get(campaignID).getMissionByID(missionID).setState();
+        if (campaign.getMissionByID(missionID).getState() == 0) {
+            campaign.getMissionByID(missionID).setState();
             DataBaseManager.getInstance("").updateMissionState(missionID);
         }
     }
@@ -90,33 +88,81 @@ public class ProgressionManager {
         return nextID(MissionStats.campaignID);
     }
 
+    public String nextMenu() {
+        return nextMenu;
+    }
+
+    public String nextMenuID() {
+        return nextMenuID;
+    }
+
+    public String nextPanel() {
+        String res = nextMenuID;
+        if (res.equals("loadingGameCard")) {
+            res = "missionsMenuCard";
+        }
+        return res;
+    }
+
+    public String getMissionsForCampaign() {
+        String res = "missionsMenuCard";
+        if (nextMenu.equals("mediaPlayerCard")) {
+            res = nextMenu;
+        }
+        return res;
+    }
+
+    public String currentCampaignID() {
+        String res = MissionStats.campaignID;
+        if (nextMenu.equals("mediaPlayerCard")) {
+            res = nextMenuID;
+        }
+        return res;
+    }
+
+    public void reset() {
+        nextMenu = "";
+    }
+
+    //gane una partida
     public void unlocks() {
-        String missionID = nextID(MissionStats.missionID);
-        if (Assets.campaigns.get(MissionStats.campaignID).containsMission(missionID)) {
-            unlocksMission(MissionStats.campaignID, missionID);
+        nextMenuID = nextID(MissionStats.missionID);
+        if (Assets.campaigns.get(MissionStats.campaignID).containsMission(nextMenuID)) {
+            //VERIFICAMOS Y DESBLOQUEAMOS SI SE PUEDE
+            unlocksMission(Assets.campaigns.get(MissionStats.campaignID), nextMenuID);
             unlocksShip();
+            //------------------------------------
+            //VENTANA CARGA DE RECURSOS
+            nextMenu = "loadingGameCard";
         } else {
             String nextCampaignID = nextID(MissionStats.campaignID);
-            if (Assets.campaigns.containsKey(nextCampaignID) && Assets.campaigns.get(nextCampaignID).getState() == 0 && Assets.campaigns.get(nextCampaignID).containsMission(missionID)) {
-                //DESBLOQUEAMOS CAMPAÑA
-                unlocksCampaign(nextCampaignID);
-                //DESBLOQUEAMOS MISSION
-                unlocksMission(nextCampaignID, missionID);
-                //DESBLOQUEAMOS NAVE
-                unlocksShip();
-                //DESBLOQUEAMOS CIVILIZACIONES puede ser load
-                unlocksCivilization();
-                
-                unlock = 1;
-            } else if (!Assets.campaigns.containsKey(nextCampaignID) || Assets.campaigns.containsKey(nextCampaignID)){
+            Campaign nextCampaign = Assets.campaigns.get(nextCampaignID);
+            nextMenu = "missionsMenuCard";
+            if (nextCampaign != null && nextCampaign.containsMission(nextMenuID)) {
+                if (nextCampaign.getState() == 0) {
+                    //DESBLOQUEAMOS CAMPAÑA
+                    unlocksCampaign(nextCampaign);
+                    //DESBLOQUEAMOS MISSION
+                    unlocksMission(nextCampaign, nextMenuID);
+                    //DESBLOQUEAMOS NAVE
+                    unlocksShip();
+                    //DESBLOQUEAMOS CIVILIZACIONES
+                    unlocksCivilization();
+
+                    //reproducimos el video de la siguiente campaña
+                    nextMenu = "mediaPlayerCard";
+                }
+                nextMenuID = nextCampaignID;
+            } else {
                 //DESBLOQUEAMOS TODAS LAS NAVES
                 unlocksShip();
                 MissionStats.nextShipID = "CRS01";
                 unlocksShip();
                 MissionStats.nextShipID = "CRS02";
                 unlocksShip();
-                unlock = -1;
                 unlocksCivilization();
+                //menu actual
+                nextMenuID = MissionStats.campaignID;
             }
         }
         //campaigns.get(MissionStats.campaignID).unlocks(MissionStats.missionID)

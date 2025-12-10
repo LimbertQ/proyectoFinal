@@ -64,7 +64,6 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         setSize(screenSize);
         setLocationRelativeTo(null);
         //-----------
-        //Assets.init();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         loadingPanel = new LoadingPanel(loadingCard, this);
@@ -78,49 +77,31 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
 
     @Override
     public void showCard(String cardName, String menuID) {
-        //MISIONES || LOADING
-        if (ProgressionManager.getInstance().unlock() != 0 && cardName.equals("loadingGameCard")) {
-            cardName = missionsMenuCard;
-        }
         switch (cardName) {
             case "loadingGameCard" -> {
                 loadingPanel.nextPanel(gameCanvasCard, menuID);
                 cardName = loadingCard;
             }
-
             case mediaPlayerCard -> {
-                mediaPlayerPanel.updateVideo("selectorMenuCard", menuID);
+                mediaPlayerPanel.updateVideo("", menuID);
             }
             case selectorMenuCard ->
-                //selectorMenuPanel.updateContentForMenu(menuID);
                 selectorMenuPanel.updateContentForMenu(menuID);
             case buttonSelectorCard -> {
                 buttonSelectorPanel.updateContentForMenu(cardName);
             }
             case missionsMenuCard -> {
-                if (ProgressionManager.getInstance().unlock() == -1) {
-                    ProgressionManager.getInstance().changeUnlock();
-                    menuID = MissionStats.campaignID;
-                }
-                if (ProgressionManager.getInstance().unlock() != 0) {
-                    //ACTUALIZAMOS TODAS LAS CAMPANIAS
+                cardName = buttonSelectorCard;
+                if (ProgressionManager.getInstance().nextMenu().equals("mediaPlayerCard")) {
                     campaignPanel.updateContentForMenu("unlock");
-                    //CAMBIAMOS EL ESTADO DE DESBLOQUEADO
-                    ProgressionManager.getInstance().changeUnlock();
-                    //REPRODUCIMOS EL VIDEO DE LA SIGUIENTE CAMPAÑA
-                    menuID = ProgressionManager.getInstance().nextCampaign();
-                    mediaPlayerPanel.updateVideo(missionsMenuCard, menuID);
                     cardName = mediaPlayerCard;
-                } else {
-                    cardName = buttonSelectorCard;
-                    buttonSelectorPanel.updateContentForMenu(menuID);
+                    mediaPlayerPanel.updateVideo("", menuID);
                 }
+                buttonSelectorPanel.updateContentForMenu(menuID);
             }
             case gameCanvasCard -> {
-                //Assets.loadGame(menuID);
                 gameCanvas.playGame();
             }
-            //System.out.println(cardName+" soy genio");
             default -> {
             }
         }
