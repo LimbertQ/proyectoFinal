@@ -113,7 +113,6 @@ public class LoadingPanel extends JPanel {
     }
 
     @Override
-
     protected void paintComponent(Graphics g) {
         g.fillRect(0, 0, getWidth(), getHeight());
         //g.drawImage(Assets.fondo, WIDTH, HEIGHT, this);

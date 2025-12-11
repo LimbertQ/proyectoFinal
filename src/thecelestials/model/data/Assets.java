@@ -24,7 +24,7 @@ import thecelestials.view.util.Loader;
 public class Assets {
 
     public static int count = 0;
-    public static int MAX_COUNT = 100;
+    public static int MAX_COUNT = 129;
     public static int currentShip = 0;
     public static boolean loaded = false;
     //public static boolean unlock = false;
@@ -59,7 +59,7 @@ public class Assets {
             money = progress[1];
             campaigns = loadCampaigns();
             ProgressionManager.getInstance();
-            fondo = loadImage("/images/maps/exoplaneta.jpeg");
+            fondo = images.get("la doble alianza");
             loadShipAvaible();
             loadCivilizations();
             getInformation();
@@ -70,14 +70,11 @@ public class Assets {
             setImageLaser(powerBullet);
 
         }
-        player = loadImage("/images/others/life.png");
-        effect = loadImage("/images/effects/fire08.png");
+        player = images.get("life");
+        effect = images.get("effect");
         for (int i = 0; i < 3; i++) {
-            shieldEffects[i] = loadImage("/images/effects/shield" + i + ".png");
+            shieldEffects[i] = images.get("shield"+i);
         }
-        images.put("effect", loadImage("/images/effects/fire08.png"));
-        images.put("multimedia", loadImage("/images/others/multimedia.png"));
-
         count = MAX_COUNT;
         loaded = true;
     }
@@ -100,12 +97,7 @@ public class Assets {
         return res;
     }
 
-    public static void unlocks() {
-        
-    }
-
     private static void setImageLaser(EntityStats bullet) {
-        //images.put(bullet.getName(), loadImage(bullet.getProfileImagePath()));
         images.put(bullet.getSpriteKey(), loadImage(bullet.getSpritePath()));
     }
 
@@ -187,11 +179,6 @@ public class Assets {
             images.put(infoGame[i][0], loadImage(infoGame[i][2]));
             informations.put(infoGame[i][3], infoList);
         }
-        images.put("instrucciones", loadImage("/images/others/instrucciones.png"));
-        images.put("galeria", loadImage("/images/others/galeria.png"));
-        images.put("creditos", loadImage("/images/others/creditos.png"));
-
-        images.put("cinematica", loadImage("/images/others/cinematica.png"));
     }
 
     public static void setear() {
@@ -206,8 +193,6 @@ public class Assets {
         missionMaps.clear();
         db.readMissionsByID(missionID);
         MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 +MissionStats.starsAssets.size()+ 2;
-        //Map<String, BufferedImage> stars = readStarsImages(missionID);
-        //MissionStats.stars = stars;
         readStarsImages(MissionStats.starsAssets);
         missionMaps.put(MissionStats.missionName, loadImage(MissionStats.allPaths.get("missionMapPath")));
         //MAX_COUNT = shipsList.length;
@@ -244,7 +229,6 @@ public class Assets {
             images.put(civilization.getName(), loadImage(civilization.getProfileImagePath()));
         }
         informations.put("civilizaciones", civilizations);
-        images.put("civilizaciones", loadImage("/images/others/civilizaciones.png"));
     }
 
     private static void readAllSounds() {
@@ -252,7 +236,6 @@ public class Assets {
         for (Map<String, String> audio : AllSounds) {
             audioCache.put(audio.get("soundName"), loadSound(audio.get("soundPath")));
         }
-
     }
 
     private static void readAllSoundsMedia() {
@@ -277,20 +260,13 @@ public class Assets {
         for (Map<String, String> image : AllImages) {
             BufferedImage imagen = loadImage(image.get("imagePath"));
             images.put(image.get("imageName"), imagen);
-
         }
     }
 
     private static void readStarsImages(List<AssetDefinition> stars) {
-        //List<Map<String, String>> AllImages = db.readStarsByMission(missionID);
-        //MAX_COUNT += AllImages.size();
-        //Map<String, BufferedImage> starsMission = new HashMap<>();
         for (AssetDefinition starAsset: stars) {
-            //BufferedImage imagen = loadImage(image.get("starAssetPath"));
             missionMaps.put(starAsset.getName(), loadImage(starAsset.getProfileImagePath()));
-
         }
-        //return starsMission;
     }
 
     private static BufferedImage loadImage(String path) {
