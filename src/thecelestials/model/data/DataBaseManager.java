@@ -99,7 +99,7 @@ public class DataBaseManager {
                 navesData.add(ship);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer naves disponibles : " + e.getMessage());
         }
         return navesData;
     }
@@ -114,7 +114,7 @@ public class DataBaseManager {
                 
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer lasers disponibles : " + e.getMessage());
         }
         return entity;
     }
@@ -153,7 +153,7 @@ public class DataBaseManager {
                 navesData.add(naveMap);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer naves disponibles : " + e.getMessage());
         }
         return navesData;
     }
@@ -172,7 +172,7 @@ public class DataBaseManager {
                 list.add(civilization);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer naves disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer civilizaciones disponibles: " + e.getMessage());
         }
         return list;
     }
@@ -231,7 +231,7 @@ public class DataBaseManager {
                 list.add(naveMap);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer imagenes disponibles : " + e.getMessage());
         }
         return list;
     }
@@ -251,7 +251,7 @@ public class DataBaseManager {
                 list.add(naveMap);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer imagenes disponibles : " + e.getMessage());
         }
         return list;
     }
@@ -276,7 +276,7 @@ public class DataBaseManager {
                 //list.add(naveMap);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer imagenes disponibles tmr: " + e.getMessage());
+            System.err.println("Error al leer fenomenos astronomicos por mision: " + e.getMessage());
         }
         return starList;
     }
@@ -288,7 +288,6 @@ public class DataBaseManager {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                System.out.println(rs.getInt("campaignState")+" :state");
                 Campaign campaign = new Campaign(rs.getString("campaignID"), rs.getString("campaignName"), rs.getString("campaignDescription"), rs.getString("videoPath"), rs.getString("mapPath"), rs.getInt("campaignState"), readMissionsByCampaign(rs.getString("campaignID")));
                 list.put(campaign.getID(), campaign);
             }

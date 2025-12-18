@@ -11,7 +11,6 @@ import java.awt.image.BufferStrategy;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import thecelestials.controller.Keyboard;
-import thecelestials.model.data.Assets;
 import thecelestials.model.data.ProgressionManager;
 import thecelestials.model.managers.GameContentManager;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
@@ -66,7 +65,6 @@ public class GameCanvas extends Canvas implements Runnable {
             gcm.pause();
             //gcm.saveProgress();
             if (gcm.gameOver() == 2) {
-                //Assets.unlocks();
                 ProgressionManager.getInstance().unlocks();
             }
             showDialog(gcm.gameOver());
@@ -102,10 +100,18 @@ public class GameCanvas extends Canvas implements Runnable {
 
     //al empezar un nivel
     public void playGame() {
+        //setFocusable(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            if (!this.hasFocus()) {
+            this.requestFocusInWindow();
+        }
+        });
         lastTime = System.nanoTime();
         gcm.clear();
         gcm.playGame();
         isPaused = false;
+        //this.requestFocusInWindow();
+        
     }
 
     public void resume() {

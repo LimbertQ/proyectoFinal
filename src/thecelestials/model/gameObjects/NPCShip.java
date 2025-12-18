@@ -4,7 +4,6 @@
  */
 package thecelestials.model.gameObjects;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import thecelestials.model.data.ShipStats;
@@ -23,19 +22,14 @@ public class NPCShip extends Ship {
     private final TargetProvider provider;
     private long contMoves = 0;
     private int currentPattern = 0;
-    private final Vector2D centerBattle;
     private final Vector2D goal;
     private long fireRate = 0;
-
+    private final int ufoFireRate;
     public NPCShip(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, TargetProvider provider) {
         super(position, shipStats, velocity, maxVel, creator, Constants.UFO_FIRE_RATE);
         goal = new Vector2D(Constants.WIDTH, getPosition().getY());
-        centerBattle = new Vector2D(Constants.WIDTH / 2.0, Constants.HEIGHT / 2.0);
         this.provider = provider;
-    }
-
-    private void searchTarget() {
-        target = provider.getTarget(getTeam());
+        ufoFireRate = (int)Constants.UFO_FIRE_RATE+(int)(Math.random()*100);
     }
 
     public Vector2D targetDirection(Vector2D targetPos, Vector2D center) {
@@ -52,7 +46,7 @@ public class NPCShip extends Ship {
 
     private void shoot(Vector2D direction) {
         specialTechnique(getCenter(), direction, 1000f);
-        if (fireRate > Constants.UFO_FIRE_RATE) {
+        if (fireRate > ufoFireRate) {
             shooti(getCenter(), direction);
             fireRate = 0;
         }
@@ -99,8 +93,8 @@ public class NPCShip extends Ship {
         toTarget(targetDirection);
         shoot(targetDirection);
 
-        double distancia = centerBattle.subtract(center).getMagnitude();
-        targetDirection = targetDirection(centerBattle, center);
+        double distancia = Constants.centerBattle.subtract(center).getMagnitude();
+        targetDirection = targetDirection(Constants.centerBattle, center);
         if (distancia < 300) {
             velocity = targetDirection.scale(maxVel * -0.05f);
             position = position.add(velocity.scale(dt));
@@ -127,6 +121,17 @@ public class NPCShip extends Ship {
         }
     }
 
+    private Ship searchTarget() {
+        if (target == null || target.isDead() || target.isInvulnerable()) {
+            target = null;
+            Ship target2 = provider.getTarget(getTeam());
+            if(target2 != null && !target2.isInvulnerable()){
+                target = target2;
+            }
+        }
+        return target;
+    }
+
     @Override
     public void update(float dt) {
         accelerating = false;
@@ -135,19 +140,16 @@ public class NPCShip extends Ship {
             return;
         }
         contMoves += dt;
-        if (target == null || target.isDead() || target.isInvulnerable()) {
-            searchTarget();
-            if (target == null) {
-                if (contMoves > 5000) {
-                    contMoves = 0;
+        if (searchTarget() == null) {
+            if (contMoves > 5000) {
+                contMoves = 0;
 
-                    goal.setX(Math.random() * Constants.WIDTH);
-                    goal.setY(Math.random() * Constants.HEIGHT);
-                }
-                //-------
-                patrol(getCenter(), dt);
-                //-------
+                goal.setX(Math.random() * Constants.WIDTH);
+                goal.setY(Math.random() * Constants.HEIGHT);
             }
+            //-------
+            patrol(getCenter(), dt);
+            //-------
         } else {
             updateValuesShip(dt);
             fireRate += dt;
@@ -182,9 +184,9 @@ public class NPCShip extends Ship {
     public void draw(Graphics2D g2d) {
 
         drawSpeed(g2d);
-        drawRectangle(g2d);
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);
+        drawRectangle(g2d);
     }
 }

@@ -4,6 +4,7 @@
  */
 package thecelestials.model.managers;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -63,10 +64,10 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     public GameContentManager() {
         images = Assets.images;
-        
+
         allShips.put(1, new ArrayList<>());
         allShips.put(0, new ArrayList<>());
-        
+
         gameEventManager = new GameEventManager();
 
         HUDManager gameHudManager = new HUDManager();
@@ -107,7 +108,6 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         for (GameManager manager : allManagers) {
             manager.clear();
         }
-
         //---------
         gravitationalsFields.clear();
         movingObjects.clear();
@@ -155,7 +155,10 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             if (cruisero.getTeam() == 1) {
                 cruiser = cruisero;
             }
-            
+
+        }
+        if (MissionStats.alliesExist) {
+            spawnShip(2, 0, Constants.HEIGHT - 100, 1, MissionStats.allShips[1]);
         }
         assault = 0;
         type = -1;
@@ -181,7 +184,6 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     }
 
     private void startWave() {
-
         for (int i = 0; i < 1; i++) {
             double x, y;
             if (random.nextBoolean()) { // Decidimos si empieza en X o Y
@@ -206,7 +208,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     private void spawnReinforcement(int limit, List<ShipStats> shipsList) {
         for (int i = 0; i < limit; i++) {
-            Ship ship = new ReinforcementShip(new Vector2D(100, (i + 1) * 20), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            Ship ship = new ReinforcementShip(new Vector2D(100, (i + 1) * 80), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             createGameObject(ship);
         }
     }
@@ -218,11 +220,12 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 startWave();
             }
 
-            if (MissionStats.alliesExist && allShips.get(1).size() < 2) {
-                spawnShip(1, 0, Constants.HEIGHT - 100, 1, MissionStats.allShips[1]);
-            }
             assault += dt;
             if (assault > 20000) {
+                if (MissionStats.alliesExist && allShips.get(1).size() < 2) {
+                    spawnShip(random.nextInt(2) + 1, 0, Constants.HEIGHT - 100, 1, MissionStats.allShips[1]);
+                }
+
                 assault = 0;
                 waves++;
                 int nroRandom;
@@ -249,8 +252,9 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             ship.switchLocked(true);
         }
         for (Ship ship : allShips.get(1)) {
-            if(ship instanceof NPCShip)
+            if (ship instanceof NPCShip) {
                 ship.switchLocked(true);
+            }
         }
     }
 
@@ -360,6 +364,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(2f));
         g.drawImage(missionMap, 0, 0, 1366, 768, null);
 
         //Graphics2D g2d = (Graphics2D) g;
@@ -397,17 +402,17 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     @Override
     public Ship getTarget(int team) {
-        if(team > 0){
+        if (team > 0) {
             team = 0;
-        }else{
+        } else {
             team = 1;
         }
         int length = allShips.get(team).size();
         Ship ship = null;
-        if(length > 0){
+        if (length > 0) {
             ship = allShips.get(team).get(random.nextInt(length));
         }
-                
+
         return ship;
     }
 

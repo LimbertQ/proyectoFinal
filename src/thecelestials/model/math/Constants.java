@@ -18,7 +18,7 @@ public class Constants {
     // player properties
 
     public static final int FIRERATE = 300;
-    public static final int FIRERATE_X2 = 300;
+    public static final int FIRERATE_X2 = 150;
     public static final double DELTAANGLE = 0.1;
     public static final double ACC = 0.2;
     public static final double PLAYER_MAX_VEL = 7.0;
@@ -60,26 +60,14 @@ public class Constants {
     
     public static final long UFO_SPAWN_WAVE = 50000;
 
-    public static final String PLAY = "PLAY";
-
-    public static final String EXIT = "EXIT";
-
     public static final int LOADING_BAR_WIDTH = 1000;
     public static final int LOADING_BAR_HEIGHT = 50;
 
-    public static final String RETURN = "RETURN";
-    public static final String HIGH_SCORES = "HIGHEST SCORES";
-
-    public static final String SCORE = "SCORE";
-    public static final String DATE = "DATE";
 
     //public static final String SCORE_PATH = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() +
       //  "\\Space_Ship_Game\\data.json"; // data.xml if you use XMLParser
 
     // This variables are required to use XMLParser
-
-    public static final String PLAYER = "PLAYER";
-    public static final String PLAYERS = "PLAYERS";
 
     // =============================================
 
@@ -97,5 +85,9 @@ public class Constants {
     public static final long ALLIES_CINEMATICA = 15000;
 
     public static final int SCORE_STACK = 1000;
-
+    
+    public static Vector2D centerBattle;
+    public static void init(){
+        centerBattle = new Vector2D(WIDTH / 2.0, HEIGHT / 2.0);
+    }
 }

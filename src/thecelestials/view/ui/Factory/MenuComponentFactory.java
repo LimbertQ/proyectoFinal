@@ -184,7 +184,6 @@ public class MenuComponentFactory {
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
             case "campaignMenuCard" -> {
-                //System.out.println(menug+"mrd");
                 title = titleMenu("campaña");
                 panel.add(createMenuLabel(0));
 
@@ -195,7 +194,6 @@ public class MenuComponentFactory {
                 //------------------------------
 
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
-                //System.out.println("grrrr");
             }
             case "selectorMenuCard" -> {
                 title = titleMenu("SELECTOR CARD");
@@ -242,10 +240,9 @@ public class MenuComponentFactory {
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
         texto.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        //texto.setText("alison de mrd");
         texto.setForeground(Color.WHITE);
         texto.setOpaque(true);
-        texto.setText("mrd");
+        texto.setText("");
         contentPanel.add(texto);
         //contentPanel.add(texto, BorderLayout.CENTER);
         return contentPanel;
@@ -319,7 +316,6 @@ public class MenuComponentFactory {
             }
         }
         mainMenu.add(Box.createVerticalGlue());
-        //System.out.println(mainMenu);
         return mainMenu;
     }
 
@@ -447,7 +443,6 @@ public class MenuComponentFactory {
         } else {
             boton.setBackground(new Color(101, 37, 126, 128));
             //boton.setBackground(Color.red);
-            //System.out.println("soy rojo");
         }
 
         boton.setForeground(Color.WHITE);

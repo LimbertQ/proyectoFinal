@@ -22,19 +22,19 @@ public abstract class Ship extends MovingObject {
 
     private final GameObjectCreator creator;
     protected final EntityStats bullet;
-    private final ShipStats shipStats;
     protected boolean accelerating = false;
     private long special = 0;
     private final int team;
     private final Color color;
     private final int finalHealt;
     private int currentBarWidth = 0;
+    private final String shipClass;
     public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, long shipFireRate) {
         super(position, shipStats, velocity, maxVel);
         this.bullet = shipStats.getEntityStats();
         this.creator = creator;
         this.team = shipStats.getTeam();
-        this.shipStats = shipStats;
+        this.shipClass = shipStats.getShipClass();
         if (this instanceof PlayerShip) {
             color = Color.GREEN;
         } else {
@@ -58,7 +58,7 @@ public abstract class Ship extends MovingObject {
     protected void specialTechnique(Vector2D position, Vector2D direction, float dt) {
         if (special > Constants.UFO_CLONE_RATE) {
             special = 0;
-            switch (shipStats.getShipClass()) {
+            switch (shipClass) {
                 case "caza" ->
                     shootLaserBig(position, direction);
                 case "ufo" ->
@@ -125,8 +125,8 @@ public abstract class Ship extends MovingObject {
     }
 
     protected void drawRectangle(Graphics2D g2d) {
-        if(special > Constants.UFO_CLONE_RATE){
-            g2d.setColor(color);
+        g2d.setColor(color);
+        if(special > Constants.UFO_CLONE_RATE-1000 && !shipClass.equals("crucero")){
             g2d.drawOval((int)position.getX(), (int)position.getY(), width, height);
         }
         // 1. **GUARDAR** el estado original de Graphics2D. ¡Crucial!
@@ -145,8 +145,7 @@ public abstract class Ship extends MovingObject {
 
         // 3. **DIBUJAR** el rectángulo:
         // Define el color del rectángulo (ej: rojo para indicar el bando o un color de sombra)
-        g2d.setColor(color);
-
+        
         // Definición de la posición RELATIVA del rectángulo (para que esté debajo de la nave):
         // X = 0 (centrado en la nave)
         // Y = height + 5 (un poco debajo de la nave)

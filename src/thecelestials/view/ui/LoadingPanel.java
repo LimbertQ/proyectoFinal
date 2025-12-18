@@ -93,6 +93,7 @@ public class LoadingPanel extends JPanel {
                         public void mouseClicked(MouseEvent e) {
                             //System.err.println("click de mrd"+nextPanel);
                             // Esta acción usa los valores actualizados de this.nextPanel y this.missionID
+                            nextButton.setFocusable(false);
                             switcher.showCard(nextPanel, missionID);
                         }
                     });

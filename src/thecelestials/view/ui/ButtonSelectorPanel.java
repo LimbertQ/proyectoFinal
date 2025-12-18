@@ -26,9 +26,8 @@ public class ButtonSelectorPanel extends BaseSelectorPanel {
 
         centerPanel.removeAll();
         String aux = missionID;
-        if (this.menuName.equals("buttonSelectorCard")) {
+        if (this.menuName.equals("compras")) {
             getSelector().setItemNameLabelText("vidas: " + Assets.lives);
-            missionID = "compras";
             super.onMenuDataInicializate(missionID);
             aux = "buyPanel";
         }else{
@@ -55,7 +54,7 @@ public class ButtonSelectorPanel extends BaseSelectorPanel {
     @Override
     protected void onBackButtonClicked() {
         String destinationCard = switch (menuName) {
-            case "buttonSelectorCard" ->
+            case "compras" ->
                 "optionsMenuCard";
             default ->
                 "campaignMenuCard"; // Caso de seguridad

@@ -14,8 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
-import thecelestials.model.data.MissionStats;
 import thecelestials.model.data.ProgressionManager;
+import thecelestials.model.math.Constants;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
@@ -64,6 +64,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         setSize(screenSize);
         setLocationRelativeTo(null);
         //-----------
+        Constants.init();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         loadingPanel = new LoadingPanel(loadingCard, this);
@@ -88,7 +89,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
             case selectorMenuCard ->
                 selectorMenuPanel.updateContentForMenu(menuID);
             case buttonSelectorCard -> {
-                buttonSelectorPanel.updateContentForMenu(cardName);
+                buttonSelectorPanel.updateContentForMenu("compras");
             }
             case missionsMenuCard -> {
                 cardName = buttonSelectorCard;

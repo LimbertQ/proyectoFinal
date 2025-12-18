@@ -158,9 +158,16 @@ public class Assets {
 
     public static void getInformation() {
         String[][] infoGame = {{"credits", """
-                                           DESARROLLADOR: LIMBERT QUISPE QUISPE
-                                           HISTORIA Y NARRACION: LIMBERT QUISPE QUISPE
-                                           EFECTOS ESPECIALES: LIMBERT QUISPE QUISPE""", "/images/others/dev.png", "creditos"},
+                                           === CREDITOS ===
+                                           
+                                           DISEÑO Y PRODUCCION: LIMBERT QUISPE QUISPE.
+                                           DESARROLLO: LOS CELESTIALES
+                                           
+                                           CONCEPTO Y NARRATIVA
+                                           UNIVERSO Y NAVES: LIMBERT QUISPE Q.
+                                           
+                                           ARTE Y GRAFICOS
+                                           ARTE CONCEPTUAL: LIMBERT QUISPE Q.""", "/images/others/dev.png", "creditos"},
         {"tutorial", """
                                                 CONTROLES:
                                                 
@@ -170,12 +177,12 @@ public class Assets {
                                                 POTENCIADORES:
                                                 
                                                 REPELE METEORO, DOBLE ESCORE, DOBLE CAÑON,
-                                                VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "instrucciones"}};
+                                                VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "instrucciones"},
+        {"shoop", "", "/images/ships/profileFighter01.png", "compras"}};
         for (int i = 0; i < infoGame.length; i++) {
             AssetDefinition info = new AssetDefinition("DES0" + (i + 1), infoGame[i][0], infoGame[i][1], infoGame[0][2], 1);
             List<AssetDefinition> infoList = new ArrayList<>();
             infoList.add(info);
-            //images.put(infoGame[i][0], loadImage(infoGame[i][2]));
             images.put(infoGame[i][0], loadImage(infoGame[i][2]));
             informations.put(infoGame[i][3], infoList);
         }

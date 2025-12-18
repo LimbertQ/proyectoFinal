@@ -210,7 +210,6 @@ public class PlayerShip extends Ship {
         }
 
         drawSpeed(g2d);
-        drawRectangle(g2d);
         if (shieldOn) {
             BufferedImage frame = shield.getCurrentFrame();
             AffineTransform atShield = AffineTransform.getTranslateInstance(
@@ -222,5 +221,6 @@ public class PlayerShip extends Ship {
         AffineTransform at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width / 2.0, height / 2.0);
         g2d.drawImage(texture, at, null);
+        drawRectangle(g2d);
     }
 }
