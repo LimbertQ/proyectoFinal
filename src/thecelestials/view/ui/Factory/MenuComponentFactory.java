@@ -279,7 +279,7 @@ public class MenuComponentFactory {
 
             panel.add(boton);
             if (i < botones.size() - 1) {
-                panel.add(Box.createVerticalStrut((int)(Constants.HEIGHT*strut)));
+                panel.add(Box.createVerticalStrut((int) (Constants.HEIGHT * strut)));
             }
             i++;
 
@@ -405,48 +405,40 @@ public class MenuComponentFactory {
         JLabel right = createArrowLabel(">>");
         JLabel nameImage = sampleLabel("", 1, 0);
 
+        // Mantengo tu clase personalizada tal cual
         SelectorPanelComponent selectorPanelComponent = new SelectorPanelComponent(currentImage, back, left, right, nameImage);
         selectorPanelComponent.setLayout(new BoxLayout(selectorPanelComponent, BoxLayout.Y_AXIS));
         selectorPanelComponent.setOpaque(false);
 
-        // 1. Título del Selector
         JLabel selectorTitle = sampleLabel("SELECTOR", -1, 1);
         selectorTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        selectorTitle.setOpaque(false);
-        // Espacio opcional arriba del título para que no pegue al techo
-        selectorPanelComponent.add(Box.createVerticalStrut((int) (Constants.HEIGHT * 0.05)));
+        selectorTitle.setOpaque(false); // Aseguramos transparencia
         selectorPanelComponent.add(selectorTitle);
 
-        // 2. Panel Central (Flecha <<  Imagen  Flecha >>)
+        //------------
         JPanel contents = new JPanel();
         contents.setLayout(new BoxLayout(contents, BoxLayout.X_AXIS));
         contents.setOpaque(false);
 
-        // Espacio horizontal proporcional (el antiguo 20)
+        // ESPACIO HORIZONTAL ADAPTABLE (Era 20)
         int hGap = (int) (Constants.WIDTH * 0.015);
 
-        contents.add(Box.createHorizontalGlue()); // Empuja todo al centro
         contents.add(left);
-        contents.add(Box.createHorizontalStrut(hGap));
+        contents.add(Box.createHorizontalStrut(hGap)); // Solo cambiamos el 20 por hGap
         contents.add(currentImage);
-        contents.add(Box.createHorizontalStrut(hGap));
+        contents.add(Box.createHorizontalStrut(hGap)); // Solo cambiamos el 20 por hGap
         contents.add(right);
-        contents.add(Box.createHorizontalGlue()); // Empuja todo al centro
 
-        selectorPanelComponent.add(Box.createVerticalGlue()); // Espacio elástico
         selectorPanelComponent.add(contents);
-        selectorPanelComponent.add(Box.createVerticalGlue()); // Espacio elástico
 
-        // 3. Nombre de la imagen/misión
         nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         nameImage.setOpaque(false);
         selectorPanelComponent.add(nameImage);
 
-        // 4. El espacio de abajo (el antiguo 67)
-        int vGap = (int) (Constants.HEIGHT * 0.087);
+        // ESPACIO VERTICAL ADAPTABLE (Era 67)
+        int vGap = (int)(Constants.HEIGHT * 0.102); 
         selectorPanelComponent.add(Box.createVerticalStrut(vGap));
 
-        // 5. Botón ATRÁS
         JPanel southPanel = new JPanel();
         southPanel.setOpaque(false);
         southPanel.add(back);

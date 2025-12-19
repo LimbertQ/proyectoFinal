@@ -80,7 +80,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         Constants.init(finalW, finalH);
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setUndecorated(true);
+        setUndecorated(false);
 
         // 4. EL CONTENEDOR DE BORDES NEGROS
         JPanel backgroundWrapper = new JPanel(new GridBagLayout());
