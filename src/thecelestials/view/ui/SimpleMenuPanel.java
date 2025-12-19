@@ -23,7 +23,7 @@ public class SimpleMenuPanel extends BaseMenuPanel{
     public void updateContentForMenu(String type) {
         if (type.equals("unlock")) {
             centerPanel.removeAll();
-            JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, "MENU"));
+            JPanel newContentFromFactory = MenuComponentFactory.putButtons(0.044, false, MenuComponentFactory.createActionsContent(switcher, "MENU"));
 
             Component[] comps = newContentFromFactory.getComponents();
             for (Component comp : comps) {

@@ -73,7 +73,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         HUDManager gameHudManager = new HUDManager();
         allManagers.add(gameHudManager);
 
-        GameMessageManager gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4), new Vector2D(Constants.WIDTH / 2, Constants.HEIGHT / 2));
+        GameMessageManager gameMessageManager = new GameMessageManager(new Vector2D(50, Constants.HEIGHT / 4));
         allManagers.add(gameMessageManager);
 
         gameSoundManager = new GameSoundManager();
@@ -123,7 +123,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     public void playGame() {
         missionMap = Assets.missionMaps.get(MissionStats.missionName);
-        this.player = new PlayerShip(new Vector2D(1366 / 2 - Assets.player.getWidth(), 768 / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null), Assets.lives);
+        this.player = new PlayerShip(new Vector2D(Constants.WIDTH / 2 - Assets.player.getWidth(), Constants.HEIGHT / 2), new Vector2D(), Assets.getCurrentShip(), Constants.PLAYER_MAX_VEL, this, new Animation(Assets.shieldEffects, 80, null), Assets.lives);
         allShips.get(1).add(player);
         movingObjects.add(player);
         //-----------
@@ -365,7 +365,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(2f));
-        g.drawImage(missionMap, 0, 0, 1366, 768, null);
+        g.drawImage(missionMap, 0, 0, Constants.WIDTH, Constants.HEIGHT, null);
 
         //Graphics2D g2d = (Graphics2D) g;
         for (GravitationalField gf : gravitationalsFields) {

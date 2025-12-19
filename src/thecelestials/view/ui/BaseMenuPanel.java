@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
+import thecelestials.model.math.Constants;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
 
 /**
@@ -28,8 +29,12 @@ public abstract class BaseMenuPanel extends BasePanel {
     public BaseMenuPanel(ScreenSwitcher switcher, String menuType) {
         super(switcher);
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(80, 40, 80, 40)); // Borde para separación y posición
+        // 1. Calculamos los márgenes basados en la pantalla actual
+        int vMargin = (int) (Constants.HEIGHT * 0.104); // El 80 original
+        int hMargin = (int) (Constants.WIDTH * 0.029);  // El 40 original
 
+// 2. Aplicamos el borde dinámico
+        setBorder(BorderFactory.createEmptyBorder(vMargin, hMargin, vMargin, hMargin));
         loadContent(menuType);
     }
 

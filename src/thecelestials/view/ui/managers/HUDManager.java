@@ -35,10 +35,19 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     private final BufferedImage[] numbers;
     private byte assaults = 0;
     private byte waves = 0;
-
+    private final int numberX;
+    private final int nFlag;
+    private final int nPot;
+    private final int nAttack;
+    private final int xScore;
     public HUDManager() {
         numbers = new BufferedImage[11];
         loadNumbersImages();
+        numberX = Constants.PWidth(0.512);
+        nFlag = Constants.PWidth(0.439);
+        nPot = Constants.PWidth(0.494);
+        nAttack = Constants.PWidth(0.476);
+        xScore = Constants.PWidth(0.878);
     }
 
     @Override
@@ -73,14 +82,6 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         }
     }
 
-    private void drawNumbers(int x, int y, int number, Graphics2D g) {
-        String str = String.valueOf(number);
-        for (char c : str.toCharArray()) {
-            g.drawImage(numbers[Character.getNumericValue(c)], x, y, null);
-            x += 20;
-        }
-    }
-
     @Override
     public void update(float dt) {
     }
@@ -93,9 +94,17 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
         }
         drawAssaults(g);
     }
+    
+    private void drawNumbers(int x, int y, int number, Graphics2D g) {
+        String str = String.valueOf(number);
+        for (char c : str.toCharArray()) {
+            g.drawImage(numbers[Character.getNumericValue(c)], x, y, null);
+            x += 20;
+        }
+    }
 
     private void drawScore(Graphics2D g) {
-        drawNumbers(1200, 25, score, g);
+        drawNumbers(xScore, 25, score, g);
     }
 
     private void drawLives(Graphics2D g) {
@@ -107,10 +116,10 @@ public class HUDManager extends GameManager implements IGameControl, IGameLoopEn
     }
 
     private void drawAssaults(Graphics2D g) {
-        g.drawImage(attack, 600, 25, null);
-        drawNumbers(650, 30, assaults, g);
-        g.drawImage(numbers[10], 675, 30, null);
-        drawNumbers(700, 30, waves, g);
+        g.drawImage(attack, nFlag, 25, null);
+        drawNumbers(nAttack, 30, assaults, g);
+        g.drawImage(numbers[10], nPot, 30, null);
+        drawNumbers(numberX, 30, waves, g);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class LoadingPanel extends JPanel {
         setOpaque(false);
         //contentPanel.setOpaque(false);
         //contentPanel.setLayout(BorderLayout.SOUTH);
-        setBorder(BorderFactory.createEmptyBorder(250, 0, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(Constants.PHeight(0.326), 0, 0, 0));
         //contentPanel.setBackground(Color.black);
         //add(contentPanel, BorderLayout.CENTER);
 

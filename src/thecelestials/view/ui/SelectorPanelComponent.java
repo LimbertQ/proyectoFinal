@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import thecelestials.model.math.Constants;
 
 /**
  *
@@ -35,10 +36,17 @@ public class SelectorPanelComponent extends JPanel {
     }
 
     public void setSelectorItemIcon(BufferedImage image, String text) {
-        itemImageLabel.setIcon(new ImageIcon(image.getScaledInstance(340, 340, Image.SCALE_SMOOTH)));
+        // 1. Calculamos el tamaño proporcional basado en la altura de la pantalla
+        // Usamos Constants.HEIGHT para que sea dinámico
+        int size = (int) (Constants.HEIGHT * 0.442);
+
+        // 2. Aplicamos el escalado usando ese tamaño para que siga siendo un cuadrado
+        // Esto asegura que en tu compu siga siendo 340x340
+        itemImageLabel.setIcon(new ImageIcon(image.getScaledInstance(size, size, Image.SCALE_SMOOTH)));
+
         itemImageName.setText(text);
     }
-    
+
     public void setItemNameLabelText(String text) {
         // Asumiendo que 'itemNameLabel' es el JLabel que muestra el nombre del ítem/vidas/dinero
         this.itemImageName.setText(text);
@@ -47,10 +55,14 @@ public class SelectorPanelComponent extends JPanel {
     public void addLabelListener(String button, ActionListener listener) {
         JLabel labelButton;
         labelButton = switch (button) {
-            case "previous" -> left;
-            case "next" -> right;
-            case "imageName" -> itemImageName;
-            default -> back;
+            case "previous" ->
+                left;
+            case "next" ->
+                right;
+            case "imageName" ->
+                itemImageName;
+            default ->
+                back;
         };
         labelButton.addMouseListener(new MouseAdapter() {
             @Override

@@ -33,13 +33,11 @@ public class GameMessageManager extends GameManager implements IGameLoopEntity, 
 
     private final List<Message> activeMessages;
     private final Vector2D left;
-    private final Vector2D center;
     private byte waves = 0;
     private byte finalScore = 1;
-    public GameMessageManager(Vector2D left, Vector2D center) {
+    public GameMessageManager(Vector2D left) {
         activeMessages = new ArrayList<>();
         this.left = left;
-        this.center = center;
     }
     
     @Override
@@ -58,7 +56,7 @@ public class GameMessageManager extends GameManager implements IGameLoopEntity, 
     }
     
     private void showMessage(String text, boolean flag){
-        activeMessages.add(new Message(center, flag, text, Color.WHITE, true, Assets.fontBig, 1));
+        activeMessages.add(new Message(Constants.centerBattle, flag, text, Color.WHITE, true, Assets.fontBig, 1));
     }
     
     @Override

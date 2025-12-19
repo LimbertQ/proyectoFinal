@@ -34,7 +34,7 @@ public class ButtonSelectorPanel extends BaseSelectorPanel {
             super.onMenuDataInicializate(Assets.campaigns.get(missionID).getName());
         }
         
-        JPanel newContentFromFactory = MenuComponentFactory.putButtons(34, false, MenuComponentFactory.createActionsContent(switcher, aux));
+        JPanel newContentFromFactory = MenuComponentFactory.putButtons(0.044, false, MenuComponentFactory.createActionsContent(switcher, aux));
 
         Component[] comps = newContentFromFactory.getComponents();
 

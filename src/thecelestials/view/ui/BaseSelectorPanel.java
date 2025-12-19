@@ -7,13 +7,13 @@ package thecelestials.view.ui;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.AssetDefinition;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.Campaign;
+import thecelestials.model.math.Constants;
 
 /**
  *
@@ -58,13 +58,22 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
     protected abstract void onBackButtonClicked();
 
     protected void onMenuDataInicializate(String type) {
-        //INSERTA EL TITULO DE LA VENTANA
+        // 1. Inserta el título de la ventana
         menuTitle.setText(type);
-        //INSERTA LA IMAGEN DE LA VENTANA
+
+        // 2. Calculamos el tamaño proporcional
+        int scaledW = (int) (Constants.WIDTH * 0.183);
+        int scaledH = (int) (Constants.HEIGHT * 0.260);
+
+        // 3. Inserta la imagen de la ventana
         if (Assets.images.containsKey(type)) {
-            imageWestPanel.setIcon(new ImageIcon(Assets.images.get(type).getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+            imageWestPanel.setIcon(new ImageIcon(
+                    Assets.images.get(type).getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH)
+            ));
         } else {
-            imageWestPanel.setIcon(new ImageIcon(Assets.images.get("multimedia").getScaledInstance(250, 200, Image.SCALE_SMOOTH)));
+            imageWestPanel.setIcon(new ImageIcon(
+                    Assets.images.get("multimedia").getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH)
+            ));
         }
     }
 
@@ -111,7 +120,7 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
 
             selector.setSelectorItemIcon(currentAsset.getProfile(), currentAsset.getName());
             updateCenterContent(currentAsset);
-            if(flag){
+            if (flag) {
                 Assets.currentShip = currentIndex;
             }
         } else {

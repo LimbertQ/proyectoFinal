@@ -28,6 +28,7 @@ import thecelestials.model.data.AssetDefinition;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.MissionStats;
 import thecelestials.model.data.ProgressionManager;
+import thecelestials.model.math.Constants;
 import thecelestials.view.ui.GameFrame;
 import thecelestials.view.ui.SelectorPanelComponent;
 
@@ -64,7 +65,7 @@ public class MenuComponentFactory {
         putButtonsExitDialog(closeDialog);
 
     }
-    
+
     private static void putButtonsExitDialog(JDialog dialog) {
         JLabel button1 = createClickableLabel("ACEPTAR", 1, e -> {
             Assets.closeDbConnection();
@@ -151,7 +152,7 @@ public class MenuComponentFactory {
                 actions.put("OPCIONES", e -> switcher.showCard("optionsMenuCard", ""));
                 actions.put("EXTRAS", e -> switcher.showCard("extraMenuCard", ""));
                 actions.put("SALIR", e -> closeDialog.setVisible(true));
-                panel.add(putButtons(25, true, actions));
+                panel.add(putButtons(0.032, true, actions));
                 //------------
                 //panel.add(new JPanel());
                 //panel.add(new JPanel());
@@ -166,7 +167,7 @@ public class MenuComponentFactory {
                 actions.put("CREDITO", e -> switcher.showCard("selectorMenuCard", "creditos"));
                 actions.put("INSTRUCCIONES", e -> switcher.showCard("selectorMenuCard", "instrucciones"));
                 actions.put("COMPRAS", e -> switcher.showCard("buttonSelectorCard", ""));
-                panel.add(putButtons(34, false, actions));
+                panel.add(putButtons(0.044, false, actions));
                 //------------
 
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
@@ -179,7 +180,7 @@ public class MenuComponentFactory {
                 actions.put("GALERIA", e -> switcher.showCard("selectorMenuCard", "galeria"));
                 actions.put("CINEMATICA", e -> switcher.showCard("selectorMenuCard", "cinematica"));
                 actions.put("CIVILIZACIONES", e -> switcher.showCard("selectorMenuCard", "civilizaciones"));
-                panel.add(putButtons(34, false, actions));
+                panel.add(putButtons(0.044, false, actions));
                 //------------
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
             }
@@ -190,7 +191,7 @@ public class MenuComponentFactory {
                 //------------
                 actions = createActionsContent(switcher, "MENU");
 
-                panel.add(putButtons(34, false, actions));
+                panel.add(putButtons(0.044, false, actions));
                 //------------------------------
 
                 panel.add(createBackPanel(e -> switcher.showCard("mainMenuCard", "1")));
@@ -216,10 +217,10 @@ public class MenuComponentFactory {
         panelTitle.add(title);
         return panel;
     }
-    
-    private static JPanel contentWidthLabel(){
+
+    private static JPanel contentWidthLabel() {
         JPanel mainMenu = new JPanel();
-        mainMenu.setBorder(BorderFactory.createEmptyBorder(286, 0, 0, 0));
+        mainMenu.setBorder(BorderFactory.createEmptyBorder((int) (Constants.HEIGHT * 0.372), 0, 0, 0));
         mainMenu.setOpaque(false);
         mainMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
         mainMenu.add(new JLabel());
@@ -230,7 +231,12 @@ public class MenuComponentFactory {
         JPanel contentPanel = new JPanel();
         //contentPanel.setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(250, 50, 50, 50));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(
+                (int) (Constants.HEIGHT * 0.326),
+                (int) (Constants.WIDTH * 0.036),
+                (int) (Constants.HEIGHT * 0.065),
+                (int) (Constants.WIDTH * 0.036)
+        ));
         contentPanel.setOpaque(false);
 
         JTextArea texto = new JTextArea();
@@ -248,16 +254,17 @@ public class MenuComponentFactory {
         return contentPanel;
     }
 
-    public static JPanel putButtons(int strut, boolean flag, Map<String, ActionListener> botones) {
+    //PORCENTAJES
+    public static JPanel putButtons(double strut, boolean flag, Map<String, ActionListener> botones) {
         JPanel panel = new JPanel();
 
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         if (flag) {
-            panel.setBorder(BorderFactory.createEmptyBorder(286, 0, 0, 0));
+            panel.setBorder(BorderFactory.createEmptyBorder((int) (Constants.HEIGHT * 0.372), 0, 0, 0));
         } else {
-            panel.setBorder(BorderFactory.createEmptyBorder(250, 50, 50, 50));
+            panel.setBorder(BorderFactory.createEmptyBorder((int) (Constants.HEIGHT * 0.326), (int) (Constants.WIDTH * 0.036), (int) (Constants.HEIGHT * 0.065), (int) (Constants.WIDTH * 0.036)));
         }
 
         int i = 0;
@@ -272,7 +279,7 @@ public class MenuComponentFactory {
 
             panel.add(boton);
             if (i < botones.size() - 1) {
-                panel.add(Box.createVerticalStrut(strut));
+                panel.add(Box.createVerticalStrut((int)(Constants.HEIGHT*strut)));
             }
             i++;
 
@@ -284,9 +291,9 @@ public class MenuComponentFactory {
     private static JPanel createBackPanel(ActionListener action) {
         JPanel panelBack = new JPanel();
         panelBack.setLayout(new BorderLayout());
-        panelBack.setBorder(BorderFactory.createEmptyBorder(0, 190, 0, 190));
-        panelBack.setPreferredSize(new Dimension(468, Integer.MAX_VALUE));
-        panelBack.setMaximumSize(new Dimension(468, Integer.MAX_VALUE));
+        panelBack.setBorder(BorderFactory.createEmptyBorder(0, (int) (Constants.WIDTH * 0.139), 0, (int) (Constants.WIDTH * 0.139)));
+        panelBack.setPreferredSize(new Dimension((int) (Constants.WIDTH * 0.343), Integer.MAX_VALUE));
+        panelBack.setMaximumSize(new Dimension((int) (Constants.WIDTH * 0.343), Integer.MAX_VALUE));
         panelBack.setOpaque(false);
         JLabel backLabel = createClickableLabel("ATRAS", 0, action);
         //backLabel.setMaximumSize(new Dimension(100, Integer.MAX_VALUE));
@@ -303,16 +310,17 @@ public class MenuComponentFactory {
         return title;
     }
 
+    //AQUI SE USO EL CONSTANTS
     private static JPanel createMenuLabel(int label) {
         JPanel mainMenu = new JPanel();
-        mainMenu.setBorder(BorderFactory.createEmptyBorder(286, 0, 0, 0));
+        mainMenu.setBorder(BorderFactory.createEmptyBorder((int) (Constants.HEIGHT * 0.372), 0, 0, 0));
         mainMenu.setOpaque(false);
         mainMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
         String[] mainMenus = {"SELECCION DE MISION", "OPCIONES", "EXTRAS", "SALIR"};
         for (int i = 0; i < mainMenus.length; i++) {
             mainMenu.add(sampleLabel(mainMenus[i], label, i));
             if (i < mainMenus.length) {
-                mainMenu.add(Box.createVerticalStrut(25));
+                mainMenu.add(Box.createVerticalStrut(Constants.PHeight(0.032)));
             }
         }
         mainMenu.add(Box.createVerticalGlue());
@@ -335,8 +343,8 @@ public class MenuComponentFactory {
         boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         return boton;
     }
-    
-    public static JLabel createArrowLabel(String text){
+
+    public static JLabel createArrowLabel(String text) {
         JLabel boton = new JLabel(text);
         Color color = new Color(41, 41, 41, 128);
         boton.setFont(Assets.fontMed);
@@ -389,46 +397,62 @@ public class MenuComponentFactory {
         });
         return boton;
     }
-    
-    public static JPanel createSelectorPanel(){
+
+    public static JPanel createSelectorPanel() {
         JLabel currentImage = new JLabel();
         JLabel back = sampleLabel("ATRAS", 1, 1);
         JLabel left = createArrowLabel("<<");
         JLabel right = createArrowLabel(">>");
         JLabel nameImage = sampleLabel("", 1, 0);
+
         SelectorPanelComponent selectorPanelComponent = new SelectorPanelComponent(currentImage, back, left, right, nameImage);
         selectorPanelComponent.setLayout(new BoxLayout(selectorPanelComponent, BoxLayout.Y_AXIS));
-        //setBackground(Color.red);
-        selectorPanelComponent.setOpaque(false); // Hazlo transparente si quieres ver el fondo del panel padre
+        selectorPanelComponent.setOpaque(false);
+
+        // 1. Título del Selector
         JLabel selectorTitle = sampleLabel("SELECTOR", -1, 1);
         selectorTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         selectorTitle.setOpaque(false);
+        // Espacio opcional arriba del título para que no pegue al techo
+        selectorPanelComponent.add(Box.createVerticalStrut((int) (Constants.HEIGHT * 0.05)));
         selectorPanelComponent.add(selectorTitle);
-        //------------
+
+        // 2. Panel Central (Flecha <<  Imagen  Flecha >>)
         JPanel contents = new JPanel();
-        //contents.setLayout(new BorderLayout());
         contents.setLayout(new BoxLayout(contents, BoxLayout.X_AXIS));
-        //currentImage = new JLabel();
         contents.setOpaque(false);
+
+        // Espacio horizontal proporcional (el antiguo 20)
+        int hGap = (int) (Constants.WIDTH * 0.015);
+
+        contents.add(Box.createHorizontalGlue()); // Empuja todo al centro
         contents.add(left);
-        contents.add(Box.createHorizontalStrut(20));
+        contents.add(Box.createHorizontalStrut(hGap));
         contents.add(currentImage);
-        contents.add(Box.createHorizontalStrut(20));
+        contents.add(Box.createHorizontalStrut(hGap));
         contents.add(right);
+        contents.add(Box.createHorizontalGlue()); // Empuja todo al centro
+
+        selectorPanelComponent.add(Box.createVerticalGlue()); // Espacio elástico
         selectorPanelComponent.add(contents);
-        
+        selectorPanelComponent.add(Box.createVerticalGlue()); // Espacio elástico
+
+        // 3. Nombre de la imagen/misión
         nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         nameImage.setOpaque(false);
         selectorPanelComponent.add(nameImage);
-        selectorPanelComponent.add(Box.createVerticalStrut(67));
 
+        // 4. El espacio de abajo (el antiguo 67)
+        int vGap = (int) (Constants.HEIGHT * 0.087);
+        selectorPanelComponent.add(Box.createVerticalStrut(vGap));
+
+        // 5. Botón ATRÁS
         JPanel southPanel = new JPanel();
         southPanel.setOpaque(false);
-
         southPanel.add(back);
-        //southPanel.add(Box.createHorizontalStrut(Integer.MAX_VALUE));
 
         selectorPanelComponent.add(southPanel);
+
         return selectorPanelComponent;
     }
 
@@ -497,7 +521,7 @@ public class MenuComponentFactory {
 
     public static Map<String, ActionListener> createActionsContent(ScreenSwitcher switcher, String menuID) {
         Map<String, ActionListener> actions = new LinkedHashMap<>();
-        
+
         if (menuID.equals("buyPanel")) {
             int cost = 5000;
             actions.put("monedas: " + Assets.money, null);

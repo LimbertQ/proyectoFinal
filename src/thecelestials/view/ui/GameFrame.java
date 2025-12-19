@@ -6,7 +6,9 @@ package thecelestials.view.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -54,24 +56,54 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                // Asegúrate de cerrar la conexión a la base de datos (o cualquier recurso)
-                // de forma limpia antes de que la aplicación finalice.
                 Assets.closeDbConnection();
-                System.exit(0); // Ahora sí, termina el proceso de la aplicación
+                System.exit(0);
             }
         });
+
+        // 1. OBTENER EL TAMAÑO REAL DE LA COMPU QUE ABRE EL JUEGO
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(screenSize);
-        setLocationRelativeTo(null);
-        System.out.println(screenSize.width+" :width"+ screenSize.height+" :height");
-        //-----------
-        Constants.init();
+        int screenW = screenSize.width;
+        int screenH = screenSize.height;
+
+        // 2. TU RESOLUCIÓN DE DISEÑO (Donde todo se ve bien)
+        // Pon aquí la resolución de TU computadora
+        int baseW = 1366;
+        int baseH = 768;
+
+        // 3. LA LÓGICA DE SEGURIDAD
+        // Si la pantalla es más chica que tu juego, usamos el tamaño de la pantalla.
+        // Si la pantalla es más grande, usamos tu tamaño de diseño (y habrá bordes negros).
+        int finalW = Math.min(baseW, screenW);
+        int finalH = Math.min(baseH, screenH);
+        Dimension safeSize = new Dimension(finalW, finalH);
+        Constants.init(finalW, finalH);
+
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
+
+        // 4. EL CONTENEDOR DE BORDES NEGROS
+        JPanel backgroundWrapper = new JPanel(new GridBagLayout());
+        backgroundWrapper.setBackground(Color.BLACK);
+
         cardLayout = new CardLayout();
+
+        // 5. TU MAINPANEL
         mainPanel = new JPanel(cardLayout);
+
+        // Usamos el tamaño "seguro" para que nunca se salga de la pantalla
+        mainPanel.setPreferredSize(safeSize);
+        mainPanel.setMinimumSize(safeSize);
+        mainPanel.setMaximumSize(safeSize);
+
         loadingPanel = new LoadingPanel(loadingCard, this);
         loadingPanel.nextPanel(mainMenuCard, "");
         mainPanel.add(loadingPanel, loadingCard);
-        add(mainPanel, BorderLayout.CENTER);
+
+        // 6. ENSAMBLAJE
+        backgroundWrapper.add(mainPanel);
+        add(backgroundWrapper, BorderLayout.CENTER);
+
         cardLayout.show(mainPanel, loadingCard);
         setVisible(true);
 

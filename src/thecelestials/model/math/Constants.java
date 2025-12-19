@@ -12,8 +12,8 @@ public class Constants {
 
     // frame dimensions
 
-    public static final int WIDTH = 1366;
-    public static final int HEIGHT = 768;
+    public static int WIDTH = 0;
+    public static int HEIGHT = 0;
 
     // player properties
 
@@ -87,7 +87,15 @@ public class Constants {
     public static final int SCORE_STACK = 1000;
     
     public static Vector2D centerBattle;
-    public static void init(){
+    public static int PWidth(double val){
+        return (int)(WIDTH*val);
+    }
+    public static int PHeight(double val){
+        return (int)(HEIGHT*val);
+    }
+    public static void init(int w, int h){
+        WIDTH = w;
+        HEIGHT = h;
         centerBattle = new Vector2D(WIDTH / 2.0, HEIGHT / 2.0);
     }
 }

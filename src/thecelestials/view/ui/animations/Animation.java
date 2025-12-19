@@ -4,7 +4,6 @@
  */
 package thecelestials.view.ui.animations;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import thecelestials.model.gameObjects.GameObject;
