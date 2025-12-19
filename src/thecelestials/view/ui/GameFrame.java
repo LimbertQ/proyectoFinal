@@ -63,6 +63,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(screenSize);
         setLocationRelativeTo(null);
+        System.out.println(screenSize.width+" :width"+ screenSize.height+" :height");
         //-----------
         Constants.init();
         cardLayout = new CardLayout();

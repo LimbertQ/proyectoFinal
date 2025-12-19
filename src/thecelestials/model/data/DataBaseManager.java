@@ -38,7 +38,7 @@ public class DataBaseManager {
     
     public boolean openConnection() {
         try {
-            conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            conn = DriverManager.getConnection("jdbc:sqlite:"+dbPath);
             System.out.println("Conexión a SQLite establecida con " + dbPath);
             return true;
         } catch (SQLException e) {
