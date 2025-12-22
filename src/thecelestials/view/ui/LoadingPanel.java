@@ -66,7 +66,6 @@ public class LoadingPanel extends JPanel {
         //repaint();
         progressTimer = new Timer(30, e -> {
             repaint();
-            System.out.println(Assets.count);
         });
         progressTimer.start();
         // 2. INICIAR EL HILO DE CARGA (El trabajo pesado en segundo plano)
@@ -91,7 +90,6 @@ public class LoadingPanel extends JPanel {
                     nextButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            //System.err.println("click de mrd"+nextPanel);
                             // Esta acción usa los valores actualizados de this.nextPanel y this.missionID
                             nextButton.setFocusable(false);
                             switcher.showCard(nextPanel, missionID);

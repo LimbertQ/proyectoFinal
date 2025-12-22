@@ -57,14 +57,13 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     private final Map<String, BufferedImage> images;
 
     private long assault = 0;
-    private byte type;
+    private byte type = -1;
     private byte waves = 0;
     private boolean meteor = false;
     private BufferedImage missionMap;
 
     public GameContentManager() {
         images = Assets.images;
-
         allShips.put(1, new ArrayList<>());
         allShips.put(0, new ArrayList<>());
 
@@ -149,7 +148,11 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         }
 
         if (!MissionStats.allShips[2].isEmpty()) {
-            Ship cruisero = new NPCShip(new Vector2D(1366 / 2, 768 / 2), MissionStats.allShips[2].getFirst(), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            int posCY = 100;
+            if(MissionStats.allShips[2].getFirst().getTeam() == 1){
+                posCY = (int)(Constants.HEIGHT * 0.5);
+            }
+            Ship cruisero = new NPCShip(new Vector2D(Constants.WIDTH / 2, posCY), MissionStats.allShips[2].getFirst(), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             movingObjects.add(cruisero);
             allShips.get(cruisero.getTeam()).add(cruisero);
             if (cruisero.getTeam() == 1) {

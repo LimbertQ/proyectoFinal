@@ -45,8 +45,8 @@ public class MediaPlayerPanel extends JPanel{
     }
     
     public void updateVideo(String menuCard, String campaignID){
-        //System.err.println(menuCard+":::::"+campaignID);
         if(ProgressionManager.getInstance().nextMenu().equals("mediaPlayerCard")){
+            ProgressionManager.getInstance().unlockInit();
             ProgressionManager.getInstance().reset();
             abrirArchivo("missionsMenuCard", campaignID, campaignID);
         }else{
@@ -60,7 +60,6 @@ public class MediaPlayerPanel extends JPanel{
             if (mediaPlayer != null) {
                 mediaPlayer.dispose();
             }
-            System.out.println(campaignID+" te odio");
             String mediaURL = getClass().getResource(Assets.campaigns.get(campaignID).getVideoPath()).toExternalForm();
             
             Media media = new Media(mediaURL);

@@ -28,7 +28,7 @@ public abstract class Ship extends MovingObject {
     private final Color color;
     private final int finalHealt;
     private int currentBarWidth = 0;
-    private final String shipClass;
+    protected final String shipClass;
     public Ship(Vector2D position, ShipStats shipStats, Vector2D velocity, double maxVel, GameObjectCreator creator, long shipFireRate) {
         super(position, shipStats, velocity, maxVel);
         this.bullet = shipStats.getEntityStats();
@@ -67,7 +67,6 @@ public abstract class Ship extends MovingObject {
                     healt += 50;
                     shootLaserBig(position, direction);
                     creator.cloneShip(getPosition(), team);
-                    creator.cloneShip(getPosition(), team);
                 }
             }
         }
@@ -75,7 +74,7 @@ public abstract class Ship extends MovingObject {
 
     private void shootLaserBig(Vector2D position, Vector2D direction) {
         Laser laser = new Laser(
-                position.add(direction.scale(width)),
+                position.add(direction.scale(width+5)),
                 Assets.powerBullet,
                 direction,
                 Constants.LASER_VEL,
@@ -88,7 +87,7 @@ public abstract class Ship extends MovingObject {
             return;
         }
         Laser laser = new Laser(
-                positione.add(direction.scale(width)),
+                positione.add(direction.scale(width+5)),
                 bullet,
                 direction,
                 Constants.LASER_VEL,
@@ -126,7 +125,7 @@ public abstract class Ship extends MovingObject {
 
     protected void drawRectangle(Graphics2D g2d) {
         g2d.setColor(color);
-        if(special > Constants.UFO_CLONE_RATE-1000 && !shipClass.equals("crucero")){
+        if(special > Constants.UFO_CLONE_RATE_PRE && !shipClass.equals("crucero")){
             g2d.drawOval((int)position.getX(), (int)position.getY(), width, height);
         }
         // 1. **GUARDAR** el estado original de Graphics2D. ¡Crucial!

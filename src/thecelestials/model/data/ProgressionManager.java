@@ -13,7 +13,7 @@ public class ProgressionManager {
     private static String nextMenu;
     private static String nextMenuID;
     private static ProgressionManager instance;
-
+    //public static boolean display = false;
     public static ProgressionManager getInstance() {
         if (instance == null) {
             instance = new ProgressionManager();
@@ -25,10 +25,14 @@ public class ProgressionManager {
         nextMenu = "";
         nextMenuID = "";
         if (Assets.campaigns.get("CAMP01").getMissionByID("MSN01").getState() == 0) {
-            unlocksMission(Assets.campaigns.get("CAMP01"), "MSN01");
-            //MissionStats.campaignID = "CAMP00";
             nextMenu = "mediaPlayerCard";
             nextMenuID = "CAMP01";
+        }
+    }
+
+    public void unlockInit() {
+        if (nextMenuID.equals("CAMP01")) {
+            unlocksMission(Assets.campaigns.get("CAMP01"), "MSN01");
         }
     }
 

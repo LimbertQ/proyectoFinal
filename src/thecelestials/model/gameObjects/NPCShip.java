@@ -155,9 +155,11 @@ public class NPCShip extends Ship {
             fireRate += dt;
             if (contMoves > 5000) {
                 contMoves = 0;
-                currentPattern = (int) (Math.random() * 4);
-                //searchTarget();
-                //currentPattern = 2;
+                if(shipClass.equals("crucero")){
+                    currentPattern = (int) (Math.random() * 2);
+                }else{
+                    currentPattern = (int) (Math.random() * 4);
+                }
             }
             Vector2D enemiCenter = target.getCenter();
             Vector2D center = getCenter();
@@ -166,11 +168,11 @@ public class NPCShip extends Ship {
                 case 0 ->
                     frontalAttack(enemiCenter, center, distance, dt);
                 case 1 ->
-                    flankAttack(enemiCenter, center, distance, dt, -1);
+                    defensive(enemiCenter, center, dt);
                 case 2 ->
                     flankAttack(enemiCenter, center, distance, dt, 1);
                 default ->
-                    defensive(enemiCenter, center, dt);
+                    flankAttack(enemiCenter, center, distance, dt, -1);
             }
 
             if (position.getX() > Constants.WIDTH || position.getY() > Constants.HEIGHT

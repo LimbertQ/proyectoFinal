@@ -30,7 +30,7 @@ public class Assets {
     //public static boolean unlock = false;
 
     public static int lives = 3;
-    public static int money = 5000;
+    public static int money = 0;
 
     public static BufferedImage player, effect, fondo;
     public static BufferedImage[] shieldEffects = new BufferedImage[3];
@@ -50,7 +50,8 @@ public class Assets {
 
     public static void init() {
         if (db == null) {
-            db = DataBaseManager.getInstance("src/thecelestials/model/data/TheCelestialsDB.db");
+            //src/thecelestials/model/data/
+            db = DataBaseManager.getInstance("TheCelestialsDB.db");
             db.openConnection();
             fontBig = loadFont("/fonts/futureFont.ttf", 42);
             fontMed = loadFont("/fonts/futureFont.ttf", 20);
@@ -172,12 +173,12 @@ public class Assets {
                                                 CONTROLES:
                                                 
                                                 MOVIMIENTO: W AVANZAR, A Y D ROTAR 
-                                                ATAQUE: P DISPARAR, O ESPECIAL
+                                                ATAQUE: P DISPARAR, O TECNICA ESPECIAL
                                                 
-                                                POTENCIADORES:
+                                                TECNICA ESPECIAL:
                                                 
-                                                REPELE METEORO, DOBLE ESCORE, DOBLE CAÑON,
-                                                VEL DISPX2, SCORE +1000, +1 VIDA""", "/images/others/tutorial.png", "instrucciones"},
+                                                UFO: INVOCAR COMPAÑERO, CAZA: MISIL,
+                                                CRUCERO: MISIL E INVOCAR COMPAÑERO""", "/images/others/tutorial.png", "instrucciones"},
         {"shoop", "", "/images/ships/profileFighter01.png", "compras"}};
         for (int i = 0; i < infoGame.length; i++) {
             AssetDefinition info = new AssetDefinition("DES0" + (i + 1), infoGame[i][0], infoGame[i][1], infoGame[0][2], 1);

@@ -31,6 +31,7 @@ public class PlayerShip extends Ship {
     private boolean shieldOn, doubleGunOn;
     private long fireRate = 0;
     private long fireRateConstants = 0;
+    private boolean flag = false;
     public PlayerShip(Vector2D position, Vector2D velocity, ShipStats shipStats, double maxVel, GameObjectCreator creator, Animation shield, int life) {
         super(position, shipStats, velocity, maxVel, creator, Constants.FIRERATE);
         x = position.getX();
@@ -105,7 +106,10 @@ public class PlayerShip extends Ship {
     private void updateSpawningState(float dt) {
         if (isInvulnerable) {
             if (spawnTime == 0) {
+                flag = true;
                 resetValues();
+            }else{
+                flag = false;
             }
             spawnTime += dt;
             flickerTime += dt;
@@ -147,8 +151,10 @@ public class PlayerShip extends Ship {
     private void shootFire(Vector2D center, float dt) {
         if (fireRate > fireRateConstants) {
             fireRate = 0;
+            if (flag == true){
+                return;
+            }
             if (doubleGunOn) {
-                
                 Vector2D left = new Vector2D(-heading.getY(), heading.getX());
                 Vector2D leftWingPosition = center.copy().add(left.scale(-width * 0.35));
                 shooti(leftWingPosition, heading);

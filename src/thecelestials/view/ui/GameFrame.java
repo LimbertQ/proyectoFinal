@@ -126,7 +126,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
             }
             case missionsMenuCard -> {
                 cardName = buttonSelectorCard;
-                if (ProgressionManager.getInstance().nextMenu().equals("mediaPlayerCard")) {
+                if (ProgressionManager.getInstance().nextMenu().equals("mediaPlayerCard")){
                     campaignPanel.updateContentForMenu("unlock");
                     cardName = mediaPlayerCard;
                     mediaPlayerPanel.updateVideo("", menuID);
