@@ -16,4 +16,5 @@ public interface GameObjectCreator {
     void createGameObject(MovingObject obj);
     void createFragmentedMeteors(Meteor meteor);
     void cloneShip(Vector2D position, int team);
+    void changeExistMeteor();
 }

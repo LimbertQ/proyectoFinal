@@ -12,7 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javax.swing.JPanel;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
 import thecelestials.model.data.ProgressionManager;
@@ -21,16 +20,15 @@ import thecelestials.model.data.ProgressionManager;
  *
  * @author pc
  */
-public class MediaPlayerPanel extends JPanel{
+public class MediaPlayerPanel extends BasePanel{
     private MediaPlayer mediaPlayer;
     private MediaView mediaView;
-    private final ScreenSwitcher switcher;
     public MediaPlayerPanel(ScreenSwitcher switcher, String menuType) {
+        super(switcher);
         setLayout(new BorderLayout());
         JFXPanel fxPanel = new JFXPanel();
         add(fxPanel, BorderLayout.CENTER);
-        this.switcher = switcher;
-
+        
         Platform.runLater(() -> {
             BorderPane root = new BorderPane();
             Scene scene = new Scene(root);
@@ -48,6 +46,7 @@ public class MediaPlayerPanel extends JPanel{
         if(ProgressionManager.getInstance().nextMenu().equals("mediaPlayerCard")){
             ProgressionManager.getInstance().unlockInit();
             ProgressionManager.getInstance().reset();
+            switcher.updateMenus();
             abrirArchivo("missionsMenuCard", campaignID, campaignID);
         }else{
             abrirArchivo("selectorMenuCard", campaignID, "cinematica");

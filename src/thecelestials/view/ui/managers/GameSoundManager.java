@@ -151,10 +151,15 @@ public class GameSoundManager extends GameManager implements IGameControl, GameO
                 mediaSound("voiceStartPath", true);
             case "laser" ->
                 playSound("shoot");
-            case "WAVE" ->
+            case "WAVE" ->{
+                playSound("soundSpawn");
+                playSound("callWar");
                 playSound("wave" + random.nextInt(11));
-            case "ASSAULT" ->
+            }
+            case "ASSAULT" ->{
+                playSound("soundSpawn");
                 playSound("assault" + random.nextInt(12));
+            }
             case "VICTORY" -> {
                 mediaSound("voiceEndPath", true);
                 mediaSound("endingSong", false);

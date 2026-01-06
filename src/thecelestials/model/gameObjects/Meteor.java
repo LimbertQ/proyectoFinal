@@ -35,6 +35,7 @@ public class Meteor extends MovingObject {
 
     @Override
     public void update(float dt) {
+        creator.changeExistMeteor();
         if(isMovementLocked()){
             return;
         }

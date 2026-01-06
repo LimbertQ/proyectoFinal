@@ -24,7 +24,7 @@ import thecelestials.view.util.Loader;
 public class Assets {
 
     public static int count = 0;
-    public static int MAX_COUNT = 129;
+    public static int MAX_COUNT = 124;
     public static int currentShip = 0;
     public static boolean loaded = false;
     //public static boolean unlock = false;
@@ -51,7 +51,7 @@ public class Assets {
     public static void init() {
         if (db == null) {
             //src/thecelestials/model/data/
-            db = DataBaseManager.getInstance("TheCelestialsDB.db");
+            db = DataBaseManager.getInstance("src/thecelestials/model/data/TheCelestialsDB.db");
             db.openConnection();
             fontBig = loadFont("/fonts/futureFont.ttf", 42);
             fontMed = loadFont("/fonts/futureFont.ttf", 20);
@@ -74,7 +74,7 @@ public class Assets {
         player = images.get("life");
         effect = images.get("effect");
         for (int i = 0; i < 3; i++) {
-            shieldEffects[i] = images.get("shield"+i);
+            shieldEffects[i] = images.get("shield" + i);
         }
         count = MAX_COUNT;
         loaded = true;
@@ -99,7 +99,11 @@ public class Assets {
     }
 
     private static void setImageLaser(EntityStats bullet) {
-        images.put(bullet.getSpriteKey(), loadImage(bullet.getSpritePath()));
+        if (images.containsKey(bullet.getSpriteKey())) {
+            count++;
+        }else{
+            images.put(bullet.getSpriteKey(), loadImage(bullet.getSpritePath()));
+        }
     }
 
     public static void loadShipAvaible() {
@@ -149,8 +153,8 @@ public class Assets {
             if (!images.containsKey(ship.getName())) {
                 missionMaps.put(ship.getName(), loadImage(ship.getProfileImagePath()));
                 missionMaps.put(ship.getSpriteKey(), loadImage(ship.getSpritePath()));
-            }else{
-                count+=2;
+            } else {
+                count += 2;
             }
             EntityStats bullet = ship.getEntityStats();
             setImageLaser(bullet);
@@ -200,16 +204,16 @@ public class Assets {
         MAX_COUNT = 10;
         missionMaps.clear();
         db.readMissionsByID(missionID);
-        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 +MissionStats.starsAssets.size()+ 2;
+        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 + MissionStats.starsAssets.size() + 2;
         readStarsImages(MissionStats.starsAssets);
         missionMaps.put(MissionStats.missionName, loadImage(MissionStats.allPaths.get("missionMapPath")));
         //MAX_COUNT = shipsList.length;
-        for(List<ShipStats> listShips: MissionStats.allShips){
+        for (List<ShipStats> listShips : MissionStats.allShips) {
             loadSpriteShips(listShips);
         }
-        
-        for(Map.Entry<String, String> entry: MissionStats.allPaths.entrySet()){
-            if(entry.getKey().substring(0, 5).equals("voice")){
+
+        for (Map.Entry<String, String> entry : MissionStats.allPaths.entrySet()) {
+            if (entry.getKey().substring(0, 5).equals("voice")) {
                 loadMediaSound(entry.getKey(), entry.getValue(), MissionStats.missionVoicePath);
             }
         }
@@ -217,7 +221,7 @@ public class Assets {
     }
 
     public static void clear() {
-        
+
         for (MediaPlayer media : MissionStats.missionVoicePath.values()) {
             media.pause();
             media.stop();
@@ -272,7 +276,7 @@ public class Assets {
     }
 
     private static void readStarsImages(List<AssetDefinition> stars) {
-        for (AssetDefinition starAsset: stars) {
+        for (AssetDefinition starAsset : stars) {
             missionMaps.put(starAsset.getName(), loadImage(starAsset.getProfileImagePath()));
         }
     }

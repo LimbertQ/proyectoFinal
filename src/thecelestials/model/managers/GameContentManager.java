@@ -60,6 +60,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     private byte type = -1;
     private byte waves = 0;
     private boolean meteor = false;
+    private boolean existMeteor = false;
     private BufferedImage missionMap;
 
     public GameContentManager() {
@@ -118,6 +119,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         assault = 0;
         waves = 0;
         type = -1;
+        existMeteor = false;
     }
 
     public void playGame() {
@@ -219,7 +221,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     private void spawnObjects(float dt) {
         if (waves <= MissionStats.assaults) {
 
-            if (meteor && !hasActiveMeteors()) {
+            if (meteor && !existMeteor) {
                 startWave();
             }
 
@@ -236,7 +238,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                     nroRandom = random.nextInt(4) + 5;
                     gameEventManager.notifyGameEvent("WAVE");
                 } else {
-                    nroRandom = random.nextInt(3) + 2;
+                    nroRandom = random.nextInt(2) + 3;
                     gameEventManager.notifyGameEvent("ASSAULT");
                 }
                 spawnShip(nroRandom, 0, 100, 0, MissionStats.allShips[0]);
@@ -244,6 +246,11 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         } else if (type < 0) {
             type = 0;
         }
+    }
+    
+    @Override
+    public void changeExistMeteor(){
+        existMeteor = true;
     }
 
     public byte gameOver() {
@@ -311,7 +318,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 gameLoopEntity.update(dt);
             }
         }
-
+        existMeteor = false;
         for (MovingObject mo : movingObjects) {
             mo.update(dt);
         }

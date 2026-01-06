@@ -12,6 +12,7 @@ public interface ScreenSwitcher {
     void showCard(String cardName, String menuID);
     void initializeMenus();
     void resume();
+    void updateMenus();
     /*
     void backCard(String cardName);
     void endMission();
