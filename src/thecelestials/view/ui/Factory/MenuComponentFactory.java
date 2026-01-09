@@ -43,25 +43,25 @@ public class MenuComponentFactory {
 
     public static void createDialogs(GameFrame frame) {
         ScreenSwitcher switcher = frame;
-        exitDialog = createJDialog(frame, "Estas seguro que deseas salir?");
+        exitDialog = createJDialog(frame, "¿Estas seguro que deseas salir?");
         putButtonsDialog(e -> {
             exitDialog.dispose();
             switcher.resume();
         }, exitDialog, switcher, "CONTINUAR");
 
-        looseDialog = createJDialog(frame, "Deseas reintentar mission?");
+        looseDialog = createJDialog(frame, "¿Deseas reintentar missión?");
         putButtonsDialog(e -> {
             looseDialog.dispose();
             switcher.showCard("loadingGameCard", MissionStats.missionID);
         }, looseDialog, switcher, "REINTENTAR");
 
-        winDialog = createJDialog(frame, "Deseas continuar?");
+        winDialog = createJDialog(frame, "¿Deseas continuar?");
         putButtonsDialog(e -> {
             winDialog.dispose();
             switcher.showCard(ProgressionManager.getInstance().nextMenu(), ProgressionManager.getInstance().nextMenuID());
         }, winDialog, switcher, "CONTINUAR");
         //SALIR DEL JUEGO
-        closeDialog = createJDialog(frame, "¿Desea salir del juego");
+        closeDialog = createJDialog(frame, "¿Desea salir del juego?");
         putButtonsExitDialog(closeDialog);
 
     }
@@ -241,7 +241,7 @@ public class MenuComponentFactory {
 
         JTextArea texto = new JTextArea();
         //texto.setMaximumSize(new Dimension(Integer.MAX_VALUE, texto.getPreferredSize().height));
-        texto.setFont(Assets.fontMed);
+        texto.setFont(Assets.fontSmall);
         texto.setBackground(new Color(41, 41, 41, 130));
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
@@ -292,13 +292,17 @@ public class MenuComponentFactory {
         JPanel panelBack = new JPanel();
         panelBack.setLayout(new BorderLayout());
         panelBack.setBorder(BorderFactory.createEmptyBorder(0, (int) (Constants.WIDTH * 0.139), 0, (int) (Constants.WIDTH * 0.139)));
-        panelBack.setPreferredSize(new Dimension((int) (Constants.WIDTH * 0.343), Integer.MAX_VALUE));
-        panelBack.setMaximumSize(new Dimension((int) (Constants.WIDTH * 0.343), Integer.MAX_VALUE));
+        //panelBack.setPreferredSize(new Dimension((int) (Constants.WIDTH * 0.343), Integer.MAX_VALUE));
+        //panelBack.setMaximumSize(new Dimension((int) (Constants.WIDTH * 0.343), Integer.MAX_VALUE));
         panelBack.setOpaque(false);
         JLabel backLabel = createClickableLabel("ATRAS", 0, action);
         //backLabel.setMaximumSize(new Dimension(100, Integer.MAX_VALUE));
-        panelBack.add(Box.createVerticalGlue(), BorderLayout.CENTER);
-        panelBack.add(backLabel, BorderLayout.SOUTH);
+        JPanel southPanel = new JPanel();
+        southPanel.setOpaque(false);
+        southPanel.add(backLabel);
+
+        //panelBack.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+        panelBack.add(southPanel, BorderLayout.SOUTH);
         return panelBack;
     }
 
@@ -340,7 +344,7 @@ public class MenuComponentFactory {
         boton.setForeground(Color.WHITE);
         boton.setOpaque(true);
         boton.setHorizontalAlignment(SwingConstants.CENTER);
-        boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        boton.setBorder(BorderFactory.createEmptyBorder(Constants.PHeight(0.0065), Constants.PWidth(0.0073), Constants.PHeight(0.0065), Constants.PWidth(0.0073)));
         return boton;
     }
 
@@ -351,7 +355,7 @@ public class MenuComponentFactory {
         boton.setBackground(color);
         boton.setForeground(Color.WHITE);
         boton.setOpaque(true);
-        boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        boton.setBorder(BorderFactory.createEmptyBorder(Constants.PHeight(0.0065), Constants.PWidth(0.0073), Constants.PHeight(0.0065), Constants.PWidth(0.0073)));
         boton.setVerticalAlignment(SwingConstants.CENTER);
         boton.setHorizontalAlignment(SwingConstants.CENTER);
         return boton;
@@ -364,7 +368,7 @@ public class MenuComponentFactory {
         boton.setBackground(color);
         boton.setForeground(Color.WHITE);
         boton.setOpaque(true);
-        boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        boton.setBorder(BorderFactory.createEmptyBorder(Constants.PHeight(0.0065), Constants.PWidth(0.0073), Constants.PHeight(0.0065), Constants.PWidth(0.0073)));
         boton.setVerticalAlignment(SwingConstants.CENTER);
         boton.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -399,50 +403,58 @@ public class MenuComponentFactory {
     }
 
     public static JPanel createSelectorPanel() {
+        // 1. Componentes
         JLabel currentImage = new JLabel();
         JLabel back = sampleLabel("ATRAS", 1, 1);
         JLabel left = createArrowLabel("<<");
         JLabel right = createArrowLabel(">>");
         JLabel nameImage = sampleLabel("", 1, 0);
 
-        // Mantengo tu clase personalizada tal cual
+        // 2. Tu panel original con BoxLayout
         SelectorPanelComponent selectorPanelComponent = new SelectorPanelComponent(currentImage, back, left, right, nameImage);
         selectorPanelComponent.setLayout(new BoxLayout(selectorPanelComponent, BoxLayout.Y_AXIS));
         selectorPanelComponent.setOpaque(false);
 
+        // 3. Título (Norte)
         JLabel selectorTitle = sampleLabel("SELECTOR", -1, 1);
         selectorTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        selectorTitle.setOpaque(false); // Aseguramos transparencia
+        selectorTitle.setOpaque(false);
         selectorPanelComponent.add(selectorTitle);
 
-        //------------
+        // 4. Contenido (Centro)
         JPanel contents = new JPanel();
         contents.setLayout(new BoxLayout(contents, BoxLayout.X_AXIS));
         contents.setOpaque(false);
-
-        // ESPACIO HORIZONTAL ADAPTABLE (Era 20)
         int hGap = (int) (Constants.WIDTH * 0.015);
-
         contents.add(left);
-        contents.add(Box.createHorizontalStrut(hGap)); // Solo cambiamos el 20 por hGap
+        contents.add(Box.createHorizontalStrut(hGap));
         contents.add(currentImage);
-        contents.add(Box.createHorizontalStrut(hGap)); // Solo cambiamos el 20 por hGap
+        contents.add(Box.createHorizontalStrut(hGap));
         contents.add(right);
 
+        // IMPORTANTE: Ponemos un límite de altura para que no se estire raro
+        contents.setMaximumSize(new Dimension(Integer.MAX_VALUE, contents.getPreferredSize().height));
         selectorPanelComponent.add(contents);
 
+        // 5. Nombre de imagen
         nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         nameImage.setOpaque(false);
         selectorPanelComponent.add(nameImage);
 
-        // ESPACIO VERTICAL ADAPTABLE (Era 67)
-        int vGap = (int)(Constants.HEIGHT * 0.102); 
-        selectorPanelComponent.add(Box.createVerticalStrut(vGap));
+        // ---------------------------------------------------------
+        // 6. EL RESORTE MÁGICO (Vertical Glue)
+        // Esto empujará todo lo que esté ABAJO hacia el límite inferior
+        // ---------------------------------------------------------
+        selectorPanelComponent.add(Box.createVerticalGlue());
 
-        JPanel southPanel = new JPanel();
+        // 7. El Panel de Atrás (Sur)
+        JPanel southPanel = new JPanel(); // JPanel usa FlowLayout por defecto (es seguro)
         southPanel.setOpaque(false);
-        southPanel.add(back);
 
+        // Limitamos la altura del panel sur para que el resorte lo empuje y no lo estire
+        southPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, back.getPreferredSize().height + 20));
+
+        southPanel.add(back);
         selectorPanelComponent.add(southPanel);
 
         return selectorPanelComponent;
@@ -465,7 +477,7 @@ public class MenuComponentFactory {
         boton.setOpaque(true);
         boton.setVerticalAlignment(SwingConstants.CENTER); // Por si el JLabel tiene espacio vertical extra
         boton.setHorizontalAlignment(SwingConstants.CENTER);
-        boton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        boton.setBorder(BorderFactory.createEmptyBorder(Constants.PHeight(0.0065), Constants.PWidth(0.0073), Constants.PHeight(0.0065), Constants.PWidth(0.0073)));
 
         boton.addMouseListener(new MouseAdapter() {
             @Override

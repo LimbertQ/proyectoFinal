@@ -103,15 +103,15 @@ public class GameCanvas extends Canvas implements Runnable {
         //setFocusable(true);
         java.awt.EventQueue.invokeLater(() -> {
             if (!this.hasFocus()) {
-            this.requestFocusInWindow();
-        }
+                this.requestFocusInWindow();
+            }
+            lastTime = System.nanoTime();
+            gcm.clear();
+            gcm.playGame();
+            isPaused = false;
         });
-        lastTime = System.nanoTime();
-        gcm.clear();
-        gcm.playGame();
-        isPaused = false;
+
         //this.requestFocusInWindow();
-        
     }
 
     public void resume() {
@@ -136,26 +136,36 @@ public class GameCanvas extends Canvas implements Runnable {
         int frames = 0;
         long timeAccumulator = 0;
         double delta = 0;
+
         while (running) {
-            if (isPaused == false) {
+            if (!isPaused) {
                 now = System.nanoTime();
                 delta += (now - lastTime) / TARGET_TIME;
                 timeAccumulator += (now - lastTime);
                 lastTime = now;
 
-                if (delta >= 1) {
-
-                    update((float) (delta * TARGET_TIME * 0.000001f));
-                    draw();
+                // --- LA CLAVE ESTÁ AQUÍ ---
+                while (delta >= 1) {
+                    // Pasamos SIEMPRE el tiempo fijo de 1 frame (1/60 seg)
+                    // En ms, 1000 / 60 = 16.666...
+                    update(16.666f);
                     delta--;
-                    frames++;
                 }
+
+                draw();
+                frames++;
 
                 if (timeAccumulator >= 1_000_000_000) {
                     averageFps = frames;
                     frames = 0;
                     timeAccumulator = 0;
                 }
+            }
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         stop();

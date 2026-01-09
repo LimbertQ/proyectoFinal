@@ -301,15 +301,11 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
             }
         }
 
-        if (assault > 15000) {
+        if (assault > 15000 || type == 3 && assault > 8000) {
             //termina el juego
             type -= 2;
         }
         assault += dt;
-    }
-
-    private boolean hasActiveMeteors() {
-        return movingObjects.stream().anyMatch(m -> m instanceof Meteor);
     }
 
     public void update(float dt) {
@@ -428,7 +424,12 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
 
     @Override
     public void cloneShip(Vector2D position, int team) {
-        Ship ship = new NPCShip(position, MissionStats.allShips[team].get(random.nextInt(MissionStats.allShips[team].size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+        Ship ship;
+        if(team == 1 && MissionStats.allShips[team].isEmpty()){
+            ship = new NPCShip(position, Assets.shipsAvaible.get(0), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+        }else{
+            ship = new NPCShip(position, MissionStats.allShips[team].get(random.nextInt(MissionStats.allShips[team].size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+        }
         createGameObject(ship);
     }
 }

@@ -45,7 +45,7 @@ public class Assets {
     public static Map<String, List<AssetDefinition>> informations = new HashMap<>();
     public static EntityStats powerBullet;
 
-    public static Font fontBig, fontMed;
+    public static Font fontBig, fontMed, fontSmall;
     private static DataBaseManager db;
 
     public static void init() {
@@ -55,6 +55,7 @@ public class Assets {
             db.openConnection();
             fontBig = loadFont("/fonts/futureFont.ttf", 42);
             fontMed = loadFont("/fonts/futureFont.ttf", 20);
+            fontSmall = loadFont("/fonts/futureFont.ttf", 18);
             int[] progress = db.readProgress();
             lives = progress[0];
             money = progress[1];

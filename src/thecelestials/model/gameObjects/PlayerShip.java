@@ -156,11 +156,11 @@ public class PlayerShip extends Ship {
             }
             if (doubleGunOn) {
                 Vector2D left = new Vector2D(-heading.getY(), heading.getX());
-                Vector2D leftWingPosition = center.copy().add(left.scale(-width * 0.35));
+                Vector2D leftWingPosition = center.copy().add(left.scale(-width * 0.38));
                 shooti(leftWingPosition, heading);
 
                 Vector2D right = new Vector2D(-heading.getY(), heading.getX());
-                Vector2D rightWingPosition = center.copy().add(right.scale(width * 0.35));
+                Vector2D rightWingPosition = center.copy().add(right.scale(width * 0.38));
                 shooti(rightWingPosition, heading);
             } else {
                 shooti(center, heading);

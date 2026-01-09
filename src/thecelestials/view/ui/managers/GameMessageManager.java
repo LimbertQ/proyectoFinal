@@ -91,7 +91,7 @@ public class GameMessageManager extends GameManager implements IGameLoopEntity, 
     public void onGameObjectDestroyed(MovingObject destroyedObject) {
         if (destroyedObject instanceof Meteor) {
             showMessage(destroyedObject.getPosition(), "+" + (Constants.METEOR_SCORE*finalScore) + " SCORE", Color.WHITE);
-        } else if (destroyedObject instanceof PlayerShip player && player.isDead()) {
+        } else if (destroyedObject instanceof PlayerShip player && player.isDestroy()) {
             showMessage(destroyedObject.getPosition(), "-1 LIFE", Color.RED);
         } else if (destroyedObject instanceof NPCShip npcShip && npcShip.getTeam() == 0) {
             showMessage(destroyedObject.getPosition(), "+" + (Constants.UFO_SCORE*finalScore) + " SCORE", Color.WHITE);
@@ -100,7 +100,14 @@ public class GameMessageManager extends GameManager implements IGameLoopEntity, 
 
     @Override
     public void update(float dt) {
-        activeMessages.removeIf(Message::isDead);
+        for (int i = 0; i < activeMessages.size(); i++) {
+        Message m = activeMessages.get(i);
+        m.update(); // <--- Llamamos al update
+        if (m.isDead()) {
+            activeMessages.remove(i);
+            i--;
+        }
+    }
     }
 
     @Override

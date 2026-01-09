@@ -321,7 +321,7 @@ public class DataBaseManager {
             while (rs.next()) {
                 //mission = new Mission(rs.getString("missionID"), rs.getString("missionName"), rs.getString("missionMapPath"), rs.getString("missionDescription"), rs.getString("voiceStartPath"), rs.getString("voiceEndPath"), rs.getString("challenge"), rs.getInt("assaults"), rs.getInt("reinforcement"), rs.getInt("missionState"), rs.getString("campaignID"));
                 //list.put(mission.getID(), mission);
-                Map<String, String> paths = new HashMap();
+                Map<String, String> paths = new HashMap<>();
                 paths.put("voiceStartPath", rs.getString("voiceStartPath"));
                 paths.put("voiceEndPath", rs.getString("voiceEndPath"));
                 paths.put("missionMapPath", rs.getString("missionMapPath"));
