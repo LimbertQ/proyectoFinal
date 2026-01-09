@@ -81,11 +81,7 @@ public class Constants {
     public static final long FAST_FIRE_TIME = 14000;
     public static final long DOUBLE_GUN_TIME = 12000;
     
-    public static final long START_CINEMATICA = 15000;
-    public static final long LOOSE_CINEMATICA = 10000;
-    public static final long END_CINEMATICA = 15000;
-    public static final long ALLIES_CINEMATICA = 15000;
-
+    
     public static final int SCORE_STACK = 1000;
     
     public static Vector2D centerBattle;

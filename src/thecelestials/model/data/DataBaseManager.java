@@ -58,6 +58,24 @@ public class DataBaseManager {
         }
     }
     
+    public int readTotalResources(){
+        String sql = "SELECT ((SELECT COUNT(*) FROM ActiveImage) + " +
+                   "(SELECT COUNT(*) FROM ActiveSound) + " +
+                   "(SELECT COUNT(*) FROM Civilization) + " +
+                   "(SELECT COUNT(*) FROM Campaign) + " +
+                   "(SELECT COUNT(*) FROM Ship WHERE shipState = 1)*3) AS total";
+        int total = 0;
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error contando recursos: " + e.getMessage());
+        }
+        return total;
+    }
+    
     public int[] readProgress(){
         String sql = "SELECT * FROM GameProgress gp;";
         int[] progress = new int[2];

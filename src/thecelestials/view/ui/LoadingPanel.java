@@ -6,6 +6,7 @@ package thecelestials.view.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,7 +21,9 @@ import javax.swing.Timer;
 import thecelestials.controller.ScreenSwitcher;
 import thecelestials.model.data.Assets;
 import thecelestials.model.math.Constants;
+import thecelestials.model.math.Vector2D;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
+import thecelestials.view.ui.animations.Text;
 
 /**
  *
@@ -61,8 +64,9 @@ public class LoadingPanel extends JPanel {
             nextButton.removeMouseListener(ml);
         }
         nextButton.setVisible(false);
-
-        Assets.setear();
+        if(!nextPanel.equals("mainMenuCard")){
+            Assets.setear();
+        }
         //final String destinationCard ;
         //repaint();
         progressTimer = new Timer(30, e -> {
@@ -115,32 +119,37 @@ public class LoadingPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.fillRect(0, 0, getWidth(), getHeight());
-        //g.drawImage(Assets.fondo, WIDTH, HEIGHT, this);
-
-        GradientPaint gp = new GradientPaint(
-                Constants.WIDTH / 2 - Constants.LOADING_BAR_WIDTH / 2,
-                Constants.HEIGHT / 2 - Constants.LOADING_BAR_HEIGHT / 2,
-                Color.WHITE,
-                Constants.WIDTH / 2 + Constants.LOADING_BAR_WIDTH / 2,
-                Constants.HEIGHT / 2 + Constants.LOADING_BAR_HEIGHT / 2,
-                Color.BLUE
-        );
-
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setPaint(gp);
-        //System.out.println(max);
+        // 1. Fondo negro (opcional, para que no se vea rastro de otros frames)
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        // 2. Configuración de la barra
         float percentage = (Assets.MAX_COUNT > 0) ? (float) Assets.count / Assets.MAX_COUNT : 0;
+        int barX = Constants.WIDTH / 2 - Constants.LOADING_BAR_WIDTH / 2;
+        int barY = Constants.HEIGHT / 2 - Constants.LOADING_BAR_HEIGHT / 2;
 
-        g2d.fillRect(Constants.WIDTH / 2 - Constants.LOADING_BAR_WIDTH / 2,
-                Constants.HEIGHT / 2 - Constants.LOADING_BAR_HEIGHT / 2,
-                (int) (Constants.LOADING_BAR_WIDTH * percentage),
-                Constants.LOADING_BAR_HEIGHT);
+        // 3. Dibujo de la barra con Gradiente
+        GradientPaint gp = new GradientPaint(barX, barY, Color.WHITE, barX + Constants.LOADING_BAR_WIDTH, barY, Color.BLUE);
+        g2d.setPaint(gp);
+        g2d.fillRect(barX, barY, (int) (Constants.LOADING_BAR_WIDTH * percentage), Constants.LOADING_BAR_HEIGHT);
 
-        g2d.drawRect(Constants.WIDTH / 2 - Constants.LOADING_BAR_WIDTH / 2,
-                Constants.HEIGHT / 2 - Constants.LOADING_BAR_HEIGHT / 2,
-                Constants.LOADING_BAR_WIDTH,
-                Constants.LOADING_BAR_HEIGHT);
+        // Contorno de la barra
+        g2d.drawRect(barX, barY, Constants.LOADING_BAR_WIDTH, Constants.LOADING_BAR_HEIGHT);
+
+        // 4. Dibujo del Texto usando tu clase Text
+        if (Assets.fontMed != null) {
+            int displayPercent = (int) (percentage * 100);
+            String progressText = "CARGANDO DATOS... " + displayPercent + "%";
+
+            // Calculamos el centro exacto: 
+            // X = Mitad de pantalla
+            // Y = Un poco debajo de la barra (barY + altura de la barra + margen)
+            int textY = barY + Constants.LOADING_BAR_HEIGHT + 40;
+
+            Text.drawText(g2d, progressText, new Vector2D(Constants.WIDTH / 2, textY),
+                    true, Color.WHITE, Assets.fontMed);
+        }
     }
 }

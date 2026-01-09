@@ -24,7 +24,7 @@ import thecelestials.view.util.Loader;
 public class Assets {
 
     public static int count = 0;
-    public static int MAX_COUNT = 131;
+    public static int MAX_COUNT = 0;
     public static int currentShip = 0;
     public static boolean loaded = false;
     //public static boolean unlock = false;
@@ -51,10 +51,11 @@ public class Assets {
     public static void init() {
         if (db == null) {
             //src/thecelestials/model/data/
-            db = DataBaseManager.getInstance("src/thecelestials/model/data/TheCelestialsDB.db");
+            db = DataBaseManager.getInstance("TheCelestialsDB.db");
             db.openConnection();
-            fontBig = loadFont("/fonts/futureFont.ttf", 42);
+            MAX_COUNT = db.readTotalResources() + 7;
             fontMed = loadFont("/fonts/futureFont.ttf", 20);
+            fontBig = loadFont("/fonts/futureFont.ttf", 42);
             fontSmall = loadFont("/fonts/futureFont.ttf", 18);
             int[] progress = db.readProgress();
             lives = progress[0];
@@ -77,7 +78,10 @@ public class Assets {
         for (int i = 0; i < 3; i++) {
             shieldEffects[i] = images.get("shield" + i);
         }
+        System.out.println(count+"eeliana");
         count = MAX_COUNT;
+        System.out.println(count+"aliston");
+        
         loaded = true;
     }
 
@@ -197,15 +201,14 @@ public class Assets {
     public static void setear() {
         loaded = false;
         count = 0;
-
+        MAX_COUNT = 0;        
     }
 
     public static void loadGame(String missionID) {
         //setear();
-        MAX_COUNT = 10;
         missionMaps.clear();
         db.readMissionsByID(missionID);
-        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 + MissionStats.starsAssets.size() + 2;
+        MAX_COUNT = MissionStats.allShips[0].size() * 3 + MissionStats.allShips[1].size() * 3 + MissionStats.allShips[2].size() * 3 + MissionStats.starsAssets.size() + 3;
         readStarsImages(MissionStats.starsAssets);
         missionMaps.put(MissionStats.missionName, loadImage(MissionStats.allPaths.get("missionMapPath")));
         //MAX_COUNT = shipsList.length;
