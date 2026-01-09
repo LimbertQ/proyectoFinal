@@ -32,6 +32,7 @@ public class LoadingPanel extends JPanel {
     private final JLabel nextButton;
     private Timer progressTimer;
     private final ScreenSwitcher switcher;
+
     //private String destinationCard;
     public LoadingPanel(String menuType, ScreenSwitcher switcher) {
         //setLayout(new BorderLayout());
@@ -60,7 +61,7 @@ public class LoadingPanel extends JPanel {
             nextButton.removeMouseListener(ml);
         }
         nextButton.setVisible(false);
-        
+
         Assets.setear();
         //final String destinationCard ;
         //repaint();
@@ -91,19 +92,20 @@ public class LoadingPanel extends JPanel {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             // Esta acción usa los valores actualizados de this.nextPanel y this.missionID
+                            if (nextPanel.equals("mainMenuCard")) {
+                                switcher.initializeMenus();
+                            }
+
                             nextButton.setFocusable(false);
                             switcher.showCard(nextPanel, missionID);
                         }
                     });
-                    //nextButton.setText("SIGUIENTE");
-                    
-                    if(nextPanel.equals("mainMenuCard")){
+                    if (nextPanel.equals("mainMenuCard")) {
                         nextButton.setFont(Assets.fontMed);
-                        switcher.initializeMenus();
                     }
                     nextButton.setVisible(true);
                     repaint(); // Para asegurar el 100%
-                    
+
                     //switcher.showCard(nextPanel, missionID);
                 }
             });
@@ -129,8 +131,7 @@ public class LoadingPanel extends JPanel {
 
         g2d.setPaint(gp);
         //System.out.println(max);
-
-        float percentage = (Assets.count / Assets.MAX_COUNT);
+        float percentage = (Assets.MAX_COUNT > 0) ? (float) Assets.count / Assets.MAX_COUNT : 0;
 
         g2d.fillRect(Constants.WIDTH / 2 - Constants.LOADING_BAR_WIDTH / 2,
                 Constants.HEIGHT / 2 - Constants.LOADING_BAR_HEIGHT / 2,

@@ -85,7 +85,10 @@ public class PlayerShip extends Ship {
         if (Keyboard.UP) {
             acceleration = heading.scale(Constants.ACC);
             accelerating = true;
-        } else {
+        }else if(Keyboard.DOWN){
+            acceleration = heading.scale(-Constants.ACC/2);
+            accelerating = true;
+        }else {
             accelerating = false;
             if (velocity.getMagnitudeSq() > 0.01) {
                 acceleration = velocity.normalize().scale(-Constants.ACC / 2);

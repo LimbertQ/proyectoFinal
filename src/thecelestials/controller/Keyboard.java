@@ -16,7 +16,7 @@ public class Keyboard implements KeyListener{
     
     private final boolean[] keys = new boolean[256];
     
-    public static boolean UP, LEFT, RIGHT, SHOOT, ESC, SPECIAL;
+    public static boolean UP, DOWN, LEFT, RIGHT, SHOOT, ESC, SPECIAL;
     
     public Keyboard(){ 
         UP    = false;
@@ -29,6 +29,7 @@ public class Keyboard implements KeyListener{
     
     public void update(){ 
         UP = keys[KeyEvent.VK_W];
+        DOWN = keys[KeyEvent.VK_S];
         LEFT = keys[KeyEvent.VK_A];
         RIGHT = keys[KeyEvent.VK_D];
         SHOOT = keys[KeyEvent.VK_P];

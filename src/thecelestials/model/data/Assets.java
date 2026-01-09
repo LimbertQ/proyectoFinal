@@ -24,7 +24,7 @@ import thecelestials.view.util.Loader;
 public class Assets {
 
     public static int count = 0;
-    public static int MAX_COUNT = 124;
+    public static int MAX_COUNT = 131;
     public static int currentShip = 0;
     public static boolean loaded = false;
     //public static boolean unlock = false;
