@@ -52,7 +52,7 @@ public class Assets {
     public static void init() {
         if (db == null) {
             //src/thecelestials/model/data/
-            db = DataBaseManager.getInstance("src/thecelestials/model/data/TheCelestialsDB.db");
+            db = DataBaseManager.getInstance("TheCelestialsDB.db");
             db.openConnection();
             MAX_COUNT = db.readTotalResources() + 7;
             fontMed = loadFont("/fonts/futureFont.ttf", 20*Constants.SCALE);

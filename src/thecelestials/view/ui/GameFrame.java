@@ -61,8 +61,8 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
 
         // 1. OBTENER EL TAMAÑO REAL DE LA COMPU QUE ABRE EL JUEGO
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenW = 1366;
-        int screenH = 768;
+        int screenW = screenSize.width;
+        int screenH = screenSize.height;
 
         // 2. TU RESOLUCIÓN DE DISEÑO (Donde todo se ve bien)
         // Pon aquí la resolución de TU computadora
