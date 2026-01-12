@@ -19,6 +19,7 @@ import thecelestials.model.data.Assets;
 import thecelestials.model.data.ProgressionManager;
 import thecelestials.model.math.Constants;
 import thecelestials.view.ui.Factory.MenuComponentFactory;
+import thecelestials.view.util.Loader;
 
 /**
  *
@@ -50,6 +51,7 @@ public class GameFrame extends JFrame implements ScreenSwitcher {
 
     public GameFrame() {
         setTitle("Los Celestiales");
+        setIconImage(Loader.ImageLoader("/images/ships/fighter02.png"));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
