@@ -72,7 +72,7 @@ public class Loader {
         return resource.toExternalForm();
     }
     
-    public static Font loadFont(String path, int size) {
+    public static Font loadFont(String path, float size) {
         try {
             return Font.createFont(Font.TRUETYPE_FONT, Loader.class.getResourceAsStream(path)).deriveFont(Font.PLAIN, size);
         } catch (FontFormatException | IOException e) {

@@ -150,7 +150,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
         }
 
         if (!MissionStats.allShips[2].isEmpty()) {
-            int posCY = 100;
+            int posCY = 50;
             if(MissionStats.allShips[2].getFirst().getTeam() == 1){
                 posCY = (int)(Constants.HEIGHT * 0.5);
             }
@@ -212,14 +212,17 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
     }
 
     private void spawnReinforcement(int limit, List<ShipStats> shipsList) {
+        if(Constants.WIDTH <= 1024){
+            limit-=2;
+        }
         for (int i = 0; i < limit; i++) {
-            Ship ship = new ReinforcementShip(new Vector2D(100, (i + 1) * 80), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
+            Ship ship = new ReinforcementShip(new Vector2D(100, (i + 1) * 75), shipsList.get(random.nextInt(shipsList.size())), new Vector2D(), Constants.UFO_MAX_VEL, this, this);
             createGameObject(ship);
         }
     }
 
     private void spawnObjects(float dt) {
-        if (waves <= MissionStats.assaults) {
+        if (waves < MissionStats.assaults) {
 
             if (meteor && !existMeteor) {
                 startWave();
@@ -276,7 +279,7 @@ public class GameContentManager extends GameManager implements IGameControl, Gam
                 if (assault == 0) {
                     //axis and reforces
                     blockShips();
-                    spawnReinforcement(8, MissionStats.allShips[1]);
+                    spawnReinforcement(9, MissionStats.allShips[1]);
                 } else if (assault > 3000) {
                     //destroyAxis
                     for (Ship ship : allShips.get(0)) {

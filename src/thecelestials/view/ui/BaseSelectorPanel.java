@@ -84,12 +84,14 @@ public abstract class BaseSelectorPanel extends BaseMenuPanel {
         Assets.currentShip = 0;
         //INSERTA LA IMAGEN Y NOMBRE DEL SELECTOR
         //---------------------------------------;
+        selector.changeColorNameLabel(false);
         if (type.equals("cinematica")) {
             List<Campaign> copy = new ArrayList<>();
             for (Campaign aa : Assets.campaigns.values()) {
                 copy.add(aa);
             }
             dataNavigator = copy;
+            selector.changeColorNameLabel(true);
         } else {
             if (Assets.informations.containsKey(type)) {
                 dataNavigator = Assets.informations.get(type);

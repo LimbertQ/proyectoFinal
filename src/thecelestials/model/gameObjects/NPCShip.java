@@ -54,7 +54,7 @@ public class NPCShip extends Ship {
     }
 
     private void flankAttack(Vector2D targetPos, Vector2D center, double distance, float dt, int leftRight) {
-        if (distance > 200) {
+        if (distance > 120) {
             frontalAttack(targetPos, center, distance, dt);
         } else {
             Vector2D jugadorANave = center.subtract(targetPos);
@@ -93,11 +93,14 @@ public class NPCShip extends Ship {
         toTarget(targetDirection);
         shoot(targetDirection);
 
-        double distancia = Constants.centerBattle.subtract(center).getMagnitude();
+        //double distancia = Constants.centerBattle.subtract(center).getMagnitude();
         targetDirection = targetDirection(Constants.centerBattle, center);
-        if (distancia < 300) {
-            velocity = targetDirection.scale(maxVel * -0.05f);
-            position = position.add(velocity.scale(dt));
+        velocity = targetDirection.scale(maxVel * -0.05f);
+        Vector2D nextPos = position.add(velocity.scale(dt));
+        boolean insideX = nextPos.getX() > 0 && nextPos.getX() + width < Constants.WIDTH;
+        boolean insideY = nextPos.getY() > 0 && nextPos.getY() + height < Constants.HEIGHT;
+        if (insideX && insideY) {
+            position = nextPos;
             accelerating = true;
         }
     }

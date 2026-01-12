@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javax.sound.sampled.Clip;
+import thecelestials.model.math.Constants;
 import thecelestials.view.util.Loader;
 
 //import javafx.scene.media.Media;
@@ -51,12 +52,12 @@ public class Assets {
     public static void init() {
         if (db == null) {
             //src/thecelestials/model/data/
-            db = DataBaseManager.getInstance("TheCelestialsDB.db");
+            db = DataBaseManager.getInstance("src/thecelestials/model/data/TheCelestialsDB.db");
             db.openConnection();
             MAX_COUNT = db.readTotalResources() + 7;
-            fontMed = loadFont("/fonts/futureFont.ttf", 20);
-            fontBig = loadFont("/fonts/futureFont.ttf", 42);
-            fontSmall = loadFont("/fonts/futureFont.ttf", 18);
+            fontMed = loadFont("/fonts/futureFont.ttf", 20*Constants.SCALE);
+            fontBig = loadFont("/fonts/futureFont.ttf", 42*Constants.SCALE);
+            fontSmall = loadFont("/fonts/futureFont.ttf", 18*Constants.SCALE);
             int[] progress = db.readProgress();
             lives = progress[0];
             money = progress[1];
@@ -78,9 +79,6 @@ public class Assets {
         for (int i = 0; i < 3; i++) {
             shieldEffects[i] = images.get("shield" + i);
         }
-        System.out.println(count+"eeliana");
-        count = MAX_COUNT;
-        System.out.println(count+"aliston");
         
         loaded = true;
     }
@@ -130,6 +128,8 @@ public class Assets {
         money += coins;
         if (money < 0) {
             money = 0;
+        }else if(money > 100000){
+            money = 100000;
         }
         //UPDATE DATABASE
         db.updateProgress(lives, money);
@@ -295,7 +295,7 @@ public class Assets {
         return Loader.loadSound(path);
     }
 
-    private static Font loadFont(String path, int size) {
+    private static Font loadFont(String path, float size) {
         count++;
         return Loader.loadFont(path, size);
     }

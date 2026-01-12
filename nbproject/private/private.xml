@@ -5,9 +5,9 @@
         <group>
             <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/model/data/Assets.java</file>
             <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/model/math/Constants.java</file>
-            <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/view/ui/animations/Text.java</file>
+            <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/view/ui/GameFrame.java</file>
             <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/view/ui/LoadingPanel.java</file>
-            <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/model/managers/GameContentManager.java</file>
+            <file>file:/C:/Users/pc/Documents/NetBeansProjects/TheCelestials/src/thecelestials/view/util/Loader.java</file>
         </group>
     </open-files>
 </project-private>

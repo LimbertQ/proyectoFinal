@@ -38,13 +38,20 @@ public class SelectorPanelComponent extends JPanel {
     public void setSelectorItemIcon(BufferedImage image, String text) {
         // 1. Calculamos el tamaño proporcional basado en la altura de la pantalla
         // Usamos Constants.HEIGHT para que sea dinámico
-        int size = (int) (Constants.HEIGHT * 0.45);
-
+        double div = 0.456;
+        if(Constants.WIDTH <= 1024){
+            div = 0.465;
+        }
+        int size = (int) (Constants.HEIGHT * div);//465
         // 2. Aplicamos el escalado usando ese tamaño para que siga siendo un cuadrado
         // Esto asegura que en tu compu siga siendo 340x340
-        itemImageLabel.setIcon(new ImageIcon(image.getScaledInstance(Constants.PWidth(0.256), size, Image.SCALE_SMOOTH)));
-
+        itemImageLabel.setIcon(new ImageIcon(image.getScaledInstance(size, size, Image.SCALE_SMOOTH)));
+        
         itemImageName.setText(text);
+    }
+    
+    public void changeColorNameLabel(boolean flag){
+        itemImageName.setOpaque(flag);
     }
 
     public void setItemNameLabelText(String text) {

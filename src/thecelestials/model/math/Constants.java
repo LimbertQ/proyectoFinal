@@ -62,8 +62,8 @@ public class Constants {
     
     public static final long UFO_SPAWN_WAVE = 50000;
 
-    public static final int LOADING_BAR_WIDTH = 1000;
-    public static final int LOADING_BAR_HEIGHT = 50;
+    public static int LOADING_BAR_WIDTH = 0;
+    public static int LOADING_BAR_HEIGHT = 0;
 
 
     //public static final String SCORE_PATH = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() +
@@ -85,6 +85,8 @@ public class Constants {
     public static final int SCORE_STACK = 1000;
     
     public static Vector2D centerBattle;
+    
+    public static float SCALE = 0;
     public static int PWidth(double val){
         return (int)(WIDTH*val);
     }
@@ -95,5 +97,8 @@ public class Constants {
         WIDTH = w;
         HEIGHT = h;
         centerBattle = new Vector2D(WIDTH / 2.0, HEIGHT / 2.0);
+        LOADING_BAR_WIDTH = (int)(WIDTH * 0.70);
+        LOADING_BAR_HEIGHT = (int)(HEIGHT * 0.06);
+        SCALE = (float) HEIGHT / 768f;
     }
 }

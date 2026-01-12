@@ -60,6 +60,7 @@ public class ProgressionManager {
         if (campaign.getMissionByID(missionID).getState() == 0) {
             campaign.getMissionByID(missionID).setState();
             DataBaseManager.getInstance("").updateMissionState(missionID);
+            unlocksShip();
         }
     }
 
@@ -132,9 +133,8 @@ public class ProgressionManager {
     public void unlocks() {
         nextMenuID = nextID(MissionStats.missionID);
         if (Assets.campaigns.get(MissionStats.campaignID).containsMission(nextMenuID)) {
-            //VERIFICAMOS Y DESBLOQUEAMOS SI SE PUEDE
+            //VERIFICAMOS Y DESBLOQUEAMOS SI SE PUEDE LA MISION Y LA NAVE
             unlocksMission(Assets.campaigns.get(MissionStats.campaignID), nextMenuID);
-            unlocksShip();
             //------------------------------------
             //VENTANA CARGA DE RECURSOS
             nextMenu = "loadingGameCard";
@@ -146,10 +146,8 @@ public class ProgressionManager {
                 if (nextCampaign.getState() == 0) {
                     //DESBLOQUEAMOS CAMPAÑA
                     unlocksCampaign(nextCampaign);
-                    //DESBLOQUEAMOS MISSION
+                    //DESBLOQUEAMOS MISSION Y LA NAVE
                     unlocksMission(nextCampaign, nextMenuID);
-                    //DESBLOQUEAMOS NAVE
-                    unlocksShip();
                     //DESBLOQUEAMOS CIVILIZACIONES
                     unlocksCivilization();
 

@@ -408,7 +408,7 @@ public class MenuComponentFactory {
         JLabel back = sampleLabel("ATRAS", 1, 1);
         JLabel left = createArrowLabel("<<");
         JLabel right = createArrowLabel(">>");
-        JLabel nameImage = sampleLabel("", 1, 0);
+        JLabel nameImage = sampleLabel("", 1, 1);
 
         // 2. Tu panel original con BoxLayout
         SelectorPanelComponent selectorPanelComponent = new SelectorPanelComponent(currentImage, back, left, right, nameImage);
@@ -437,9 +437,13 @@ public class MenuComponentFactory {
         selectorPanelComponent.add(contents);
 
         // 5. Nombre de imagen
-        nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //nameImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         nameImage.setOpaque(false);
-        selectorPanelComponent.add(nameImage);
+        JPanel ticket = new JPanel();
+        ticket.setOpaque(false);
+        //ticket.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ticket.add(nameImage);
+        selectorPanelComponent.add(ticket);
 
         // ---------------------------------------------------------
         // 6. EL RESORTE MÁGICO (Vertical Glue)
