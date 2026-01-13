@@ -44,10 +44,10 @@ public abstract class GravitationalField extends GameObject {
     }
     
     private void updatePosition(){
-        if(position.getX() > Constants.WIDTH || position.getX() < 0){
+        if(position.getX()+height > Constants.WIDTH || position.getX() < 0){
             xw*=-1;
         }
-        if(position.getY() > Constants.HEIGHT || position.getY() < 0){
+        if(position.getY()+height > Constants.HEIGHT || position.getY() < 0){
             yh*=-1;
         }
         
